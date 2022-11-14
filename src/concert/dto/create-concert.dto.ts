@@ -3,22 +3,44 @@ import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateConcertDto {
   @ApiProperty({
-    description: 'name1 field',
+    description: 'concertName field',
   })
   @IsNotEmpty()
   @IsString()
-  public name1: string;
+  public concertName: string;
 
   @ApiProperty({
-    description: 'name2 field',
+    description: 'concertImg field',
   })
   @IsNotEmpty()
   @IsString()
-  public name2: string;
+  public concertImg: string;
 
   @ApiProperty({
-    description: 'name3 field',
+    description: 'artist field',
   })
+  @IsNotEmpty()
   @IsString()
-  public name3: string;
+  public artist: string;
+
+  @ApiProperty({
+    description: 'concertInfo field',
+  })
+  @IsNotEmpty()
+  @IsString()
+  public concertInfo: string;
+
+  @ApiProperty({
+    description: 'concertDate field',
+  })
+  @IsNotEmpty()
+  @IsString()
+  public concertDate: string;
+
+  @ApiProperty({
+    description: 'ticketingDate field',
+  })
+  @IsNotEmpty()
+  @IsString()
+  public ticketingDate: string;
 }

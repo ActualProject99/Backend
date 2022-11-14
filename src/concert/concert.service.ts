@@ -8,8 +8,8 @@ export class ConcertService {
     return 'This action adds a new test';
   }
 
-  findAll() {
-    return `This action returns all test`;
+  findAll(categoryId: number) {
+    return `This action returns all #${categoryId} test`;
   }
 
   findOne(concertId: number) {
