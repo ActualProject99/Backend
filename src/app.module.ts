@@ -10,6 +10,7 @@ import { CategoryModule } from './category/category.module';
 import { CommentModule } from './comment/comment.module';
 import { ConcertModule } from './concert/concert.module';
 import { ConcertlikeModule } from './concertlike/concertlike.module';
+import { TestModule } from './test/test.module';
 
 //entities
 import { Category } from './entities/category.entity';
@@ -31,6 +32,7 @@ import { ArtistLike } from './entities/artistlike.entity';
       entities: [Category, Concert, ConcertLike, Comment, Artist, ArtistLike],
       synchronize: true,
     }),
+    TestModule,
   ],
 })
 @Module({
