@@ -12,6 +12,8 @@ import { Category } from './category/category.entity';
 import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { UserEntity } from './user/models/user.entity';
+// import { UserController } from './user/user.controller';
+// import { UserService } from './user/user.service';
 
 @Module({
   imports: [
@@ -29,14 +31,7 @@ import { UserEntity } from './user/models/user.entity';
       logging: true, // 로그 기록
       keepConnectionAlive: true, // 계속 실행되도록
     }),
-    // inject: [ConfigService],
-    // UserModule,
-  ],
-  // controllers: [UsersController],
-  // providers: [UserService],
-})
-@Module({
-  imports: [
+
     ArtistModule,
     ArtistlikeModule,
     CategoryModule,
@@ -45,7 +40,11 @@ import { UserEntity } from './user/models/user.entity';
     ConcertlikeModule,
     UserModule,
   ],
+  // inject: [ConfigService],
+  // UserModule,
   controllers: [AppController],
   providers: [AppService],
+  // controllers: [UserController],
+  // providers: [UserService],
 })
 export class AppModule {}

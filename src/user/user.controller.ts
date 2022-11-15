@@ -21,8 +21,8 @@ import { UserDTO } from './dto/user.dto';
 import { JwtAuthGuard } from './jwt/jwt.guard';
 
 @Controller('users')
-export class UsersController {
-  private readonly logger = new Logger(UsersController.name);
+export class UserController {
+  private readonly logger = new Logger(UserController.name);
 
   constructor(
     private readonly usersService: UserService,

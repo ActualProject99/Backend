@@ -4,7 +4,9 @@ import { UserEntity } from '../models/user.entity';
 
 export class UserRegisterDTO extends PickType(UserEntity, [
   'email',
+  'profileImg',
   'nickname',
+  'name',
 ] as const) {
   @IsString()
   @IsNotEmpty({ message: '비밀번호를 입력해주세요.' })
