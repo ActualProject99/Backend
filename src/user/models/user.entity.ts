@@ -1,12 +1,16 @@
 import { Exclude } from 'class-transformer';
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { IsNotEmpty, IsString } from 'class-validator';
+import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
 
+@Index('email', ['email'], { unique: true })
 @Entity('User')
 export class UserEntity {
   @PrimaryColumn()
   userId: number;
 
-  @Column({ unique: true })
+  @IsString()
+  @IsNotEmpty({ message: '이름을 작성해 주세요.' })
+  @Column({ type: 'varchar', nullable: false })
   email: string;
 
   @Column({ nullable: true })

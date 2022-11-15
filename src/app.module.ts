@@ -9,8 +9,6 @@ import { CommentModule } from './comment/comment.module';
 import { ConcertModule } from './concert/concert.module';
 import { ConcertlikeModule } from './concertlike/concertlike.module';
 import { Category } from './category/category.entity';
-import { UserController } from './user/user.controller';
-import { UserService } from './user/user.service';
 import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { UserEntity } from './user/models/user.entity';
@@ -31,10 +29,11 @@ import { UserEntity } from './user/models/user.entity';
       logging: true, // 로그 기록
       keepConnectionAlive: true, // 계속 실행되도록
     }),
-    UserModule,
+    // inject: [ConfigService],
+    // UserModule,
   ],
-  controllers: [UserController],
-  providers: [UserService],
+  // controllers: [UsersController],
+  // providers: [UserService],
 })
 @Module({
   imports: [
