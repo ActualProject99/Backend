@@ -5,7 +5,7 @@ export class Artist {
   @PrimaryGeneratedColumn()
   artistId: number;
 
-  @Column()
+  @Column({nullable:true})
   concertId: number;
 
   @Column()
@@ -17,6 +17,6 @@ export class Artist {
   @Column()
   artistInfo: string;
 
-  @Column()
+  @Column({nullable:true})
   likeCount: number;
 }

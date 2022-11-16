@@ -1,8 +1,8 @@
-import { ArtistLike } from '../entities/artistlike.entity';
+import { ArtistLike } from '../entities/artist_like.entity';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ArtistlikeController } from './artistlike.controller';
-import { ArtistlikeService } from './artistlike.service';
+import { ArtistlikeController } from './artist_like.controller';
+import { ArtistlikeService } from './artist_like.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ArtistLike])],
