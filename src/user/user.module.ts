@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
+// import { MulterModule } from '@nestjs/platform-express';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AwsService } from 'src/aws.service';
 import { JwtStrategy } from './jwt/jwt.strategy';
 import { UserEntity } from './models/user.entity';
 import { UserController } from './user.controller';
@@ -16,8 +18,11 @@ import { UserService } from './user.service';
       secretOrPrivateKey: process.env.SECRET_KEY,
       signOptions: { expiresIn: '1d' },
     }),
+    // MulterModule.register({
+    //   dest: './upload',
+    // }),
   ],
-  providers: [JwtStrategy, UserService],
+  providers: [JwtStrategy, UserService, AwsService],
   controllers: [UserController],
   exports: [UserService],
 })

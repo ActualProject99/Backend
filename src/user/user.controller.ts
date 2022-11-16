@@ -5,6 +5,7 @@ import {
   Logger,
   Post,
   Res,
+  UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -19,6 +20,9 @@ import { OnlyPrivateInterceptor } from '../common/interceptor/only-private.inter
 import { CurrentUser } from '../common/decorator/current-user.decorator';
 import { UserDTO } from './dto/user.dto';
 import { JwtAuthGuard } from './jwt/jwt.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { AwsService } from 'src/aws.service';
+// import multer from 'multer';
 
 @Controller('users')
 export class UserController {
@@ -28,6 +32,7 @@ export class UserController {
     private readonly usersService: UserService,
     @InjectRepository(UserEntity)
     private readonly usersRepository: Repository<UserEntity>,
+    private readonly awsService: AwsService,
   ) {}
 
   @Get()
@@ -37,9 +42,14 @@ export class UserController {
     return currentUser;
   }
 
+  @UseInterceptors(FileInterceptor('profileImg'))
   @Post('signup')
-  async signUp(@Body() userRegisterDTO: UserRegisterDTO) {
-    return await this.usersService.registerUser(userRegisterDTO);
+  async signUp(
+    @Body() userRegisterDTO: UserRegisterDTO,
+    @UploadedFile() profileImg: Express.Multer.File,
+  ) {
+    const imgUrl = await this.awsService.uploadFileToS3('users', profileImg);
+    return await this.usersService.registerUser(userRegisterDTO, imgUrl);
   }
 
   @Post('login')
@@ -54,6 +64,14 @@ export class UserController {
     response.cookie('jwt', jwt, { httpOnly: true });
     return user;
   }
+
+  // @UseInterceptors(FileInterceptor('profileImg'))
+  // @UseGuards(JwtAuthGuard)
+  // @Post('upload')
+  // async uploadprofileImg(@UploadedFile() file: Express.Multer.File) {
+  //   console.log(file);
+  //   return await this.awsService.uploadFileToS3('users', file);
+  // }
 
   @Post('logout')
   async logOut(@Res({ passthrough: true }) response: Response) {

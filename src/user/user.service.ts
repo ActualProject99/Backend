@@ -25,24 +25,45 @@ export class UserService {
     private readonly configService: ConfigService,
   ) {}
 
-  async registerUser(userRegisterDTO: UserRegisterDTO): Promise<void> {
-    const { email, profileImg, nickname, name, password } = userRegisterDTO;
-    const user = await this.userRepository.findOne({ where: { email: email } });
+  async registerUser(userRegisterDTO: UserRegisterDTO, imgUrl): Promise<void> {
+    const { email, nickname, name, password } = userRegisterDTO;
+    console.log(imgUrl.key);
+    const imgName = process.env.AWS_S3_STORAGE_URL + imgUrl.key;
+    userRegisterDTO.profileImg = imgName;
+    const user = await this.userRepository.findOne({ where: { email } });
     if (user) {
       throw new UnauthorizedException('이메일이 이미 존재합니다.');
+    }
+    const nick = await this.userRepository.findOne({ where: { nickname } });
+    if (nick) {
+      throw new UnauthorizedException('닉네임이 이미 존재합니다.');
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     await this.userRepository.save({
       ...userRegisterDTO,
+      imgName,
       password: hashedPassword,
     });
   }
+
+  // async uploadImg(currentUser: UserDTO, file: Express.Multer.File) {
+  //   const fileName = `users/${file[0].filename}`;
+
+  //   console.log(fileName);
+
+  //   const user = await this.userRepository.findByIdAndUpdateImg({
+  //     currentUser.userId,
+  //     fileName
+  //   });
+  //   console.log(user);
+  //   return user;
+  // }
 
   async verifyUserAndSignJwt(
     email: UserLoginDTO['email'],
     password: UserLoginDTO['password'],
   ): Promise<{ jwt: string; user: UserDTO }> {
-    const user = await this.userRepository.findOne({ where: { email: email } });
+    const user = await this.userRepository.findOne({ where: { email } });
     if (!user)
       throw new UnauthorizedException('해당하는 이메일은 존재하지 않습니다.');
     if (!(await bcrypt.compare(password, user.password)))
@@ -61,7 +82,7 @@ export class UserService {
   async findUserById(userId: number) {
     try {
       const user = await this.userRepository.findOne({
-        where: { userId: userId },
+        where: { userId },
       });
       if (!user) throw new Error();
       return user;

@@ -7,8 +7,10 @@ export class UserRegisterDTO extends PickType(UserEntity, [
   'profileImg',
   'nickname',
   'name',
-] as const) {
-  @IsString()
-  @IsNotEmpty({ message: '비밀번호를 입력해주세요.' })
-  password: string;
-}
+  'password',
+] as const) {}
+// {
+//   @IsString()
+//   @IsNotEmpty({ message: '비밀번호를 입력해주세요.' })
+//   password: string;
+//

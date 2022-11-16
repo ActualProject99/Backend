@@ -31,7 +31,6 @@ import { UserEntity } from './user/models/user.entity';
       logging: true, // 로그 기록
       keepConnectionAlive: true, // 계속 실행되도록
     }),
-
     ArtistModule,
     ArtistlikeModule,
     CategoryModule,
