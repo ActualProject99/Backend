@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Param } from '@nestjs/common';
 import { Comment } from '../entities/comment.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -16,9 +16,12 @@ export class CommentService {
     return this.commentRepository.find({ where: { concertId } });
   }
   // 댓글 생성
-  async create(createCommentDto: CreateCommentDto): Promise<void> {
+  async create(
+    { concertId },
+    createCommentDto: CreateCommentDto,
+  ): Promise<void> {
     const { comment } = createCommentDto;
-    await this.commentRepository.save({ ...createCommentDto });
+    await this.commentRepository.save({ concertId, ...createCommentDto });
   }
   // 댓글 삭제
   async remove(commentId: number): Promise<void> {

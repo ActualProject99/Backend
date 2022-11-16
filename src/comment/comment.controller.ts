@@ -1,7 +1,3 @@
-// import { Controller } from '@nestjs/common';
-
-// @Controller('comment')
-// export class CommentController {}
 import {
   Controller,
   Get,
@@ -29,8 +25,11 @@ export class CommentController {
   }
   // 댓글 생성
   @Post(':concertId')
-  create(@Body() createCommentDto: CreateCommentDto) {
-    return this.commentService.create(createCommentDto);
+  create(
+    @Param('concertId') concertId: number,
+    @Body() createCommentDto: CreateCommentDto,
+  ) {
+    return this.commentService.create({ concertId }, createCommentDto);
   }
   // // 댓글 수정
   // @Put(':commentId')
