@@ -4,7 +4,7 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 // @Index('email', ['email'], { unique: true })
 @Entity('User')
-export class UserEntity {
+export class User {
   @PrimaryGeneratedColumn()
   userId: number;
 

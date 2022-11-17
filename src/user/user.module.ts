@@ -5,19 +5,22 @@ import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AwsService } from 'src/aws.service';
 import { JwtStrategy } from './jwt/jwt.strategy';
-import { UserEntity } from '../enties/user.entity';
+import { User } from "../entities/user.entity"
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserEntity]),
+    TypeOrmModule.forFeature([User]),
     PassportModule.register({ defaultStrategy: 'jwt', session: true }),
     JwtModule.register({
       secret: process.env.SECRET_KEY,
       secretOrPrivateKey: process.env.SECRET_KEY,
       signOptions: { expiresIn: '1d' },
     }),
+    // MulterModule.register({
+    //   dest: './upload',
+    // }),
   ],
   providers: [JwtStrategy, UserService, AwsService],
   controllers: [UserController],
