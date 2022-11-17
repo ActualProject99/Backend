@@ -18,9 +18,6 @@ import { UserService } from './user.service';
       secretOrPrivateKey: process.env.SECRET_KEY,
       signOptions: { expiresIn: '1d' },
     }),
-    // MulterModule.register({
-    //   dest: './upload',
-    // }),
   ],
   providers: [JwtStrategy, UserService, AwsService],
   controllers: [UserController],

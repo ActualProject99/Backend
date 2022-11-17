@@ -48,8 +48,8 @@ export class UserController {
     @Body() userRegisterDTO: UserRegisterDTO,
     @UploadedFile() profileImg: Express.Multer.File,
   ) {
-    const imgUrl = await this.awsService.uploadFileToS3('users', profileImg);
-    return await this.usersService.registerUser(userRegisterDTO, imgUrl);
+    const { key } = await this.awsService.uploadFileToS3('users', profileImg);
+    return await this.usersService.registerUser(userRegisterDTO, key);
   }
 
   @Post('login')
