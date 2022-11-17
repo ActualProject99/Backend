@@ -11,7 +11,7 @@ import { ConcertlikeModule } from './concertlike/concertlike.module';
 import { Category } from './category/category.entity';
 import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
-import { UserEntity } from './user/models/user.entity';
+import { UserEntity } from './enties/user.entity';
 // import { UserController } from './user/user.controller';
 // import { UserService } from './user/user.service';
 

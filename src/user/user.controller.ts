@@ -14,7 +14,7 @@ import { UserService } from './user.service';
 import { UserLoginDTO } from './dto/user-login.dto';
 import { UserRegisterDTO } from './dto/user-register.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from './models/user.entity';
+import { UserEntity } from '../enties/user.entity';
 import { Repository } from 'typeorm';
 import { OnlyPrivateInterceptor } from '../common/interceptor/only-private.interceptor';
 import { CurrentUser } from '../common/decorator/current-user.decorator';

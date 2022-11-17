@@ -5,7 +5,7 @@ import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AwsService } from 'src/aws.service';
 import { JwtStrategy } from './jwt/jwt.strategy';
-import { UserEntity } from './models/user.entity';
+import { UserEntity } from '../enties/user.entity';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 
