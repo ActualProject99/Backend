@@ -15,9 +15,9 @@ export class ConcertService {
     return this.concertRepository.find({ where: { categoryId } });
   }
   // 콘서트 상세 조회 왜 에러?
-  // findOne(concertId: number): Promise<Concert> {
-  //     return this.concertRepository.findOne(concertId);
-  // }
+  findOne(concertId: number): Promise<Concert> {
+    return this.concertRepository.findOne({ where: { concertId } });
+  }
   // 콘서트 게시글 생성(관리자)
   async create(createConcertDto: CreateConcertDto): Promise<void> {
     const { concertName, concertImg, concertInfo, concertDate, ticketingDate } =

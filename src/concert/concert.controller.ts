@@ -1,5 +1,12 @@
-import { Controller, Get, Post, Put, Delete, Param, Body}
- from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Param,
+  Body,
+} from '@nestjs/common';
 import { ConcertService } from './concert.service';
 import { Concert } from '../entities/concert.entity';
 import { CreateConcertDto } from './dto/create-concert.dto';
@@ -9,8 +16,7 @@ import { CreateConcertDto } from './dto/create-concert.dto';
 
 @Controller('')
 export class ConcertController {
-  constructor(
-    private concertService: ConcertService) {}
+  constructor(private concertService: ConcertService) {}
 
   // 카테고리별 조회
   @Get('category/:categoryId')

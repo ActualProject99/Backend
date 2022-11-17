@@ -18,7 +18,7 @@ export class ArtistService {
   }
 
   findOne(artistId: number): Promise<Artist> {
-    return this.artistRepository.findOne(artistId);
+    return this.artistRepository.findOne({ where: { artistId } });
   }
 
   async create(createArtistDto: CreateArtistDto): Promise<void> {
