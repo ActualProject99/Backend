@@ -22,7 +22,7 @@ export class ArtistController {
     return this.artistService.findOne(artistId);
   }
   // 아티스트 생성
-  @Post()
+  @Post('artist')
   create(@Body() createArtistDto: CreateArtistDto) {
     return this.artistService.create(createArtistDto);
   }
