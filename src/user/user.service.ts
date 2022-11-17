@@ -9,7 +9,7 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserRegisterDTO } from './dto/user-register.dto';
-import { User } from '../entities/user.entity';
+import { UserEntity } from '../enties/user.entity';
 import * as bcrypt from 'bcrypt';
 import { UserLoginDTO } from './dto/user-login.dto';
 import { UserDTO } from './dto/user.dto';
@@ -19,16 +19,18 @@ export class UserService {
   private readonly logger = new Logger(UserService.name);
 
   constructor(
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
   ) {}
 
-  async registerUser(userRegisterDTO: UserRegisterDTO, imgUrl): Promise<void> {
+  async registerUser(
+    userRegisterDTO: UserRegisterDTO,
+    key: string,
+  ): Promise<void> {
     const { email, nickname, name, password } = userRegisterDTO;
-    console.log(imgUrl.key);
-    const imgName = process.env.AWS_S3_STORAGE_URL + imgUrl.key;
+    const imgName = process.env.AWS_S3_STORAGE_URL + key;
     userRegisterDTO.profileImg = imgName;
     const user = await this.userRepository.findOne({ where: { email } });
     if (user) {

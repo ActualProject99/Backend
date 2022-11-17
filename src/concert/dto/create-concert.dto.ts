@@ -1,4 +1,4 @@
-import { ApiProperty,PickType } from '@nestjs/swagger';
+import { ApiProperty, PickType } from '@nestjs/swagger';
 import { Concert } from '../../entities/concert.entity';
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
@@ -39,6 +39,7 @@ import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 //   public ticketingDate: string;
 // }
 export class CreateConcertDto extends PickType(Concert, [
+  'categoryId',
   'concertName',
   'concertImg',
   'concertInfo',

@@ -1,8 +1,8 @@
 import { PickType } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
-import { User } from '../../entities/user.entity';
+import { UserEntity } from '../../enties/user.entity';
 
-export class UserRegisterDTO extends PickType(User, [
+export class UserRegisterDTO extends PickType(UserEntity, [
   'email',
   'profileImg',
   'nickname',
