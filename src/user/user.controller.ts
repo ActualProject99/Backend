@@ -4,7 +4,9 @@ import {
   Get,
   Logger,
   Post,
+  Put,
   Res,
+  UnauthorizedException,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -22,6 +24,7 @@ import { UserDTO } from './dto/user.dto';
 import { JwtAuthGuard } from './jwt/jwt.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AwsService } from 'src/aws.service';
+import { UserUpdateDTO } from './dto/user-update.dto';
 // import multer from 'multer';
 
 @Controller('users')
@@ -35,13 +38,7 @@ export class UserController {
     private readonly awsService: AwsService,
   ) {}
 
-  @Get()
-  @UseGuards(JwtAuthGuard)
-  @UseInterceptors(OnlyPrivateInterceptor)
-  async getCurrentUser(@CurrentUser() currentUser: UserDTO) {
-    return currentUser;
-  }
-
+  // 유저 회원가입
   @UseInterceptors(FileInterceptor('profileImg'))
   @Post('signup')
   async signUp(
@@ -52,6 +49,7 @@ export class UserController {
     return await this.usersService.registerUser(userRegisterDTO, imgUrl);
   }
 
+  // 유저 로그인
   @Post('login')
   async logIn(
     @Body() userLoginDTO: UserLoginDTO,
@@ -65,6 +63,56 @@ export class UserController {
     return user;
   }
 
+  // 유저 정보 불러오기
+  @Get('userinfo')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(OnlyPrivateInterceptor)
+  async getCurrentUser(@CurrentUser() currentUser: UserDTO) {
+    return currentUser;
+  }
+
+  // 유저 닉네임, 패스워드 수정
+  @Put('userinfo')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(OnlyPrivateInterceptor)
+  async updateUserInfo(
+    @Body() userUpdateDTO: UserUpdateDTO,
+    @CurrentUser() currentUser: UserDTO,
+  ) {
+    if (userUpdateDTO.nickname) {
+      this.usersService.editNickname(
+        userUpdateDTO.nickname,
+        currentUser.userId,
+      );
+    }
+    if (userUpdateDTO.password && userUpdateDTO.confirmPassword) {
+      this.usersService.editPassword(userUpdateDTO, currentUser.userId);
+    }
+    if (
+      !userUpdateDTO.nickname &&
+      !userUpdateDTO.password &&
+      !userUpdateDTO.confirmPassword
+    ) {
+      throw new UnauthorizedException('입력된 값이 없습니다');
+    }
+    return { success: true, message: '수정성공' };
+  }
+
+  // 유저 프로필 이미지 업데이트
+  @UseInterceptors(FileInterceptor('profileImg'))
+  @Put('userinfo/upload')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(OnlyPrivateInterceptor)
+  async updateUserImg(
+    @UploadedFile() profileImg: Express.Multer.File,
+    @Body() userUpdateDTO: UserUpdateDTO,
+    @CurrentUser() currentUser: UserDTO,
+  ) {
+    // await this.awsService.deleteS3Object(currentUser.profileImg); //s3 이미지 삭제 수정요함
+    const imgObject = await this.awsService.uploadFileToS3('users', profileImg);
+    return await this.usersService.updateUserImg(imgObject, currentUser.userId);
+  }
+
   // @UseInterceptors(FileInterceptor('profileImg'))
   // @UseGuards(JwtAuthGuard)
   // @Post('upload')
@@ -73,6 +121,7 @@ export class UserController {
   //   return await this.awsService.uploadFileToS3('users', file);
   // }
 
+  // 유저 로그아웃
   @Post('logout')
   async logOut(@Res({ passthrough: true }) response: Response) {
     response.clearCookie('jwt');
