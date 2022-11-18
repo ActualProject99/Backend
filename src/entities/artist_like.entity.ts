@@ -24,10 +24,14 @@ export class ArtistLike {
   //   referencedColumnName: 'artistId'
   // })
 
-  @ManyToOne(type => User, user => user.artistlikes)
-  user: User
+  @ManyToOne(() => User, (user) => user.artistlikes)
+  @JoinColumn({ name: 'artistlike_user_no'})
+  user: User;
 
-  @ManyToOne((type) => User, users => users.artistlikes)
-  users: User
+  @ManyToOne(() => Artist, (artist) => artist.artists)
+  @JoinColumn({ name: 'artistlike_artist_no'})
+  artist: Artist;
+
+
 
 }

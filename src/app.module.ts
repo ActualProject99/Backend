@@ -11,6 +11,7 @@ import { CommentModule } from './comment/comment.module';
 import { ConcertModule } from './concert/concert.module';
 import { ConcertlikeModule } from './concert_like/concert_like.module';
 import { ConfigModule } from '@nestjs/config';
+import { LocationModule } from './location/location.module';
 
 //entities
 import { Category } from './entities/category.entity';
@@ -22,8 +23,12 @@ import { ArtistLike } from './entities/artist_like.entity';
 import { User } from "./entities/user.entity"
 import { AppService } from './app.service';
 import { AppController } from './app.controller';
+import { Location } from './entities/location.entity';
 
 // import { access } from 'fs';
+import { LocationService } from './location/location.service';
+import { LocationController } from './location/location.controller';
+
 
 @Module({
   imports: [
@@ -37,7 +42,7 @@ import { AppController } from './app.controller';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [Category, Concert, ConcertLike, Comment, Artist, ArtistLike, User],
+      entities: [Category, Concert, ConcertLike, Comment, Artist, ArtistLike, User, Location],
       synchronize: false, // 매번 연결할때마다 데이터베이스를 날리고 새로 생성하는 메소드
       autoLoadEntities: true, // Entity를 자동으로 로딩
       logging: true, // 로그 기록
@@ -46,12 +51,14 @@ import { AppController } from './app.controller';
     
       // MySqlConfigModule,
       // MySqlConfigService,
+      LocationModule,
       ArtistModule,
       ArtistlikeModule,
       CommentModule,
       ConcertModule,
       ConcertlikeModule,
-      UserModule
+      UserModule,
+      LocationModule
     
   ],
     controllers: [AppController],

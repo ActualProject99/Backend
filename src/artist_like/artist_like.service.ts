@@ -3,7 +3,7 @@ import { ArtistLike } from '../entities/artist_like.entity';
 import { Artist } from 'src/entities/artist.entity';
 import { User } from 'src/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, getConnection } from 'typeorm';
+import { Repository } from 'typeorm';
 
 
 @Injectable()
@@ -33,7 +33,7 @@ export class ArtistlikeService {
         }
     }
 
-// 유저별 좋아요 조회 유저아이디 어떻게 받아오는지?? 파라미터는 아닌데
+// 유저별 좋아요 조회
     async getArtistLikeByUser(userId: number) {
         const user = {userId}
         return this.artistLikeRepository.find({where:{user}})
@@ -41,7 +41,7 @@ export class ArtistlikeService {
 
 // 좋아요 추가
 async addLike(userId: number, artistId: number) {
-    const user = {userId:userId, artistId: artistId}
+    const user = {userId, artistId}
     this.artistLikeRepository.create({user})
 }
 // 좋아요 삭제
@@ -49,13 +49,28 @@ async deleteLike(userId: number, artistId: number) {
     const user = {userId, artistId}
    await this.artistLikeRepository.delete({user})
 }
-// likeCount 증가
-async increment(artist: any) {
-    await getConnection().createQueryBuilder().update(artist).set({ likeCount: () => "likeCount + 1"}).execute();
-}
-// likeCount 감소
-async decrement(artist: any) {
-    await getConnection().createQueryBuilder().update(artist).set({ likeCount: () => "likeCount - 1"}).execute();
-}
+
+
+// async findUserLike(userId): Promise<User[]> {
+//     const result = this.userRepository
+//     .createQueryBuilder('u')
+//       .leftJoinAndSelect('u.artistlikes', 'artistlike')
+//       .leftJoinAndSelect('u.artists', 'artist')
+//       .select([ 
+//         'artist_user_no',
+//         'artistlike_artist_no'
+
+//       ])
+//       .where(`artist_user_no = $(userId)`)
+//       .getMany();
+//       return result
+// }
+
+
+
+
+
+
 
 }
+
