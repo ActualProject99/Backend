@@ -12,8 +12,15 @@ export class CommentService {
   ) {}
 
   // 콘서트별 댓글 조회
-  async findAll(concertId: number): Promise<Comment[]> {
-    return this.commentRepository.find({ where: { concertId } });
+  async findAll(concertId: number) {
+    await this.commentRepository.find({ where: { concertId } });
+    await this.commentRepository.findAndCount({
+      order: {
+        updatedAt: 'DESC',
+      },
+      skip: 0,
+      take: 10,
+    });
   }
 
   // 댓글 생성
