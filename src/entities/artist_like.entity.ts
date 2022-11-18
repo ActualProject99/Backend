@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { User } from './user.entity';
 
 @Entity()
 export class ArtistLike {
@@ -13,4 +14,8 @@ export class ArtistLike {
 
   @Column()
   createdAt: string;
+
+  @ManyToOne(() => User, user => user.likes)
+  user: User;
+
 }

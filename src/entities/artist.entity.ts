@@ -17,6 +17,7 @@ export class Artist {
   @Column()
   artistInfo: string;
 
-  @Column({nullable:true})
+  @Column({ default: 0})
   likeCount: number;
+
 }
