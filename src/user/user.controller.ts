@@ -25,6 +25,13 @@ import { JwtAuthGuard } from './jwt/jwt.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AwsService } from 'src/aws.service';
 import { UserUpdateDTO } from './dto/user-update.dto';
+import {
+  ApiBody,
+  ApiCreatedResponse,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 // import multer from 'multer';
 
 @Controller('users')
@@ -41,6 +48,21 @@ export class UserController {
   // 유저 회원가입
   @UseInterceptors(FileInterceptor('profileImg'))
   @Post('signup')
+  @ApiTags('users')
+  @ApiOperation({
+    summary: '회원가입',
+    description: '회원가입',
+  })
+  @ApiCreatedResponse({ description: '회원가입' })
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+    type: UserDTO,
+  })
+  @ApiResponse({
+    status: 500,
+    description: '서버 에러',
+  })
   async signUp(
     @Body() userRegisterDTO: UserRegisterDTO,
     @UploadedFile() profileImg: Express.Multer.File,
@@ -51,6 +73,21 @@ export class UserController {
 
   // 유저 로그인
   @Post('login')
+  @ApiTags('users')
+  @ApiOperation({
+    summary: '로그인',
+    description: '로그인',
+  })
+  @ApiCreatedResponse({ description: '로그인' })
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+    type: UserDTO,
+  })
+  @ApiResponse({
+    status: 500,
+    description: '서버 에러',
+  })
   async logIn(
     @Body() userLoginDTO: UserLoginDTO,
     @Res({ passthrough: true }) response: Response,
@@ -65,6 +102,21 @@ export class UserController {
 
   // 유저 정보 불러오기
   @Get('userinfo')
+  @ApiTags('users')
+  @ApiOperation({
+    summary: '회원정보',
+    description: '회원정보',
+  })
+  @ApiCreatedResponse({ description: '회원정보' })
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+    type: UserDTO,
+  })
+  @ApiResponse({
+    status: 500,
+    description: '서버 에러',
+  })
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(OnlyPrivateInterceptor)
   async getCurrentUser(@CurrentUser() currentUser: UserDTO) {
@@ -73,6 +125,22 @@ export class UserController {
 
   // 유저 닉네임, 패스워드 수정
   @Put('userinfo')
+  @ApiTags('users')
+  @ApiOperation({
+    summary: '회원정보 수정(닉네임, 비밀번호)',
+    description: '회원정보 수정(닉네임, 비밀번호)',
+  })
+  @ApiCreatedResponse({ description: '회원정보' })
+  @ApiBody({ type: UserUpdateDTO })
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+    type: UserDTO,
+  })
+  @ApiResponse({
+    status: 500,
+    description: '서버 에러',
+  })
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(OnlyPrivateInterceptor)
   async updateUserInfo(
@@ -101,6 +169,22 @@ export class UserController {
   // 유저 프로필 이미지 업데이트
   @UseInterceptors(FileInterceptor('profileImg'))
   @Put('userinfo/upload')
+  @ApiTags('users')
+  @ApiOperation({
+    summary: '회원정보 수정(프로필사진)',
+    description: '회원정보 수정(프로필사진)',
+  })
+  @ApiCreatedResponse({ description: '회원정보' })
+  @ApiBody({ type: UserUpdateDTO })
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+    type: UserDTO,
+  })
+  @ApiResponse({
+    status: 500,
+    description: '서버 에러',
+  })
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(OnlyPrivateInterceptor)
   async updateUserImg(
@@ -112,14 +196,6 @@ export class UserController {
     const imgObject = await this.awsService.uploadFileToS3('users', profileImg);
     return await this.usersService.updateUserImg(imgObject, currentUser.userId);
   }
-
-  // @UseInterceptors(FileInterceptor('profileImg'))
-  // @UseGuards(JwtAuthGuard)
-  // @Post('upload')
-  // async uploadprofileImg(@UploadedFile() file: Express.Multer.File) {
-  //   console.log(file);
-  //   return await this.awsService.uploadFileToS3('users', file);
-  // }
 
   // 유저 로그아웃
   @Post('logout')

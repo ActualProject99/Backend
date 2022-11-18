@@ -11,6 +11,7 @@ import * as expressBasicAuth from 'express-basic-auth';
 import * as passport from 'passport';
 import * as cookieParser from 'cookie-parser';
 import * as expressSession from 'express-session';
+import { readFileSync } from 'fs';
 import { HttpApiExceptionFilter } from './common/exceptions/http-api-exception.filter';
 
 class Application {
@@ -108,6 +109,10 @@ class Application {
 }
 
 async function init(): Promise<void> {
+  // const httpsOptions = {
+  //   key: readFileSync('./secret/tgle.key'),
+  //   cert: readFileSync('./secret/tgle.pem'),
+  // };
   const server = await NestFactory.create<NestExpressApplication>(AppModule);
   const app = new Application(server);
   await app.boostrap();
