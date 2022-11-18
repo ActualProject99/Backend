@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Put, Delete, Param } from '@nestjs/common';
 import { ArtistlikeService } from './artist_like.service';
 import { Artist } from '../entities/artist.entity';
+import { User } from '../entities/user.entity';
 
 
 @Controller('artistlike')
@@ -20,19 +21,19 @@ export class ArtistlikeController {
 
   // 좋아요 추가, likeCount 증가
   @Post(':artistId')
-  addLike(@Param('artistId') artistId: number, userId: number) {
-    return this.artistlikeService.addLike(userId, artistId);
+  addLike(@Param('artistId') artistId: number, user:User) {
+    return this.artistlikeService.addLike(user.userId, artistId);
   }
-  increment(artistId: number) {
-    return this.artistlikeService.increment(artistId);
+  increment(artist:Artist) {
+    return this.artistlikeService.increment(artist);
   }
 
   // 좋아요 삭제, likeCount 감소
   @Delete(':artistId')
-  remove(@Param('artistId') artistId: number, userId: number) {
-    this.artistlikeService.deleteLike(userId, artistId);
+  remove(@Param('artistId') artistId: number, user:User) {
+    this.artistlikeService.deleteLike(user.userId, artistId);
   }
-  decrement(artistId: number) {
-    return this.artistlikeService.decrement(artistId);
+  decrement(artist:Artist) {
+    return this.artistlikeService.decrement(artist);
   }
 }

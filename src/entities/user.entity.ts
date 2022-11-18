@@ -1,6 +1,6 @@
 import { Exclude } from 'class-transformer';
 // import { IsNotEmpty, IsString } from 'class-validator';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { ArtistLike } from './artist_like.entity';
 
 // @Index('email', ['email'], { unique: true })
@@ -19,9 +19,6 @@ export class User {
 
   @Column({ unique: false })
   nickname: string;
-
-  @Column({ unique: false })
-  name: string;
 
   @Column({ nullable: false })
   password: string;
@@ -42,7 +39,8 @@ export class User {
 // 유저의 좋아요는 여러개, 사용자는 하나.
 // 아티스트 Like 의 artistLike.user 필드에 User
 // @JoinColumn({ referencedColumnName: "id" ,name:artistLikeId})가 디폴트임
-  @OneToMany(() => ArtistLike, artistLike => artistLike.user )
-  likes: ArtistLike[];
+  @OneToMany((type) => ArtistLike, artistLike => artistLike.user)
+  artistlikes: ArtistLike[]
+ 
 
 }

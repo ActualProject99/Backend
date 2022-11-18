@@ -1,4 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany } from 'typeorm';
+import { ArtistLike } from './artist_like.entity';
+import { User } from './user.entity';
 
 @Entity()
 export class Artist {
@@ -20,4 +22,7 @@ export class Artist {
   @Column({ default: 0})
   likeCount: number;
 
+  @OneToMany(() => ArtistLike, artistLike => artistLike.user)
+  artists: ArtistLike[]
+  user : User
 }

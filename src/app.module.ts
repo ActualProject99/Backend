@@ -6,7 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 // module
 import { UserModule } from './user/user.module';
 import { ArtistModule } from './artist/artist.module';
-//import { ArtistlikeModule } from './artist_like/artist_like.module';
+import { ArtistlikeModule } from './artist_like/artist_like.module';
 import { CommentModule } from './comment/comment.module';
 import { ConcertModule } from './concert/concert.module';
 import { ConcertlikeModule } from './concert_like/concert_like.module';
@@ -47,7 +47,7 @@ import { AppController } from './app.controller';
       // MySqlConfigModule,
       // MySqlConfigService,
       ArtistModule,
-      //ArtistlikeModule,
+      ArtistlikeModule,
       CommentModule,
       ConcertModule,
       ConcertlikeModule,
