@@ -38,4 +38,6 @@ export class Concert {
   @Column()
   updatedAt: string;
 
+  @Column()
+  calender: string;
 }

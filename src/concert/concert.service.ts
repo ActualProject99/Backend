@@ -3,6 +3,7 @@ import { Concert } from '../entities/concert.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateConcertDto } from './dto/create-concert.dto';
+import * as dayjs from 'dayjs';
 
 @Injectable()
 export class ConcertService {
@@ -23,11 +24,14 @@ export class ConcertService {
     }
 
     async create(createConcertDto: CreateConcertDto): Promise<void> {
-        // const {categoryId,concertName, concertImg, concertInfo, concertDate, ticketingDate} = await this.concertRepository.save({...createConcertDto});
-        await this.concertRepository.save({...createConcertDto});
+        const {categoryId,concertName, concertImg, concertInfo, concertDate, ticketingDate, calender } = await this.concertRepository.save({...createConcertDto,
+             createdAt:dayjs().format('YYYY-MM-DDTHH:mm:ss.sssZ'),
+        updatedAt:dayjs().format('YYYY-MM-DDTHH:mm:ss.sssZ')});
+        // await this.concertRepository.save({...createConcertDto});
     }
 
     async remove(concertId: number): Promise<void> {
         await this.concertRepository.delete(concertId);
     }
   }
+//   'YYYY-MM-DDTHH:mm:ss'
