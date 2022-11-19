@@ -31,6 +31,7 @@ import {
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
     ): Promise<Pagination<Comment>> {
+      limit = limit > 10 ? 10 : limit; // 필요없는 코드같은데
       return this.commentService.paginate({
         page, limit,
       });

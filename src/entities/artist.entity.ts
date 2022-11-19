@@ -28,6 +28,6 @@ export class Artist {
   @ManyToMany(() => User, (user) => user.artists)
   @JoinColumn({ name: 'artist_user_no'})
   user: User;
-  artistlikes: any;
+  
   
 }

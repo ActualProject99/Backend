@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { MongooseModule } from '@nestjs/mongoose'
+import * as mongoose from 'mongoose';
 // import { MySqlConfigModule } from './config/database/config.module';
 // import { MySqlConfigService } from './config/database/config.service';
 
@@ -12,6 +14,7 @@ import { ConcertModule } from './concert/concert.module';
 import { ConcertlikeModule } from './concert_like/concert_like.module';
 import { ConfigModule } from '@nestjs/config';
 import { LocationModule } from './location/location.module';
+import { ChatsModule } from './chats/chats.module';
 
 //entities
 import { Category } from './entities/category.entity';
@@ -48,9 +51,11 @@ import { LocationController } from './location/location.controller';
       logging: true, // 로그 기록
       keepConnectionAlive: true, // 계속 실행되도록
     }),
+    MongooseModule.forRoot(process.env.MONGO_URL),
     
       // MySqlConfigModule,
       // MySqlConfigService,
+      ChatsModule,
       LocationModule,
       ArtistModule,
       ArtistlikeModule,
