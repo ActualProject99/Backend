@@ -8,6 +8,7 @@ import {
   Pagination,
   IPaginationOptions,
 } from 'nestjs-typeorm-paginate';
+import * as dayjs from 'dayjs';
 
 @Injectable()
 export class CommentService {
@@ -31,11 +32,13 @@ export class CommentService {
 
   // 댓글 생성
   async create(
-    { concertId },
+    concertId: number,
     createCommentDto: CreateCommentDto,
   ): Promise<void> {
     const { comment } = createCommentDto;
-    await this.commentRepository.save({ concertId, ...createCommentDto });
+    await this.commentRepository.save({ concertId, ...createCommentDto,
+      createdAt:dayjs().format('YYYY-MM-DDTHH:mm:ss.sssZ'),
+      updatedAt:dayjs().format('YYYY-MM-DDTHH:mm:ss.sssZ') });
   }
 
   // 댓글 삭제

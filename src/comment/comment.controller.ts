@@ -22,9 +22,6 @@ import {
   export class CommentController {
     constructor(private commentService: CommentService) {}
   
-// pagination 설정
-
-
     // 콘서트별 댓글 조회
     @Get(':concertId')
     async findAll(@Param('concertId') concertId: number,
@@ -37,15 +34,13 @@ import {
       });
     }
 
-    // 댓글 상세 조회
-    // @Post
     // 댓글 생성
   @Post(':concertId')
   create(
     @Param('concertId') concertId: number,
     @Body() createCommentDto: CreateCommentDto,
   ) {
-    return this.commentService.create({ concertId }, createCommentDto);
+    return this.commentService.create(concertId, createCommentDto);
   }
 
     // // 댓글 수정
