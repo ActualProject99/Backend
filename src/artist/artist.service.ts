@@ -36,6 +36,18 @@ export class ArtistService {
         await this.artistRepository.delete(artistId);
     }
 
+
+    // 검색 
+    searchArtist = (args: any) => {
+        const { searchQuery } = args;
+        const artistRepository = Repository<Artist>
+         
+    return this.artistRepository
+      .createQueryBuilder().select()
+      .where(`MATCH(artistName) AGAINST ('${searchQuery}' IN BOOLEAN MODE)`)
+      .getMany();
+   }
+
 //     async update(id: number, artist: Artist): Promise<void> {
 //         const existedArtist = await this.findOne(id);
 //         if(existedArtist)   {

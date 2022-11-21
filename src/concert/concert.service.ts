@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Concert } from '../entities/concert.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository} from 'typeorm';
 import { CreateConcertDto } from './dto/create-concert.dto';
 import * as dayjs from 'dayjs';
 
@@ -34,5 +34,16 @@ export class ConcertService {
     async remove(concertId: number): Promise<void> {
         await this.concertRepository.delete(concertId);
     }
-  }
-//   'YYYY-MM-DDTHH:mm:ss'
+  
+
+  // 검색
+        searchConcert = (args: any) => {
+        const { searchQuery } = args;
+        const concertRepository = Repository<Concert>
+         
+    return this.concertRepository
+      .createQueryBuilder().select()
+      .where(`MATCH(concertName) AGAINST ('${searchQuery}' IN BOOLEAN MODE)`)
+      .getMany();
+   }
+}
