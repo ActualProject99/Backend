@@ -38,9 +38,8 @@ export class ArtistService {
 
 
     // 검색 
-    searchArtist = (args: any) => {
+  searchArtist = (args: any) => {
         const { searchQuery } = args;
-        const artistRepository = Repository<Artist>
          
     return this.artistRepository
       .createQueryBuilder().select()
@@ -48,20 +47,20 @@ export class ArtistService {
       .getMany();
    }
 
-//     async update(id: number, artist: Artist): Promise<void> {
-//         const existedArtist = await this.findOne(id);
-//         if(existedArtist)   {
-//          await  .getConnection()
-//                 .createQueryBuilder()
-//                 .update(Artist)
-//                 .set({
-//                     name: artist.artistName,
-//                     Img: artist.artistImg,
-//                     Info: artist.artistInfo,
-//                 })
-//                 .where("id = :id", {id})
-//                 .execute();
-//         }
-//     }
-// }
+// 수정
+    async update(artistId: number, artist: Artist): Promise<void> {
+        const existedArtist = await this.findOne(artistId);
+        if(existedArtist)   {
+         await  this.artistRepository
+                .createQueryBuilder()
+                .update(Artist)
+                .set({
+                    artistName : artist.artistName,
+                    artistImg: artist.artistImg,
+                    artistInfo : artist.artistInfo,
+                })
+                .where("artistId = :artistId", {artistId})
+                .execute();
+        }
+    }
 }

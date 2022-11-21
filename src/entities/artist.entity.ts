@@ -20,8 +20,8 @@ export class Artist {
   @Column()
   artistInfo: string;
 
-  @Column({ default: 0})
-  likeCount: number;
+  // @Column({ default: 0})
+  // likeCount: number;
 
   @OneToMany(() => ArtistLike, artistLike => artistLike.artist)
   artists: ArtistLike[];

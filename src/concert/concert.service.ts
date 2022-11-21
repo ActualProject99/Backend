@@ -37,9 +37,8 @@ export class ConcertService {
   
 
   // 검색
-        searchConcert = (args: any) => {
+     searchConcert = (args: any) => {
         const { searchQuery } = args;
-        const concertRepository = Repository<Concert>
          
     return this.concertRepository
       .createQueryBuilder().select()
