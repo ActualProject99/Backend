@@ -17,10 +17,10 @@ export class ArtistlikeService {
         private readonly userRepository: Repository<User>
     ) {}
 
-// 특정 아티스트 likeCount 조회
-    async getLikeCountByArtistId(artistId: number): Promise<Artist> {
-        return this.artistRepository.findOne({select: {likeCount: true}, where: {artistId}});
-    }
+// // 특정 아티스트 likeCount 조회
+//     async getLikeCountByArtistId(artistId: number): Promise<Artist> {
+//         return this.artistRepository.findOne({select: {likeCount: true}, where: {artistId}});
+    // }
     
 // 좋아요 여부
     async findLike(userId: number, artistId: number) {

@@ -45,4 +45,24 @@ export class ConcertService {
       .where(`MATCH(concertName) AGAINST ('${searchQuery}' IN BOOLEAN MODE)`)
       .getMany();
    }
+
+   // 수정
+   async update(concertId: number, concert: Concert): Promise<void> {
+    const existedConcert = await this.findOne(concertId);
+    if(existedConcert)   {
+     await  this.concertRepository
+            .createQueryBuilder()
+            .update(Concert)
+            .set({
+                concertName : concert.concertName,
+                concertImg: concert.concertImg,
+                concertInfo : concert.concertInfo,
+                concertDate : concert.concertDate,
+                ticketingDate : concert.ticketingDate,
+                calender : concert.calender
+            })
+            .where("concertId = :concertId", {concertId})
+            .execute();
+    }
+}
 }
