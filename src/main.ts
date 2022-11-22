@@ -11,8 +11,9 @@ import * as expressBasicAuth from 'express-basic-auth';
 import * as passport from 'passport';
 import * as cookieParser from 'cookie-parser';
 import * as expressSession from 'express-session';
-import { readFileSync } from 'fs';
+import * as fs from 'fs';
 import { HttpApiExceptionFilter } from './common/exceptions/http-api-exception.filter';
+// import helmet from 'helmet';
 
 class Application {
   private logger = new Logger(Application.name);
@@ -91,13 +92,28 @@ class Application {
   }
 
   async boostrap() {
+    const appHttps = await NestFactory.create<NestExpressApplication>(
+      AppModule,
+      {
+        cors: true,
+      },
+    );
+    appHttps.enableCors({
+      origin: ['https://tgle.shop'],
+      methods: 'GET, HEAD, PUT, PATCH, POST, DELETE, OPTIONS',
+      credentials: true,
+    });
+    appHttps.useGlobalPipes(new ValidationPipe());
+    appHttps.useGlobalFilters(new HttpApiExceptionFilter());
+    appHttps.setViewEngine('hbs');
+    // appHttps.use(helmet());
     await this.setUpGlobalMiddleware();
     await this.server.listen(this.PORT);
   }
 
   startLog() {
     if (this.DEV_MODE) {
-      this.logger.log(`✅ Server on http://localhost:${this.PORT}`);
+      this.logger.log(`✅ Server on https://localhost:${this.PORT}`);
     } else {
       this.logger.log(`✅ Server on port ${this.PORT}...`);
     }
@@ -110,10 +126,14 @@ class Application {
 
 async function init(): Promise<void> {
   // const httpsOptions = {
-  //   key: readFileSync('./secret/tgle.key'),
-  //   cert: readFileSync('./secret/tgle.pem'),
+  //   ca: fs.readFileSync('/etc/letsencrypt/live/tgle.shop/fullchain.pem'),
+  //   key: fs.readFileSync('/etc/letsencrypt/live/www.tgle.shop/privkey.pem'),
+  //   cert: fs.readFileSync('/etc/letsencrypt/live/www.tgle.shop/cert.pem'),
   // };
-  const server = await NestFactory.create<NestExpressApplication>(AppModule);
+  const server = await NestFactory.create<NestExpressApplication>(AppModule, {
+    cors: true,
+    // httpsOptions,
+  });
   const app = new Application(server);
   await app.boostrap();
   app.startLog();

@@ -6,14 +6,10 @@ export class UserRegisterDTO extends PickType(User, [
   'email',
   'profileImg',
   'nickname',
+  'phoneNumber',
   'password',
 ] as const) {
   @IsString()
   @IsNotEmpty({ message: '비밀번호 확인을 입력해주세요.' })
   confirm: string;
 }
-// {
-//   @IsString()
-//   @IsNotEmpty({ message: '비밀번호를 입력해주세요.' })
-//   password: string;
-//

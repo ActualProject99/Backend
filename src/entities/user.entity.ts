@@ -38,6 +38,14 @@ export class User {
   nickname: string;
 
   @ApiProperty({
+    example: '01000001111',
+    description: '핸드폰 번호',
+    required: true,
+  })
+  @Column({ unique: false })
+  phoneNumber: string;
+
+  @ApiProperty({
     example: '12345678',
     description: 'password',
     required: true,

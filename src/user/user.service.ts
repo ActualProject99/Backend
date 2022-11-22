@@ -26,7 +26,7 @@ export class UserService {
   ) {}
 
   async registerUser(userRegisterDTO: UserRegisterDTO, imgUrl): Promise<void> {
-    const { email, nickname, password, confirm } = userRegisterDTO;
+    const { email, nickname, phoneNumber, password, confirm } = userRegisterDTO;
     const imgName = process.env.AWS_S3_STORAGE_URL + imgUrl.key;
     userRegisterDTO.profileImg = imgName;
     const user = await this.userRepository.findOne({ where: { email } });

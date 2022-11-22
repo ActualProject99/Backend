@@ -46,8 +46,8 @@ export class UserController {
   ) {}
 
   // 유저 회원가입
-  @UseInterceptors(FileInterceptor('profileImg'))
   @Post('signup')
+  @UseInterceptors(FileInterceptor('profileImg'))
   @ApiTags('users')
   @ApiOperation({
     summary: '회원가입',
@@ -67,7 +67,9 @@ export class UserController {
     @Body() userRegisterDTO: UserRegisterDTO,
     @UploadedFile() profileImg: Express.Multer.File,
   ) {
+    console.log(profileImg);
     const imgUrl = await this.awsService.uploadFileToS3('users', profileImg);
+    console.log(imgUrl);
     return await this.usersService.registerUser(userRegisterDTO, imgUrl);
   }
 
