@@ -40,9 +40,9 @@ export class User {
 // 유저의 좋아요는 여러개, 사용자는 하나.
 // 아티스트 Like 의 artistLike.user 필드에 User
 // @JoinColumn({ referencedColumnName: "id" ,name:artistLikeId})가 디폴트임
-  @OneToMany(() => ArtistLike, (artistLike) => artistLike.user)
-  artistlikes: ArtistLike[]
+  @OneToMany(() => ArtistLike, (artistLike) => artistLike.userId)
+  artistLikes: ArtistLike[]
  
-  @OneToMany(() => Artist, (artist) => artist.user)
-  artists: Artist[];
+  @OneToMany(() => Artist, (artist) => artist.artistId)
+  artist: Artist[];
 }

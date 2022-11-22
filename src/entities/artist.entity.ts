@@ -23,12 +23,11 @@ export class Artist {
   // @Column({ default: 0})
   // likeCount: number;
 
-  @OneToMany(() => ArtistLike, artistLike => artistLike.artist)
-  artists: ArtistLike[];
+  @OneToMany(() => ArtistLike, (artistLike) => artistLike.artistId)
+  artistLikes: ArtistLike[];
   
-  @ManyToMany(() => User, (user) => user.artists)
-  @JoinColumn({ name: 'artist_user_no'})
-  user: User;
-  
+  // @ManyToOne(() => User, (user) => user.artist)
+  // @JoinColumn([{ name: 'userId', referencedColumnName: 'userId'}])
+  // user: User;
   
 }

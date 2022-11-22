@@ -1,9 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { Artist } from '../entities/artist.entity';
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectRepository} from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { stringify } from 'querystring';
+import { JwtAuthGuard } from 'src/user/jwt/jwt.guard';
+import { ArtistlikeService } from 'src/artist_like/artist_like.service';
+import { ArtistLike } from 'src/entities/artist_like.entity';
+import { User } from 'src/entities/user.entity';
 
 
 
@@ -13,7 +17,9 @@ import { stringify } from 'querystring';
 export class ArtistService {
     constructor(
         @InjectRepository(Artist)
-        private readonly artistRepository: Repository<Artist>
+        private readonly artistRepository: Repository<Artist>,
+        
+        
     ) {}
 
    async getArtist() {
@@ -63,4 +69,27 @@ export class ArtistService {
                 .execute();
         }
     }
+// // 좋아요, 좋아요 취소
+
+//     async like(currentUser: User, artistId: number) {
+//         const currentArtist = await this.findOne(artistId);
+//         const isLike = await this.artistlikeservice.isLike(currentUser, currentArtist)
+
+//    // 좋아요를 이미 했다면 좋아요 취소
+//         if (isLike) {
+//         await this.artistlikeservice.like(currentUser, currentArtist)
+//         return;
+//     }
+//     // 좋아요를 안했다면 좋아요 하기
+//     await this.artistlikeservice.like(currentUser, currentArtist)
+
+//     }
+
+
 }
+
+
+
+
+
+
