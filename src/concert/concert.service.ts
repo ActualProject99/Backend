@@ -12,9 +12,14 @@ export class ConcertService {
         private readonly concertRepository: Repository<Concert>
     ) {}
 
-// 카테고리별 조회
+    // 카테고리별 조회
    async getConcert(categoryId: number) {
         return this.concertRepository.find({ where: {categoryId}});
+    }
+
+    // 아티스트별 콘서트 조회
+    findByArtist(artistId: number) {
+        return this.concertRepository.find({ where: {artistId}});
     }
 
     // 상세 조회
@@ -24,7 +29,7 @@ export class ConcertService {
 
     // 생성
     async create(createConcertDto: CreateConcertDto): Promise<void> {
-        const {categoryId,concertName, concertImg, concertInfo, concertDate, ticketingDate, calender } = await this.concertRepository.save({...createConcertDto,
+        const {concertName, concertImg, concertInfo, concertDate, ticketingDate, calender } = await this.concertRepository.save({...createConcertDto,
              createdAt:dayjs().format('YYYY-MM-DDTHH:mm:ss.sssZ'),
         updatedAt:dayjs().format('YYYY-MM-DDTHH:mm:ss.sssZ')});
         // await this.concertRepository.save({...createConcertDto});

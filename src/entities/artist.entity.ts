@@ -7,9 +7,6 @@ export class Artist {
   @PrimaryGeneratedColumn()
   artistId: number;
 
-  @Column({nullable:true})
-  concertId: number;
-
   @Index({fulltext: true})
   @Column()
   artistName: string;
@@ -18,7 +15,19 @@ export class Artist {
   artistImg: string;
 
   @Column()
+  categoryId: number;
+
+  @Column()
+  debutSong: string;
+
+  @Column()
+  debutDate: string;
+
+  @Column()
   artistInfo: string;
+
+  @Column()
+  createdAt: string;
 
   // @Column({ default: 0})
   // likeCount: number;

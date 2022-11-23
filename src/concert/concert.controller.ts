@@ -17,17 +17,26 @@ export class ConcertController {
   findAll(@Param('categoryId') categoryId: number): Promise<Concert[]> {
     return this.concertService.getConcert(categoryId);
   }
+
+  // 아티스트별 콘서트 조회
+  @Get('concert/artist/:artistId')
+  async findByArtist(@Param('artistId') artistId: number): Promise<Concert[]> {
+    return this.concertService.findByArtist(artistId);
+  }
+
   // 콘서트 상세 조회
   @Get('concert/:concertId')
   async findOne(@Param('concertId') concertId: number): Promise<Concert> {
     return this.concertService.findOne(concertId);
   }
+
   // 콘서트 생성
   @Post('concert')
   create(@Body() createConcertDto: CreateConcertDto) {
     return this.concertService.create(createConcertDto);
   }
-  // 아티스트 정보 수정
+  
+  // 콘서트 수정
   @Put('concert/:concertId')
   update(@Param('concertId') concertId: number, @Body() concert: Concert) {
     return this.concertService.update(concertId, concert);

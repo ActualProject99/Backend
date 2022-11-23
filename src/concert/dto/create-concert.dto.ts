@@ -9,5 +9,9 @@ export class CreateConcertDto extends PickType(Concert, [
   'concertInfo',
   'concertDate',
   'ticketingDate',
-  'calender'
+  'ticketingUrl',
+  'calender',
+  'playTime',
+  'locationName',
+  'ratings',
  ] as const) {}

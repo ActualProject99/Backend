@@ -4,8 +4,10 @@ import { Artist } from 'src/entities/artist.entity';
 import { User } from 'src/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { UserService } from 'src/user/user.service';
 import { throwError } from 'rxjs';
 import * as dayjs from 'dayjs';
+import { JwtPayload } from '../user/jwt/jwt.payload';
 
 
 @Injectable()
@@ -19,15 +21,16 @@ export class ArtistlikeService {
         private readonly userRepository: Repository<User>
     ) {}
 
-async like(artistId: number, payload: any): Promise<void> {
-    try {
-      const userId = payload.sub
-      console.log(artistId, userId)
+async like(artistId: number, like: any): Promise<void> {
+    // try {
+      const userId = like.payload.sub
+      console.log(`1`,artistId, userId)
         const existLike = await this.artistLikeRepository.findOne({
             where: { artistId, userId }
         });
         console.log(existLike)
         if (!existLike) {
+          console.log(`2`,artistId, userId)
             const data = this.artistLikeRepository.create({
               userId,  
               artistId,
@@ -36,27 +39,29 @@ async like(artistId: number, payload: any): Promise<void> {
             });
             await this.artistLikeRepository.save(data);
         } else {
-            if (existLike.isLike)
-            await this.artistLikeRepository.update(
-                { artistLikeId: existLike.artistLikeId },
-                { isLike: false },
-              );
-            else
-              await this.artistLikeRepository.update(
-                { artistLikeId: existLike.artistLikeId },
-                { isLike: true },
-              );
+          // console.log(`3`,artistId, userId)
+          //   if (existLike.isLike)
+          //   await this.artistLikeRepository.update(
+          //       { artistLikeId: existLike.artistLikeId },
+          //       { isLike: false },
+          //     );
+          //   else
+          //     await this.artistLikeRepository.update(
+          //       { artistLikeId: existLike.artistLikeId },
+          //       { isLike: true },
+          //     );
+          await this.artistLikeRepository.update(existLike,{});
           }
           
-        } catch (error) {
-            throwError(
-              {
-                success: false,
-                statusCode: 400,
-                error: '알 수 없는 오류가 발생했습니다.',
-                timestamp: new Date().toISOString(),
-              },)
-    }
+    //     // } catch (error) {
+    //         throwError(
+    //           {
+    //             success: false,
+    //             statusCode: 400,
+    //             error: '알 수 없는 오류가 발생했습니다.',
+    //             timestamp: new Date().toISOString(),
+    //           },)
+    // }
 }
 
 

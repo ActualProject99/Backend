@@ -30,6 +30,11 @@ export class CommentService {
     return this.commentRepository.find({ where: { concertId } });
   }
 
+  // 유저별 댓글 조회
+  findByUser(userId: number) {
+    return this.commentRepository.find({ where: {userId}});
+  }
+
   // 댓글 생성
   async create(
     concertId: number,

@@ -8,18 +8,20 @@ import { JwtPayload } from '../user/jwt/jwt.payload';
 
 @Controller('')
 export class ArtistlikeController {
-  constructor(private artistlikeService: ArtistlikeService) {}
+  constructor(
+    private artistlikeService: ArtistlikeService
+    ) {}
   
   @Put('artistlike/:artistId')
   @UseGuards(JwtAuthGuard)
-  like(@Param('artistId') artistId: number, payload: JwtPayload): Promise<any> {
-    return this.artistlikeService.like(artistId, payload);
+  async like(@Param('artistId') artistId: number, payload: JwtPayload): Promise<any> {
+    const like = await this.artistlikeService.like(
+      artistId,
+      payload.sub
+    );
+    return like;
   }
-
-
 }
-
-
 
 
 

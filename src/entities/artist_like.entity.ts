@@ -8,7 +8,7 @@ export class ArtistLike {
   artistLikeId: number;
 
   @Column()
-  userId:number;
+  userId: number;
 
   @Column()
   artistId: number;

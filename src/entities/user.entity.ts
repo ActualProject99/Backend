@@ -43,6 +43,6 @@ export class User {
   @OneToMany(() => ArtistLike, (artistLike) => artistLike.userId)
   artistLikes: ArtistLike[]
  
-  @OneToMany(() => Artist, (artist) => artist.artistId)
-  artist: Artist[];
+  // @OneToMany(() => Artist, (artist) => artist.artistId)
+  // artist: Artist[];
 }

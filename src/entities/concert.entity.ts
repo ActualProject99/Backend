@@ -19,12 +19,6 @@ export class Concert {
   concertImg: string;
 
   @Column()
-  likeCount: number;
-
-  @Column()
-  reviewCount: number;
-
-  @Column()
   concertInfo: string;
 
   @Column()
@@ -32,6 +26,18 @@ export class Concert {
 
   @Column()
   ticketingDate: string;
+
+  @Column()
+  ticketingUrl: string;
+
+  @Column()
+  locationName: string;
+
+  @Column()
+  playTime: string;
+
+  @Column()
+  ratings: string;
 
   @Column()
   createdAt: string;

@@ -35,7 +35,7 @@ export class ArtistService {
     }
 
     async create(createArtistDto: CreateArtistDto,): Promise<void> {
-        const { artistName,artistImg,artistInfo } = await this.artistRepository.save({...createArtistDto})
+        const {categoryId, artistName,artistImg,artistInfo, debutSong, debutDate } = await this.artistRepository.save({...createArtistDto})
     }
    
     async remove(artistId: number): Promise<void> {

@@ -22,7 +22,7 @@ import {
   export class CommentController {
     constructor(private commentService: CommentService) {}
   
-    // 콘서트별 댓글 조회
+    // 콘서트별 댓글 조회(페이지)
     @Get(':concertId')
     async findAll(@Param('concertId') concertId: number,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
@@ -32,6 +32,12 @@ import {
       return this.commentService.paginate({
         page, limit,
       });
+    }
+
+    // 유저별 댓글 조회
+    @Get('user/:userId')
+    async findByUser(@Param('userId') userId: number) {
+      return this.commentService.findByUser(userId);
     }
 
     // 댓글 생성
