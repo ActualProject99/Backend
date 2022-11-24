@@ -14,7 +14,7 @@ import { UserService } from './user.service';
 import { UserLoginDTO } from './dto/user-login.dto';
 import { UserRegisterDTO } from './dto/user-register.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from '../enties/user.entity';
+import { User } from '../entities/user.entity';
 import { Repository } from 'typeorm';
 import { OnlyPrivateInterceptor } from '../common/interceptor/only-private.interceptor';
 import { CurrentUser } from '../common/decorator/current-user.decorator';
@@ -30,8 +30,8 @@ export class UserController {
 
   constructor(
     private readonly usersService: UserService,
-    @InjectRepository(UserEntity)
-    private readonly usersRepository: Repository<UserEntity>,
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>,
     private readonly awsService: AwsService,
   ) {}
 
@@ -48,8 +48,8 @@ export class UserController {
     @Body() userRegisterDTO: UserRegisterDTO,
     @UploadedFile() profileImg: Express.Multer.File,
   ) {
-    const { key } = await this.awsService.uploadFileToS3('users', profileImg);
-    return await this.usersService.registerUser(userRegisterDTO, key);
+    const imgUrl = await this.awsService.uploadFileToS3('users', profileImg);
+    return await this.usersService.registerUser(userRegisterDTO, imgUrl);
   }
 
   @Post('login')

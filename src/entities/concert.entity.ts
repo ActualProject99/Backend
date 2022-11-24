@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index, OneToMany } from 'typeorm';
 
 @Entity()
 export class Concert {
@@ -6,11 +6,12 @@ export class Concert {
   concertId: number;
 
   @Column()
-  categoryId: string;
+  categoryId: number;
 
   @Column()
   artistId: number;
 
+  @Index({fulltext: true})
   @Column()
   concertName: string;
 
@@ -37,4 +38,7 @@ export class Concert {
 
   @Column()
   updatedAt: string;
+
+  @Column()
+  calender: string;
 }
