@@ -7,15 +7,15 @@ export class Artist {
   @PrimaryGeneratedColumn()
   artistId: number;
 
+  @Column()
+  categoryId: number;
+
   @Index({fulltext: true})
   @Column()
   artistName: string;
 
   @Column()
   artistImg: string;
-
-  @Column()
-  categoryId: number;
 
   @Column()
   debutSong: string;

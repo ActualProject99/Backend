@@ -8,6 +8,7 @@ import { JwtAuthGuard } from 'src/user/jwt/jwt.guard';
 import { ArtistlikeService } from 'src/artist_like/artist_like.service';
 import { ArtistLike } from 'src/entities/artist_like.entity';
 import { User } from 'src/entities/user.entity';
+import * as dayjs from 'dayjs';
 
 
 
@@ -35,7 +36,8 @@ export class ArtistService {
     }
 
     async create(createArtistDto: CreateArtistDto,): Promise<void> {
-        const {categoryId, artistName,artistImg,artistInfo, debutSong, debutDate } = await this.artistRepository.save({...createArtistDto})
+        const {categoryId, artistName,artistImg,artistInfo, debutSong, debutDate } = await this.artistRepository.save({...createArtistDto,
+        createdAt:dayjs().format('YYYY-MM-DDTHH:mm:ss.sssZ')})
     }
    
     async remove(artistId: number): Promise<void> {
