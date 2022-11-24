@@ -18,12 +18,6 @@ export class Concert {
   concertImg: string;
 
   @Column()
-  likeCount: number;
-
-  @Column()
-  reviewCount: number;
-
-  @Column()
   concertInfo: string;
 
   @Column()
@@ -37,5 +31,4 @@ export class Concert {
 
   @Column()
   updatedAt: string;
-
 }
