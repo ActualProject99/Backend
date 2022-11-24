@@ -27,7 +27,10 @@ import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateArtistDto extends PickType(Artist, [
   'artistName',
+  'categoryId',
   'artistImg',
+  'debutSong',
+  'debutDate',
   'artistInfo',
  ] as const) {
 // @IsString(),
