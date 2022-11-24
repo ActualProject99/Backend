@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 // import { IsNotEmpty, IsString } from 'class-validator';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
@@ -10,24 +11,50 @@ export class User {
 
   // @IsString()
   // @IsNotEmpty({ message: '이름을 작성해 주세요.' })
+  @ApiProperty({
+    example: 'kmdet1235@naver.com',
+    description: 'email',
+    required: true,
+  })
   @Column({ nullable: false })
   email: string;
 
-  @Column({ nullable: true })
+  @ApiProperty({
+    example: 'profileImg.jpeg',
+    description: 'profileImg',
+    required: true,
+  })
+  @Column({
+    nullable: true,
+  })
   profileImg: string;
 
+  @ApiProperty({
+    example: '티글티글',
+    description: 'nickname',
+    required: true,
+  })
   @Column({ unique: false })
   nickname: string;
 
+  @ApiProperty({
+    example: '01000001111',
+    description: '핸드폰 번호',
+    required: true,
+  })
   @Column({ unique: false })
-  name: string;
+  phoneNumber: string;
 
+  @ApiProperty({
+    example: '12345678',
+    description: 'password',
+    required: true,
+  })
   @Column({ nullable: false })
   password: string;
 
   @Column({ nullable: true })
-  @Exclude()
-  currentHashedRefreshToken?: string;
+  refresh_token: string;
 
   @Column({ nullable: true })
   like: number;

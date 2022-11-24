@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Put, Delete, Param} from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Param,
+} from '@nestjs/common';
 import { ArtistService } from './artist.service';
 import { Artist } from '../entities/artist.entity';
 import { CreateArtistDto } from './dto/create-artist.dto';
@@ -8,8 +16,7 @@ import { CreateArtistDto } from './dto/create-artist.dto';
 
 @Controller('artist')
 export class ArtistController {
-  constructor(
-    private artistService: ArtistService) {}
+  constructor(private artistService: ArtistService) {}
 
   // 모든 아티스트 조회
   @Get()
@@ -31,7 +38,7 @@ export class ArtistController {
   // update(@Param('artistId') artistId: number, @Body() artist: Artist) {
   //   return this.artistService.update(artistId, artist);
   //}
-  
+
   // 아티스트 삭제
   @Delete(':artistId')
   remove(@Param('artistId') artistId: number) {
