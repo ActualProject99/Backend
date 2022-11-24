@@ -2,9 +2,12 @@ import {
   Body,
   Controller,
   Get,
+  HttpStatus,
   Logger,
   Post,
   Put,
+  Req,
+  Request,
   Res,
   UnauthorizedException,
   UploadedFile,
@@ -21,7 +24,6 @@ import { Repository } from 'typeorm';
 import { OnlyPrivateInterceptor } from '../common/interceptor/only-private.interceptor';
 import { CurrentUser } from '../common/decorator/current-user.decorator';
 import { UserDTO } from './dto/user.dto';
-import { JwtAuthGuard } from './jwt/jwt.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AwsService } from 'src/aws.service';
 import { UserUpdateDTO } from './dto/user-update.dto';
@@ -32,6 +34,9 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { KakaoAuthGuard } from 'src/auth/guard/kakao.guard';
+import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
+import { AuthService } from './auth.service';
 // import multer from 'multer';
 
 @Controller('users')
@@ -43,6 +48,7 @@ export class UserController {
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
     private readonly awsService: AwsService,
+    private readonly authService: AuthService,
   ) {}
 
   // 유저 회원가입
@@ -63,13 +69,18 @@ export class UserController {
     status: 500,
     description: '서버 에러',
   })
+  // @UseGuards(JwtAuthGuard)
   async signUp(
+    @Res({ passthrough: true }) response: Response,
     @Body() userRegisterDTO: UserRegisterDTO,
     @UploadedFile() profileImg: Express.Multer.File,
   ) {
-    console.log(profileImg);
     const imgUrl = await this.awsService.uploadFileToS3('users', profileImg);
-    console.log(imgUrl);
+    // const user = await this.authService.validateUser(userRegisterDTO.email);
+    // const access_token = await this.authService.createLoginToken(user);
+    // const refresh_token = await this.authService.createRefreshToken(user);
+    // response.setHeader('access_token', access_token);
+    // response.setHeader('refresh_token', refresh_token);
     return await this.usersService.registerUser(userRegisterDTO, imgUrl);
   }
 
@@ -90,16 +101,51 @@ export class UserController {
     status: 500,
     description: '서버 에러',
   })
+  // @UseGuards(JwtAuthGuard)
   async logIn(
+    @Request() req: any,
     @Body() userLoginDTO: UserLoginDTO,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const { jwt, user } = await this.usersService.verifyUserAndSignJwt(
+    const { jwt } = await this.usersService.verifyUserAndSignJwt(
       userLoginDTO.email,
       userLoginDTO.password,
     );
+    const user = await this.authService.validateUser(userLoginDTO.email);
+    const access_token = await this.authService.createLoginToken(user);
+    // const refresh_token = await this.authService.createRefreshToken(user);
+
+    response.setHeader('access_token', access_token);
+    // response.setHeader('refresh_token', refresh_token);
     response.cookie('jwt', jwt, { httpOnly: true });
     return user;
+  }
+
+  @ApiOperation({
+    summary: '카카오 로그인',
+    description: '카카오 로그인을 API',
+  })
+  @UseGuards(KakaoAuthGuard)
+  @Get('kakao')
+  async kakaoLogin() {
+    return HttpStatus.OK;
+  }
+
+  @ApiOperation({
+    summary: '카카오 로그인 콜백',
+    description: '카카오 로그인시 콜백 라우터입니다.',
+  })
+  @UseGuards(KakaoAuthGuard)
+  @Get('kakao/callback')
+  async kakaocallback(@Req() req, @Res() res: Response) {
+    if (req.user.type === 'login') {
+      res.cookie('access_token', req.user.access_token);
+      res.cookie('refresh_token', req.user.refresh_token);
+    } else {
+      res.cookie('once_token', req.user.once_token);
+    }
+    res.redirect('https://tgle.shop/users/signup');
+    res.end();
   }
 
   // 유저 정보 불러오기

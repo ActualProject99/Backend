@@ -22,6 +22,7 @@ import { ArtistLike } from './entities/artist_like.entity';
 import { User } from './entities/user.entity';
 import { AppService } from './app.service';
 import { AppController } from './app.controller';
+import { AuthModule } from './auth/auth.module';
 
 // import { access } from 'fs';
 
@@ -60,6 +61,7 @@ import { AppController } from './app.controller';
     ConcertModule,
     ConcertlikeModule,
     UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

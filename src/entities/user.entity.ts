@@ -54,8 +54,7 @@ export class User {
   password: string;
 
   @Column({ nullable: true })
-  @Exclude()
-  currentHashedRefreshToken?: string;
+  refresh_token: string;
 
   @Column({ nullable: true })
   like: number;

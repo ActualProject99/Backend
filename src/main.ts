@@ -11,9 +11,7 @@ import * as expressBasicAuth from 'express-basic-auth';
 import * as passport from 'passport';
 import * as cookieParser from 'cookie-parser';
 import * as expressSession from 'express-session';
-import * as fs from 'fs';
 import { HttpApiExceptionFilter } from './common/exceptions/http-api-exception.filter';
-// import helmet from 'helmet';
 
 class Application {
   private logger = new Logger(Application.name);
@@ -125,14 +123,8 @@ class Application {
 }
 
 async function init(): Promise<void> {
-  // const httpsOptions = {
-  //   ca: fs.readFileSync('/etc/letsencrypt/live/tgle.shop/fullchain.pem'),
-  //   key: fs.readFileSync('/etc/letsencrypt/live/www.tgle.shop/privkey.pem'),
-  //   cert: fs.readFileSync('/etc/letsencrypt/live/www.tgle.shop/cert.pem'),
-  // };
   const server = await NestFactory.create<NestExpressApplication>(AppModule, {
     cors: true,
-    // httpsOptions,
   });
   const app = new Application(server);
   await app.boostrap();

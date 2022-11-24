@@ -87,18 +87,6 @@ export class UserService {
     const profileImg = process.env.AWS_S3_STORAGE_URL + imgObject.key;
     await this.userRepository.update(userId, { profileImg });
   }
-  // async uploadImg(currentUser: UserDTO, file: Express.Multer.File) {
-  //   const fileName = `users/${file[0].filename}`;
-
-  //   console.log(fileName);
-
-  //   const user = await this.userRepository.findByIdAndUpdateImg({
-  //     currentUser.userId,
-  //     fileName
-  //   });
-  //   console.log(user);
-  //   return user;
-  // }
 
   async findUserById(userId: number) {
     try {
@@ -110,5 +98,10 @@ export class UserService {
     } catch (error) {
       throw new BadRequestException('해당하는 사용자를 찾을 수 없습니다.');
     }
+  }
+
+  async findUserByEmail(email: string) {
+    const user = await this.userRepository.findOne({ where: { email } });
+    return user;
   }
 }
