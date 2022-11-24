@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index, OneToMany } from 'typeorm';
 
 @Entity()
 export class Concert {
@@ -11,6 +11,7 @@ export class Concert {
   @Column()
   artistId: number;
 
+  @Index({fulltext: true})
   @Column()
   concertName: string;
 
@@ -27,8 +28,23 @@ export class Concert {
   ticketingDate: string;
 
   @Column()
+  ticketingUrl: string;
+
+  @Column()
+  locationName: string;
+
+  @Column()
+  playTime: string;
+
+  @Column()
+  ratings: string;
+
+  @Column()
   createdAt: string;
 
   @Column()
   updatedAt: string;
+
+  @Column()
+  calender: string;
 }

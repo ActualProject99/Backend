@@ -1,7 +1,8 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 // import { IsNotEmpty, IsString } from 'class-validator';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Artist } from './artist.entity';
+import { ArtistLike } from './artist_like.entity';
 
 // @Index('email', ['email'], { unique: true })
 @Entity('User')
@@ -11,50 +12,21 @@ export class User {
 
   // @IsString()
   // @IsNotEmpty({ message: '이름을 작성해 주세요.' })
-  @ApiProperty({
-    example: 'kmdet1235@naver.com',
-    description: 'email',
-    required: true,
-  })
   @Column({ nullable: false })
   email: string;
 
-  @ApiProperty({
-    example: 'profileImg.jpeg',
-    description: 'profileImg',
-    required: true,
-  })
-  @Column({
-    nullable: true,
-  })
+  @Column({ nullable: true })
   profileImg: string;
 
-  @ApiProperty({
-    example: '티글티글',
-    description: 'nickname',
-    required: true,
-  })
   @Column({ unique: false })
   nickname: string;
 
-  @ApiProperty({
-    example: '01000001111',
-    description: '핸드폰 번호',
-    required: true,
-  })
-  @Column({ unique: false })
-  phoneNumber: string;
-
-  @ApiProperty({
-    example: '12345678',
-    description: 'password',
-    required: true,
-  })
   @Column({ nullable: false })
   password: string;
 
   @Column({ nullable: true })
-  refresh_token: string;
+  @Exclude()
+  currentHashedRefreshToken?: string;
 
   @Column({ nullable: true })
   like: number;
@@ -64,4 +36,13 @@ export class User {
 
   @Column({ nullable: true })
   likeConcert: number;
+  
+// 유저의 좋아요는 여러개, 사용자는 하나.
+// 아티스트 Like 의 artistLike.user 필드에 User
+// @JoinColumn({ referencedColumnName: "id" ,name:artistLikeId})가 디폴트임
+  @OneToMany(() => ArtistLike, (artistLike) => artistLike.userId)
+  artistLikes: ArtistLike[]
+ 
+  // @OneToMany(() => Artist, (artist) => artist.artistId)
+  // artist: Artist[];
 }
