@@ -29,9 +29,7 @@ export class AwsService {
     contentType: string;
   }> {
     try {
-      const key = `${folder}/${Date.now()}_${path.basename(
-        file.originalname,
-      )}`.replace(/ /g, '');
+      const key = `${folder}/${Date.now()}`.replace(/ /g, '');
 
       const s3Object = await this.awsS3
         .putObject({
