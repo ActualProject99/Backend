@@ -3,7 +3,7 @@ import { Controller, Get, Post, Put, Delete, Param, Body}
 import { ConcertService } from './concert.service';
 import { Concert } from '../entities/concert.entity';
 import { CreateConcertDto } from './dto/create-concert.dto';
-import { UpdateConcertDto } from './dto/update-concert.dto';
+// import { UpdateConcertDto } from './dto/update-concert.dto';
 // import { Repository } from 'typeorm';
 // import { InjectRepository } from '@nestjs/typeorm';
 
@@ -27,11 +27,14 @@ export class ConcertController {
   create(@Body() createConcertDto: CreateConcertDto) {
     return this.concertService.create(createConcertDto);
   }
-  // 아티스트 정보 수정
-  @Put('concert/:concertId')
-  update(@Param('concertId') concertId: number, @Body() concert: Concert) {
-    return this.concertService.update(concertId, concert);
-  }
+  // // 콘서트 수정
+  // @Put('concert/:concertId')
+  // update(
+  //   @Param('concertId') concertId: number,
+  //   @Body() updateConcertDto: UpdateConcertDto,
+  // ) {
+  //   return this.concertService.update(concertId, updateConcertDto);
+  // }
 
   // 콘서트 삭제
   @Delete('concert/:concertId')

@@ -6,9 +6,6 @@ import {
     Delete,
     Param,
     Body,
-    DefaultValuePipe,
-    ParseIntPipe,
-    Query
   } from '@nestjs/common';
   import { CommentService } from './comment.service';
   import { Comment } from '../entities/comment.entity';
@@ -16,7 +13,6 @@ import {
   // import { UpdateCommentDto } from './dto/update-comment.dto';
   // import { Repository } from 'typeorm';
   // import { InjectRepository } from '@nestjs/typeorm';
-  import { Pagination } from 'nestjs-typeorm-paginate';
   
   @Controller('comment')
   export class CommentController {
@@ -24,23 +20,19 @@ import {
   
     // 콘서트별 댓글 조회
     @Get(':concertId')
-    async findAll(@Param('concertId') concertId: number,
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
-    ): Promise<Pagination<Comment>> {
-      limit = limit > 10 ? 10 : limit; // 필요없는 코드같은데
-      return this.commentService.paginate({
-        page, limit,
-      });
+    async findAll(@Param('concertId') concertId: number): Promise<Comment[]> {
+      return this.commentService.findAll(concertId);
     }
 
+    // 댓글 상세 조회
+    // @Post
     // 댓글 생성
   @Post(':concertId')
   create(
     @Param('concertId') concertId: number,
     @Body() createCommentDto: CreateCommentDto,
   ) {
-    return this.commentService.create(concertId, createCommentDto);
+    return this.commentService.create({ concertId }, createCommentDto);
   }
 
     // // 댓글 수정

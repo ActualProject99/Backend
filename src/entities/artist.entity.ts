@@ -1,6 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, ManyToOne, OneToMany, ManyToMany, JoinColumn } from 'typeorm';
-import { ArtistLike } from './artist_like.entity';
-import { User } from './user.entity';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Artist {
@@ -10,7 +8,6 @@ export class Artist {
   @Column({nullable:true})
   concertId: number;
 
-  @Index({fulltext: true})
   @Column()
   artistName: string;
 
@@ -20,14 +17,6 @@ export class Artist {
   @Column()
   artistInfo: string;
 
-  // @Column({ default: 0})
-  // likeCount: number;
-
-  @OneToMany(() => ArtistLike, (artistLike) => artistLike.artistId)
-  artistLikes: ArtistLike[];
-  
-  // @ManyToOne(() => User, (user) => user.artist)
-  // @JoinColumn([{ name: 'userId', referencedColumnName: 'userId'}])
-  // user: User;
-  
+  @Column({nullable:true})
+  likeCount: number;
 }
