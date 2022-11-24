@@ -1,37 +1,37 @@
-import { Controller, Get, Post, Put, Delete, Param, UseGuards, UseInterceptors, Req } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Param,
+  UseGuards,
+  UseInterceptors,
+  Req,
+} from '@nestjs/common';
 import { ArtistlikeService } from './artist_like.service';
-import { JwtAuthGuard } from 'src/user/jwt/jwt.guard';
 import { OnlyPrivateInterceptor } from 'src/common/interceptor/only-private.interceptor';
 import { ApiTags } from '@nestjs/swagger';
 import { Artist } from '../entities/artist.entity';
-import { JwtPayload } from '../user/jwt/jwt.payload';
+import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
+import { JwtPayload } from 'src/auth/jwt/jwt.payload';
 
 @Controller('')
 export class ArtistlikeController {
-  constructor(
-    private artistlikeService: ArtistlikeService
-    ) {}
-  
+  constructor(private artistlikeService: ArtistlikeService) {}
+
   @Put('artistlike/:artistId')
   @UseGuards(JwtAuthGuard)
-  async like(@Param('artistId') artistId: number, payload: JwtPayload): Promise<any> {
-    const like = await this.artistlikeService.like(
-      artistId,
-      payload.sub
-    );
+  async like(
+    @Param('artistId') artistId: number,
+    payload: JwtPayload,
+  ): Promise<any> {
+    const like = await this.artistlikeService.like(artistId, payload.sub);
     return like;
   }
 }
 
-
-
-
-
-
-
-
-   
-// 유저별 좋아요 조회 유저아이디 어떻게 받아오는지?? 마이페이지에서 좋아요한 가수를 볼테니 일단 파라미터로 userId를 받는다고 가정 
+// 유저별 좋아요 조회 유저아이디 어떻게 받아오는지?? 마이페이지에서 좋아요한 가수를 볼테니 일단 파라미터로 userId를 받는다고 가정
 // @Get(':userId')
 // @UseGuards(JwtAuthGuard)
 // @UseInterceptors(OnlyPrivateInterceptor)
