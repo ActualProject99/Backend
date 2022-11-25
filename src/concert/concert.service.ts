@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { Concert } from '../entities/concert.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository} from 'typeorm';
 import { CreateConcertDto } from './dto/create-concert.dto';
+import * as dayjs from 'dayjs';
 
 @Injectable()
 export class ConcertService {
@@ -11,23 +12,70 @@ export class ConcertService {
         private readonly concertRepository: Repository<Concert>
     ) {}
 
-
-   async getConcert(categoryId) {
+    // 카테고리별 조회
+   async getConcert(categoryId: number) {
         return this.concertRepository.find({ where: {categoryId}});
     }
 
+    // 아티스트별 콘서트 조회
+    findByArtist(artistId: number) {
+        return this.concertRepository.find({ where: {artistId}});
+    }
+    
+    // 콘서트 월별 전체 조회
+    async findAllConcertByMonth(month: number) {
+        const findAllConcertByMonth = await this.concertRepository.find({where: {month}});
+    
+        return findAllConcertByMonth;
+    }
 
-
+    // 상세 조회
     findOne(concertId: number): Promise<Concert> {
         return this.concertRepository.findOne({where: {concertId}});
+      
     }
 
+    // 생성
     async create(createConcertDto: CreateConcertDto): Promise<void> {
-        // const {categoryId,concertName, concertImg, concertInfo, concertDate, ticketingDate} = await this.concertRepository.save({...createConcertDto});
-        await this.concertRepository.save({...createConcertDto});
+        const {concertName, concertImg, concertInfo, concertDate, ticketingDate, calender } = await this.concertRepository.save({...createConcertDto,
+             createdAt:dayjs().format('YYYY-MM-DDTHH:mm:ss.sssZ'),
+        updatedAt:dayjs().format('YYYY-MM-DDTHH:mm:ss.sssZ')});
+        // await this.concertRepository.save({...createConcertDto});
     }
 
+    // 삭제
     async remove(concertId: number): Promise<void> {
         await this.concertRepository.delete(concertId);
     }
-  }
+  
+
+  // 검색
+     searchConcert = (args: any) => {
+        const { searchQuery } = args;
+         
+    return this.concertRepository
+      .createQueryBuilder().select()
+      .where(`MATCH(concertName) AGAINST ('${searchQuery}' IN BOOLEAN MODE)`)
+      .getMany();
+   }
+
+   // 수정
+   async update(concertId: number, concert: Concert): Promise<void> {
+    const existedConcert = await this.findOne(concertId);
+    if(existedConcert)   {
+     await  this.concertRepository
+            .createQueryBuilder()
+            .update(Concert)
+            .set({
+                concertName : concert.concertName,
+                concertImg: concert.concertImg,
+                concertInfo : concert.concertInfo,
+                concertDate : concert.concertDate,
+                ticketingDate : concert.ticketingDate,
+                calender : concert.calender
+            })
+            .where("concertId = :concertId", {concertId})
+            .execute();
+    }
+}
+}

@@ -1,4 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index, OneToMany } from 'typeorm';
+import { ConcertLike } from './concert_like.entity';
+
 
 @Entity()
 export class Concert {
@@ -12,16 +14,14 @@ export class Concert {
   artistId: number;
 
   @Column()
+  month: number;
+
+  @Index({fulltext: true})
+  @Column()
   concertName: string;
 
   @Column()
   concertImg: string;
-
-  @Column()
-  likeCount: number;
-
-  @Column()
-  reviewCount: number;
 
   @Column()
   concertInfo: string;
@@ -33,9 +33,36 @@ export class Concert {
   ticketingDate: string;
 
   @Column()
+  ticketingUrl: string;
+
+  @Column()
+  locationName: string;
+
+  @Column()
+  playTime: string;
+
+  @Column()
+  ratings: string;
+
+  @Column()
   createdAt: string;
 
   @Column()
   updatedAt: string;
 
+  @Column()
+  calender: string;
+
+
+
+
+
+
+
+  @OneToMany(() => ConcertLike, (concertLike) => concertLike.concert)
+  concertLikes: ConcertLike[];
+
+
+  @OneToMany(() => ConcertLike, (concertLike) => concertLike.concert)
+  concerts: Concert[]
 }

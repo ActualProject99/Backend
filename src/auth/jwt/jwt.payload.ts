@@ -1,5 +1,5 @@
 export class JwtPayload {
-  sub: number;
+  userId: number;
   iat?: number;
   exp?: number;
 }
