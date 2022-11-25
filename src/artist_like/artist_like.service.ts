@@ -8,6 +8,7 @@ import { UserService } from 'src/user/user.service';
 import { throwError } from 'rxjs';
 import * as dayjs from 'dayjs';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
+import { CreateArtistlikeDto } from './dto/create-artist_like.dto';
 
 @Injectable()
 export class ArtistlikeService {
@@ -20,44 +21,68 @@ export class ArtistlikeService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-async like(artistId: number, userId: number) {
+async existLike(artistId:number, userId:number) {
+  return this.artistLikeRepository.findOne({where:{artistId, userId}})
+}
+
+async createArtistLike(artistId: number, userId: number) {
+
   const artistlike = new ArtistLike();
   artistlike.artistId = artistId;
   artistlike.userId = userId;
-  return this.artistLikeRepository.create(artistlike)
+  
+  return this.artistLikeRepository.save(artistlike)}
+
+
+  async deleteArtistLike(artistId: number, userId: number): Promise<any> {
+    const existLike = await this.artistLikeRepository.findOne({where:{artistId, userId}})
+    if(existLike){
+  return this.artistLikeRepository.remove(existLike)}
+ }
+
+ // 특정 유저 좋아요 조회
+ find(userId: number): Promise<ArtistLike[]> {
+  return this.artistLikeRepository.find({ where: { userId } });
 }
+}
+//  async CountArtistLike(artistId: number) {
+//   return this.artistLikeRepository.count(artistId);
+//  }
 
 
-  // async like(artistId: number, userId: number): Promise<void> {
-  //   // try {
-  //   console.log(`1`, artistId, userId);
-  //   const existLike = await this.artistLikeRepository.findOne({
-  //     where: { artistId, userId },
-  //   });
-  //   console.log(existLike);
-  //   if (!existLike) {
-  //     console.log(`2`, artistId, userId);
-  //     const data = this.artistLikeRepository.create({
-  //       userId,
-  //       artistId,
-  //       createdAt: dayjs().format('YYYY-MM-DDTHH:mm:ss.sssZ'),
-  //       isLike: true,
-  //     });
-  //     await this.artistLikeRepository.save(data);
-  //   } else {
-  //     // console.log(`3`,artistId, userId)
-  //     //   if (existLike.isLike)
-  //     //   await this.artistLikeRepository.update(
-  //     //       { artistLikeId: existLike.artistLikeId },
-  //     //       { isLike: false },
-  //     //     );
-  //     //   else
-  //     //     await this.artistLikeRepository.update(
-  //     //       { artistLikeId: existLike.artistLikeId },
-  //     //       { isLike: true },
-  //     //     );
-  //     await this.artistLikeRepository.delete(existLike);
-  //   }
+
+// // 좋아요 여부
+// async isLike()
+//   async like(artistId: number, userId: number): Promise<void> {
+//     // try {
+//     console.log(`1`, artistId, userId);
+//     const existLike = await this.artistLikeRepository.findOne({
+//       where: { artistId, userId },
+//     });
+//     console.log(existLike);
+//     if (!existLike) {
+//       console.log(`2`, artistId, userId);
+//       const data = this.artistLikeRepository.create({
+//         userId,
+//         artistId,
+//         createdAt: dayjs().format('YYYY-MM-DDTHH:mm:ss.sssZ'),
+//         isLike: true,
+//       });
+//       await this.artistLikeRepository.save(data);
+//     } else {
+//       // console.log(`3`,artistId, userId)
+//       //   if (existLike.isLike)
+//       //   await this.artistLikeRepository.update(
+//       //       { artistLikeId: existLike.artistLikeId },
+//       //       { isLike: false },
+//       //     );
+//       //   else
+//       //     await this.artistLikeRepository.update(
+//       //       { artistLikeId: existLike.artistLikeId },
+//       //       { isLike: true },
+//       //     );
+//       await this.artistLikeRepository.delete(existLike);
+//     }
 
     //     // } catch (error) {
     //         throwError(
@@ -117,4 +142,4 @@ async like(artistId: number, userId: number) {
   //       .getMany();
   //       return result
   // }
-}
+

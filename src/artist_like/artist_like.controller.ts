@@ -19,29 +19,56 @@ import { JwtPayload } from '../auth/jwt/jwt.payload';
 import { UserLoginDTO } from '../user/dto/user-login.dto'
 
 
-@Controller('')
+@Controller('artistlike')
 export class ArtistlikeController {
   constructor(private artistlikeService: ArtistlikeService) {}
 
-  @Post('artistlike/:artistId')
+  // // 좋아요 추가
+  // @Post('artistlike/:artistId')
+  // @ApiBearerAuth('access-token')
+  // @UseGuards(JwtAuthGuard)
+  // setArtistlike(@Param('artistId', ParseIntPipe) artistId: number, @Req() req){
+  //   return this.artistlikeService.createArtistLike(artistId, req.user.userId)
+  // }
+
+  // // 좋아요 삭제
+  // @Delete('artistlike/:artistId')
+  // @ApiBearerAuth('access-token')
+  // @UseGuards(JwtAuthGuard)
+  // delete(@Param('artistId', ParseIntPipe) artistId: number, @Req() req){
+  //   return this.artistlikeService.deleteArtistLike(artistId, req.user.userId)
+  // }
+
+  
+    // @Get('count/:artistId') // 좋아요 카운트
+    // getLikeCount(@Param('postId', ParseIntPipe) postId: number) {
+    //   return this.heartsService.getHeartCount(postId);
+    
+
+  
+
+  @Put(':artistId')
   @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
-  like(@Param('artistId', ParseIntPipe) artistId: number, @Req() req){
-    return this.artistlikeService.like(artistId, req.user.userId)
+  async like(@Param('artistId', ParseIntPipe) artistId: number,  @Req() req ) {
+    const existLike:any = await this. artistlikeService.existLike(artistId, req.user.userId)
+    
+    if(!existLike){
+    return this.artistlikeService.createArtistLike(artistId, req.user.userId);
+  } else {
+    return this.artistlikeService.deleteArtistLike(artistId, req.user.userId);
+  }
+  }
+
+  @Get('mypage/:userId')
+  @ApiBearerAuth('access-token')
+  @UseGuards(JwtAuthGuard)
+  async findAllByUser(@Param('userId') userId: number) {
+    return this.artistlikeService.find(userId)
   }
 
 
 
-
-  // @Put('artistlike/:artistId')
-  // @UseGuards(JwtAuthGuard)
-  // async like(
-  //   @Param('artistId') ParseIntPipe, artistId: number,  @Req() req 
-  // ){
-  // return this.artistlikeService.like(artistId, req.payload.userId);
-    
-  // }
-}
 
 // 유저별 좋아요 조회 유저아이디 어떻게 받아오는지?? 마이페이지에서 좋아요한 가수를 볼테니 일단 파라미터로 userId를 받는다고 가정
 // @Get(':userId')
@@ -64,3 +91,5 @@ export class ArtistlikeController {
 //     this.artistlikeService.deleteLike(user.userId, artistId);
 //   }
 // }
+ 
+}

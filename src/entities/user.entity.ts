@@ -3,6 +3,7 @@ import { Exclude } from 'class-transformer';
 // import { IsNotEmpty, IsString } from 'class-validator';
 import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { ArtistLike } from './artist_like.entity';
+import { ConcertLike } from './concert_like.entity';
 
 // @Index('email', ['email'], { unique: true })
 @Entity('User')
@@ -72,6 +73,9 @@ export class User {
   // @JoinColumn({ referencedColumnName: "id" ,name:artistLikeId})가 디폴트임
   @OneToMany(() => ArtistLike, (artistLike) => artistLike.user)
   artistLikes: ArtistLike[];
+
+  @OneToMany(() => ConcertLike, (concertLike) => concertLike.user)
+  concertLikes: ConcertLike[];
   
   // @OneToMany(() => Artist, (artist) => artist.user)
   // artists: Artist[];

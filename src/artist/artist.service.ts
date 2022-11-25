@@ -21,7 +21,7 @@ export class ArtistService {
 
     return getArtist;
   }
-
+  // 특정 아티스트 조회
   findOne(artistId: number): Promise<Artist> {
     return this.artistRepository.findOne({ where: { artistId } });
   }
@@ -39,7 +39,7 @@ export class ArtistService {
       createdAt: dayjs().format('YYYY-MM-DDTHH:mm:ss.sssZ'),
     });
   }
-
+  // 삭제
   async remove(artistId: number): Promise<void> {
     await this.artistRepository.delete(artistId);
   }

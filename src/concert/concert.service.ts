@@ -21,10 +21,18 @@ export class ConcertService {
     findByArtist(artistId: number) {
         return this.concertRepository.find({ where: {artistId}});
     }
+    
+    // 콘서트 월별 전체 조회
+    async findAllConcertByMonth(month: number) {
+        const findAllConcertByMonth = await this.concertRepository.find({where: {month}});
+    
+        return findAllConcertByMonth;
+    }
 
     // 상세 조회
     findOne(concertId: number): Promise<Concert> {
         return this.concertRepository.findOne({where: {concertId}});
+      
     }
 
     // 생성
