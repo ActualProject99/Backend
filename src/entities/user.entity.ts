@@ -1,13 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 // import { IsNotEmpty, IsString } from 'class-validator';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { ArtistLike } from './artist_like.entity';
 
 // @Index('email', ['email'], { unique: true })
 @Entity('User')
 export class User {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ name: 'userId' })
   userId: number;
 
   // @IsString()
@@ -65,12 +65,19 @@ export class User {
 
   @Column({ nullable: true })
   likeConcert: number;
+
+  
   // 유저의 좋아요는 여러개, 사용자는 하나.
   // 아티스트 Like 의 artistLike.user 필드에 User
   // @JoinColumn({ referencedColumnName: "id" ,name:artistLikeId})가 디폴트임
-  @OneToMany(() => ArtistLike, (artistLike) => artistLike.userId)
+  @OneToMany(() => ArtistLike, (artistLike) => artistLike.user)
   artistLikes: ArtistLike[];
+  
+  // @OneToMany(() => Artist, (artist) => artist.user)
+  // artists: Artist[];
+  
+  //  @ManyToMany(() => Artist, (artist) => artist.likingUsers)
+  //  likedArtists: Artist[]
 
-  // @OneToMany(() => Artist, (artist) => artist.artistId)
-  // artist: Artist[];
+
 }

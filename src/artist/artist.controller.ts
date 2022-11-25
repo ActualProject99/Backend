@@ -16,6 +16,7 @@ export class ArtistController {
   findAll(): Promise<Artist[]> {
     return this.artistService.getArtist();
   }
+
   // 특정 아티스트 조회
   @Get(':artistId')
   async findOne(@Param('artistId') artistId: number): Promise<Artist> {

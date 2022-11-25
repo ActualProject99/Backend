@@ -4,7 +4,7 @@ import { User } from './user.entity';
 
 @Entity()
 export class Artist {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ name: 'artistId'})
   artistId: number;
 
   @Column()
@@ -32,11 +32,21 @@ export class Artist {
   // @Column({ default: 0})
   // likeCount: number;
 
-  @OneToMany(() => ArtistLike, (artistLike) => artistLike.artistId)
+  @OneToMany(() => ArtistLike, (artistLike) => artistLike.artist)
   artistLikes: ArtistLike[];
+
+// @ManyToMany(() => User, (user) => user.likedArtists)
+// @JoinColumn({
+//   name: 'artistLike',
+//   joinColumn: { name: 'artist_id', referencedColumnName: 'id'}
+// })
+
   
-  // @ManyToOne(() => User, (user) => user.artist)
-  // @JoinColumn([{ name: 'userId', referencedColumnName: 'userId'}])
+  // @ManyToOne(() => User, (user) => user.artists)
+  // @JoinColumn([{ name: 'user_id', referencedColumnName: 'id'}])
   // user: User;
+
+  @OneToMany(() => ArtistLike, (artistLike) => artistLike.artist)
+  artists: Artist[]
   
 }

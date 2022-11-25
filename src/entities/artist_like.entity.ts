@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { ApiProperty } from '@nestjs/swagger';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, PrimaryColumn } from 'typeorm';
 import { Artist } from './artist.entity';
 import { User } from './user.entity';
 
@@ -7,11 +8,13 @@ export class ArtistLike {
   @PrimaryGeneratedColumn()
   artistLikeId: number;
 
-  @Column()
-  userId: number;
+  @PrimaryColumn({ name: 'userId'})
+  @ApiProperty()
+   userId: number;
 
-  @Column()
-  artistId: number;
+  @PrimaryColumn({ name: 'artistId'})
+  @ApiProperty()
+   artistId: number;
 
   @Column()
   createdAt: string;
@@ -35,11 +38,11 @@ export class ArtistLike {
   // })
   // Artist:Artist;
 
-  @ManyToOne(() => User, (user) => user.artistLikes)
+  @ManyToOne(() => User)
   @JoinColumn([{ name: 'userId', referencedColumnName: 'userId'}])
   user: User;
 
-  @ManyToOne(() => Artist, (artist) => artist.artistLikes)
+  @ManyToOne(() => Artist)
   @JoinColumn([{ name: 'artistId', referencedColumnName: 'artistId'}])
   artist: Artist;
     

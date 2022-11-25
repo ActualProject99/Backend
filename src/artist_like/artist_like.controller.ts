@@ -8,27 +8,39 @@ import {
   UseGuards,
   UseInterceptors,
   Req,
+  ParseIntPipe
 } from '@nestjs/common';
 import { ArtistlikeService } from './artist_like.service';
 import { OnlyPrivateInterceptor } from 'src/common/interceptor/only-private.interceptor';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Artist } from '../entities/artist.entity';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
-import { JwtPayload } from 'src/auth/jwt/jwt.payload';
+import { JwtPayload } from '../auth/jwt/jwt.payload';
+import { UserLoginDTO } from '../user/dto/user-login.dto'
+
 
 @Controller('')
 export class ArtistlikeController {
   constructor(private artistlikeService: ArtistlikeService) {}
 
-  @Put('artistlike/:artistId')
+  @Post('artistlike/:artistId')
+  @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
-  async like(
-    @Param('artistId') artistId: number,
-    payload: JwtPayload,
-  ): Promise<any> {
-    const like = await this.artistlikeService.like(artistId, payload.sub);
-    return like;
+  like(@Param('artistId', ParseIntPipe) artistId: number, @Req() req){
+    return this.artistlikeService.like(artistId, req.user.userId)
   }
+
+
+
+
+  // @Put('artistlike/:artistId')
+  // @UseGuards(JwtAuthGuard)
+  // async like(
+  //   @Param('artistId') ParseIntPipe, artistId: number,  @Req() req 
+  // ){
+  // return this.artistlikeService.like(artistId, req.payload.userId);
+    
+  // }
 }
 
 // 유저별 좋아요 조회 유저아이디 어떻게 받아오는지?? 마이페이지에서 좋아요한 가수를 볼테니 일단 파라미터로 userId를 받는다고 가정

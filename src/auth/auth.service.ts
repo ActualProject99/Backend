@@ -71,7 +71,7 @@ export class AuthService {
       expiresIn: '10m',
     });
   }
-
+// 리턴 어디로 하는거죠?
   async tokenValidate(token: string) {
     return await this.jwtService.verify(token, {
       secret: process.env.SECRET_KEY,

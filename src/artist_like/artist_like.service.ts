@@ -7,6 +7,7 @@ import { Repository } from 'typeorm';
 import { UserService } from 'src/user/user.service';
 import { throwError } from 'rxjs';
 import * as dayjs from 'dayjs';
+import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
 
 @Injectable()
 export class ArtistlikeService {
@@ -19,37 +20,44 @@ export class ArtistlikeService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async like(artistId: number, like: any): Promise<void> {
-    // try {
-    const userId = like.payload.sub;
-    console.log(`1`, artistId, userId);
-    const existLike = await this.artistLikeRepository.findOne({
-      where: { artistId, userId },
-    });
-    console.log(existLike);
-    if (!existLike) {
-      console.log(`2`, artistId, userId);
-      const data = this.artistLikeRepository.create({
-        userId,
-        artistId,
-        createdAt: dayjs().format('YYYY-MM-DDTHH:mm:ss.sssZ'),
-        isLike: true,
-      });
-      await this.artistLikeRepository.save(data);
-    } else {
-      // console.log(`3`,artistId, userId)
-      //   if (existLike.isLike)
-      //   await this.artistLikeRepository.update(
-      //       { artistLikeId: existLike.artistLikeId },
-      //       { isLike: false },
-      //     );
-      //   else
-      //     await this.artistLikeRepository.update(
-      //       { artistLikeId: existLike.artistLikeId },
-      //       { isLike: true },
-      //     );
-      await this.artistLikeRepository.update(existLike, {});
-    }
+async like(artistId: number, userId: number) {
+  const artistlike = new ArtistLike();
+  artistlike.artistId = artistId;
+  artistlike.userId = userId;
+  return this.artistLikeRepository.create(artistlike)
+}
+
+
+  // async like(artistId: number, userId: number): Promise<void> {
+  //   // try {
+  //   console.log(`1`, artistId, userId);
+  //   const existLike = await this.artistLikeRepository.findOne({
+  //     where: { artistId, userId },
+  //   });
+  //   console.log(existLike);
+  //   if (!existLike) {
+  //     console.log(`2`, artistId, userId);
+  //     const data = this.artistLikeRepository.create({
+  //       userId,
+  //       artistId,
+  //       createdAt: dayjs().format('YYYY-MM-DDTHH:mm:ss.sssZ'),
+  //       isLike: true,
+  //     });
+  //     await this.artistLikeRepository.save(data);
+  //   } else {
+  //     // console.log(`3`,artistId, userId)
+  //     //   if (existLike.isLike)
+  //     //   await this.artistLikeRepository.update(
+  //     //       { artistLikeId: existLike.artistLikeId },
+  //     //       { isLike: false },
+  //     //     );
+  //     //   else
+  //     //     await this.artistLikeRepository.update(
+  //     //       { artistLikeId: existLike.artistLikeId },
+  //     //       { isLike: true },
+  //     //     );
+  //     await this.artistLikeRepository.delete(existLike);
+  //   }
 
     //     // } catch (error) {
     //         throwError(
@@ -60,7 +68,7 @@ export class ArtistlikeService {
     //             timestamp: new Date().toISOString(),
     //           },)
     // }
-  }
+  // }
 
   // // 특정 아티스트 likeCount 조회
   //     async getLikeCountByArtistId(artistId: number): Promise<Artist> {
