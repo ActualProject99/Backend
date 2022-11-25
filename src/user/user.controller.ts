@@ -155,7 +155,7 @@ export class UserController {
     } else {
       res.cookie('once_token', req.user.once_token);
     }
-    res.redirect('https://tgle.shop/users/signup');
+    res.redirect('https://tgle.shop/');
     res.end();
   }
 
