@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -13,22 +13,14 @@ import { UserService } from './user.service';
 
 @Module({
   imports: [
+    forwardRef(() => AuthModule),
     TypeOrmModule.forFeature([User]),
-    // PassportModule.register({ defaultStrategy: 'jwt', session: true }),
-    // JwtModule.register({
-    //   secret: process.env.SECRET_KEY,
-    //   secretOrPrivateKey: process.env.SECRET_KEY,
-    //   signOptions: { expiresIn: '1d' },
-    // }),
+    JwtModule.register({
+      secret: process.env.SECRET_KEY,
+      secretOrPrivateKey: process.env.SECRET_KEY,
+    }),
   ],
-  providers: [
-    JwtStrategy,
-    JwtService,
-    AuthService,
-    UserService,
-    AwsService,
-    // AuthModule,
-  ],
+  providers: [UserService, AwsService],
   controllers: [UserController],
   exports: [UserService],
 })

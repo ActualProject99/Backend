@@ -31,6 +31,7 @@ import { Location } from './entities/location.entity';
 // import { access } from 'fs';
 import { LocationService } from './location/location.service';
 import { LocationController } from './location/location.controller';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -72,6 +73,7 @@ import { LocationController } from './location/location.controller';
     ConcertlikeModule,
     UserModule,
     LocationModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
