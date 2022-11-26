@@ -28,15 +28,13 @@ export class ArtistService {
 
   async create(createArtistDto: CreateArtistDto): Promise<void> {
     const {
-      categoryId,
+      category,
       artistName,
       artistImg,
-      artistInfo,
       debutSong,
       debutDate,
     } = await this.artistRepository.save({
       ...createArtistDto,
-      createdAt: dayjs().format('YYYY-MM-DDTHH:mm:ss.sssZ'),
     });
   }
   // 삭제
@@ -65,7 +63,6 @@ export class ArtistService {
         .set({
           artistName: artist.artistName,
           artistImg: artist.artistImg,
-          artistInfo: artist.artistInfo,
         })
         .where('artistId = :artistId', { artistId })
         .execute();

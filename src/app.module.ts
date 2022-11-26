@@ -59,11 +59,11 @@ import { LocationController } from './location/location.controller';
       logging: true, // 로그 기록
       keepConnectionAlive: true, // 계속 실행되도록
     }),
-    // MongooseModule.forRoot(process.env.MONGO_URL),
+     MongooseModule.forRoot(`mongodb+srv://admin:tgle1222!@cluster0.ofwavxq.mongodb.net/?retryWrites=true&w=majority`),
 
     // MySqlConfigModule,
     // MySqlConfigService,
-    // ChatsModule,
+    ChatsModule,
     LocationModule,
     ArtistModule,
     ArtistlikeModule,
