@@ -38,10 +38,11 @@ export class CommentService {
   // 댓글 생성
   async create(
     concertId: number,
+    userId: number,
     createCommentDto: CreateCommentDto,
   ): Promise<void> {
     const { comment } = createCommentDto;
-    await this.commentRepository.save({ concertId, ...createCommentDto,
+    await this.commentRepository.save({ concertId, userId, ...createCommentDto,
       createdAt:dayjs().format('YYYY-MM-DDTHH:mm:ss.sssZ'),
       updatedAt:dayjs().format('YYYY-MM-DDTHH:mm:ss.sssZ') });
   }

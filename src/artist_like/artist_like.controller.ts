@@ -1,37 +1,76 @@
-import { Controller, Get, Post, Put, Delete, Param, UseGuards, UseInterceptors, Req } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Param,
+  UseGuards,
+  UseInterceptors,
+  Req,
+  ParseIntPipe
+} from '@nestjs/common';
 import { ArtistlikeService } from './artist_like.service';
-import { JwtAuthGuard } from 'src/user/jwt/jwt.guard';
 import { OnlyPrivateInterceptor } from 'src/common/interceptor/only-private.interceptor';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Artist } from '../entities/artist.entity';
-import { JwtPayload } from '../user/jwt/jwt.payload';
+import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
+import { JwtPayload } from '../auth/jwt/jwt.payload';
+import { UserLoginDTO } from '../user/dto/user-login.dto'
 
-@Controller('')
+
+@Controller('artistlike')
 export class ArtistlikeController {
-  constructor(
-    private artistlikeService: ArtistlikeService
-    ) {}
+  constructor(private artistlikeService: ArtistlikeService) {}
+
+  // // 좋아요 추가
+  // @Post('artistlike/:artistId')
+  // @ApiBearerAuth('access-token')
+  // @UseGuards(JwtAuthGuard)
+  // setArtistlike(@Param('artistId', ParseIntPipe) artistId: number, @Req() req){
+  //   return this.artistlikeService.createArtistLike(artistId, req.user.userId)
+  // }
+
+  // // 좋아요 삭제
+  // @Delete('artistlike/:artistId')
+  // @ApiBearerAuth('access-token')
+  // @UseGuards(JwtAuthGuard)
+  // delete(@Param('artistId', ParseIntPipe) artistId: number, @Req() req){
+  //   return this.artistlikeService.deleteArtistLike(artistId, req.user.userId)
+  // }
+
   
-  @Put('artistlike/:artistId')
+    // @Get('count/:artistId') // 좋아요 카운트
+    // getLikeCount(@Param('postId', ParseIntPipe) postId: number) {
+    //   return this.heartsService.getHeartCount(postId);
+    
+
+  
+
+  @Put(':artistId')
+  @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
-  async like(@Param('artistId') artistId: number, payload: JwtPayload): Promise<any> {
-    const like = await this.artistlikeService.like(
-      artistId,
-      payload.sub
-    );
-    return like;
+  async like(@Param('artistId', ParseIntPipe) artistId: number,  @Req() req ) {
+    const existLike:any = await this. artistlikeService.existLike(artistId, req.user.userId)
+    
+    if(!existLike){
+    return this.artistlikeService.createArtistLike(artistId, req.user.userId);
+  } else {
+    return this.artistlikeService.deleteArtistLike(artistId, req.user.userId);
   }
-}
+  }
+
+  @Get('mypage/:userId')
+  @ApiBearerAuth('access-token')
+  @UseGuards(JwtAuthGuard)
+  async findAllByUser(@Param('userId') userId: number) {
+    return this.artistlikeService.find(userId)
+  }
 
 
 
 
-
-
-
-
-   
-// 유저별 좋아요 조회 유저아이디 어떻게 받아오는지?? 마이페이지에서 좋아요한 가수를 볼테니 일단 파라미터로 userId를 받는다고 가정 
+// 유저별 좋아요 조회 유저아이디 어떻게 받아오는지?? 마이페이지에서 좋아요한 가수를 볼테니 일단 파라미터로 userId를 받는다고 가정
 // @Get(':userId')
 // @UseGuards(JwtAuthGuard)
 // @UseInterceptors(OnlyPrivateInterceptor)
@@ -52,3 +91,5 @@ export class ArtistlikeController {
 //     this.artistlikeService.deleteLike(user.userId, artistId);
 //   }
 // }
+ 
+}

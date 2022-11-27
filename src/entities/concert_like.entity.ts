@@ -1,4 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {  Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, PrimaryColumn} from 'typeorm';
+import { ApiProperty } from '@nestjs/swagger';
+import { Concert } from './concert.entity';
+import { User } from './user.entity';
 
 
 @Entity()
@@ -6,12 +9,22 @@ export class ConcertLike {
   @PrimaryGeneratedColumn()
   concertLikeId: number;
 
-  @Column()
+  @PrimaryColumn({ name: 'userId'})
+  @ApiProperty()
   userId: number;
 
-  @Column()
+  @PrimaryColumn({ name: 'concertId'})
+  @ApiProperty()
   concertId: number;
 
-  @Column()
-  createdAt: string;
+
+
+
+  @ManyToOne(() => User)
+  @JoinColumn([{ name: 'userId', referencedColumnName: 'userId'}])
+  user: User;
+
+  @ManyToOne(() => Concert)
+  @JoinColumn([{ name: 'concertId', referencedColumnName: 'concertId'}])
+  concert: Concert;
 }

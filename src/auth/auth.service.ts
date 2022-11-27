@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import CryptoJS from 'crypto-js';
 import { User } from 'src/entities/user.entity';
 import { UserService } from 'src/user/user.service';
 import { getConnection } from 'typeorm';
@@ -72,7 +71,7 @@ export class AuthService {
       expiresIn: '10m',
     });
   }
-
+// 리턴 어디로 하는거죠?
   async tokenValidate(token: string) {
     return await this.jwtService.verify(token, {
       secret: process.env.SECRET_KEY,

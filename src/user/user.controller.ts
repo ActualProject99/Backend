@@ -6,6 +6,8 @@ import {
   Logger,
   Post,
   Put,
+  Query,
+  Redirect,
   Req,
   Request,
   Res,
@@ -36,8 +38,7 @@ import {
 } from '@nestjs/swagger';
 import { KakaoAuthGuard } from 'src/auth/guard/kakao.guard';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
-import { AuthService } from './auth.service';
-// import multer from 'multer';
+import { AuthService } from 'src/auth/auth.service';
 
 @Controller('users')
 export class UserController {
@@ -73,15 +74,10 @@ export class UserController {
   async signUp(
     @Res({ passthrough: true }) response: Response,
     @Body() userRegisterDTO: UserRegisterDTO,
-    @UploadedFile() profileImg: Express.Multer.File,
+    // @UploadedFile() profileImg: Express.Multer.File,
   ) {
-    const imgUrl = await this.awsService.uploadFileToS3('users', profileImg);
-    // const user = await this.authService.validateUser(userRegisterDTO.email);
-    // const access_token = await this.authService.createLoginToken(user);
-    // const refresh_token = await this.authService.createRefreshToken(user);
-    // response.setHeader('access_token', access_token);
-    // response.setHeader('refresh_token', refresh_token);
-    return await this.usersService.registerUser(userRegisterDTO, imgUrl);
+    // const imgUrl = await this.awsService.uploadFileToS3('users', profileImg);
+    return await this.usersService.registerUser(userRegisterDTO);
   }
 
   // 유저 로그인
@@ -118,7 +114,7 @@ export class UserController {
     response.setHeader('access_token', access_token);
     // response.setHeader('refresh_token', refresh_token);
     response.cookie('jwt', jwt, { httpOnly: true });
-    return user;
+    return { AccessToken: jwt };
   }
 
   @ApiOperation({
@@ -131,6 +127,21 @@ export class UserController {
     return HttpStatus.OK;
   }
 
+  // @Get('/kakao/callback')
+  // @ApiTags('user')
+  // @Redirect('https://tgle.shop/users/userinfo')
+  // async kakaoCallback(@Query() query, @Res() res) {
+  //   const { access_token } = await this.usersService.kakaoCallback(query.code);
+  // res.cookie('refreshToken', refreshToken);
+  // res.cookie('accessToken', accessToken);
+  // res.session.token = { accessToken, refreshToken };
+  // res.session.save();
+  // return res.redirect('https://everyque.com/auth');
+  //   return {
+  //     url: `https://tgle.shop/auth?accessToken=${access_token}`,
+  //   };
+  // }
+
   @ApiOperation({
     summary: '카카오 로그인 콜백',
     description: '카카오 로그인시 콜백 라우터입니다.',
@@ -140,7 +151,7 @@ export class UserController {
   async kakaocallback(@Req() req, @Res() res: Response) {
     if (req.user.type === 'login') {
       res.cookie('access_token', req.user.access_token);
-      res.cookie('refresh_token', req.user.refresh_token);
+      // res.cookie('refresh_token', req.user.refresh_token);
     } else {
       res.cookie('once_token', req.user.once_token);
     }

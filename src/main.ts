@@ -25,7 +25,7 @@ class Application {
     this.server = server;
 
     if (!process.env.SECRET_KEY) this.logger.error('Set "SECRET" env');
-    this.DEV_MODE = process.env.NODE_ENV === 'production';
+    this.DEV_MODE = process.env.NODE_ENV === 'production' ? false : true;
     this.PORT = process.env.PORT;
     this.corsOriginList = process.env.CORS_ORIGIN_LIST
       ? process.env.CORS_ORIGIN_LIST.split(',').map((origin) => origin.trim())
@@ -53,8 +53,8 @@ class Application {
       SwaggerModule.createDocument(
         this.server,
         new DocumentBuilder()
-          .setTitle('Tgle - API')
-          .setDescription('Actual Project Page')
+          .setTitle(' Tgle - API')
+          .setDescription('Concert Ticketing')
           .setVersion('0.0.1')
           .build(),
       ),
@@ -69,7 +69,6 @@ class Application {
         saveUninitialized: true,
       }),
     );
-
     this.server.enableCors({
       origin: this.corsOriginList,
       credentials: true,
@@ -91,13 +90,28 @@ class Application {
   }
 
   async boostrap() {
+    const appHttps = await NestFactory.create<NestExpressApplication>(
+      AppModule,
+      {
+        cors: true,
+      },
+    );
+    appHttps.enableCors({
+      origin: ['https://tgle.shop'],
+      methods: 'GET, HEAD, PUT, PATCH, POST, DELETE, OPTIONS',
+      credentials: true,
+    });
+    appHttps.useGlobalPipes(new ValidationPipe());
+    appHttps.useGlobalFilters(new HttpApiExceptionFilter());
+    appHttps.setViewEngine('hbs');
+    // appHttps.use(helmet());
     await this.setUpGlobalMiddleware();
     await this.server.listen(this.PORT);
   }
 
   startLog() {
     if (this.DEV_MODE) {
-      this.logger.log(`✅ Server on http://localhost:${this.PORT}`);
+      this.logger.log(`✅ Server on https://localhost:${this.PORT}`);
     } else {
       this.logger.log(`✅ Server on port ${this.PORT}...`);
     }
@@ -109,7 +123,9 @@ class Application {
 }
 
 async function init(): Promise<void> {
-  const server = await NestFactory.create<NestExpressApplication>(AppModule);
+  const server = await NestFactory.create<NestExpressApplication>(AppModule, {
+    cors: true,
+  });
   const app = new Application(server);
   await app.boostrap();
   app.startLog();

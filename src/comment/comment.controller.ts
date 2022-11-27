@@ -8,7 +8,9 @@ import {
     Body,
     DefaultValuePipe,
     ParseIntPipe,
-    Query
+    Query,
+    UseGuards,
+    Req
   } from '@nestjs/common';
   import { CommentService } from './comment.service';
   import { Comment } from '../entities/comment.entity';
@@ -17,6 +19,8 @@ import {
   // import { Repository } from 'typeorm';
   // import { InjectRepository } from '@nestjs/typeorm';
   import { Pagination } from 'nestjs-typeorm-paginate';
+  import { ApiBearerAuth } from '@nestjs/swagger';
+  import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
   
   @Controller('comment')
   export class CommentController {
@@ -41,13 +45,14 @@ import {
     }
 
     // 댓글 생성
-  @Post(':concertId')
-  create(
-    @Param('concertId') concertId: number,
-    @Body() createCommentDto: CreateCommentDto,
-  ) {
-    return this.commentService.create(concertId, createCommentDto);
-  }
+    @Post(':concertId')
+    @ApiBearerAuth('access-token')
+    @UseGuards(JwtAuthGuard)
+      create(@Param('concertId') concertId: number, @Req() req,
+      @Body() createCommentDto: CreateCommentDto,
+    ) {
+      return this.commentService.create(concertId, req.user.userId ,createCommentDto);
+    }
 
     // // 댓글 수정
     // @Put(':commentId')
