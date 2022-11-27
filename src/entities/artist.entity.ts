@@ -8,7 +8,7 @@ export class Artist {
   artistId: number;
 
   @Column()
-  categoryId: number;
+  category: string;
 
   @Index({fulltext: true})
   @Column()
@@ -23,11 +23,6 @@ export class Artist {
   @Column()
   debutDate: string;
 
-  @Column()
-  artistInfo: string;
-
-  @Column()
-  createdAt: string;
 
   // @Column({ default: 0})
   // likeCount: number;
