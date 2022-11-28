@@ -1,5 +1,14 @@
-import { Controller, Get, Post, Put, Delete, Param, Body, Req, Query}
- from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Param,
+  Body,
+  Req,
+  Query,
+} from '@nestjs/common';
 import { ConcertService } from './concert.service';
 import { Concert } from '../entities/concert.entity';
 import { CreateConcertDto } from './dto/create-concert.dto';
@@ -10,19 +19,23 @@ import { Panorama } from 'aws-sdk';
 
 @Controller('')
 export class ConcertController {
-  constructor(
-    private concertService: ConcertService) {}
+  constructor(private concertService: ConcertService) {}
 
+  // 콘서트 전체 조회
+  @Get('concert')
+  findAll() {
+    return this.concertService.findAll();
+  }
   // 카테고리별 조회
   @Get('category/:categoryId')
-  findAll(@Param('categoryId') categoryId: number): Promise<Concert[]> {
+  findAllByCat(@Param('categoryId') categoryId: number): Promise<Concert[]> {
     return this.concertService.getConcert(categoryId);
   }
 
   // 콘서트 월별로 전체조회
-  @Get('concert')
+  @Get('month')
   findAllConcertByMonth(@Query('month') month: number): Promise<Concert[]> {
-    return this.concertService.findAllConcertByMonth(month)
+    return this.concertService.findAllConcertByMonth(month);
   }
 
   // 아티스트별 콘서트 조회
