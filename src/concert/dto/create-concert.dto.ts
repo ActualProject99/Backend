@@ -4,6 +4,7 @@ import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateConcertDto extends PickType(Concert, [
   'categoryId',
+  'month',
   'concertName',
   'concertImg',
   'concertInfo',
