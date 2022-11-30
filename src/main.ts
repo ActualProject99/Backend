@@ -90,20 +90,24 @@ class Application {
   }
 
   async boostrap() {
-    const appHttps = await NestFactory.create<NestExpressApplication>(
-      AppModule,
-      {
-        cors: true,
-      },
-    );
-    appHttps.enableCors({
-      origin: ['https://tgle.shop'],
-      methods: 'GET, HEAD, PUT, PATCH, POST, DELETE, OPTIONS',
-      credentials: true,
-    });
-    appHttps.useGlobalPipes(new ValidationPipe());
-    appHttps.useGlobalFilters(new HttpApiExceptionFilter());
-    appHttps.setViewEngine('hbs');
+    // const appHttps = await NestFactory.create<NestExpressApplication>(
+    //   AppModule,
+    //   {
+    //     cors: true,
+    //   },
+    // );
+    // appHttps.enableCors({
+    //   origin: [
+    //     'https://tgle.shop',
+    //     'https://www.tgle.shop/',
+    //     'http://localhost:3000/',
+    //   ],
+    //   methods: 'GET, HEAD, PUT, PATCH, POST, DELETE, OPTIONS',
+    //   credentials: true,
+    // });
+    // appHttps.useGlobalPipes(new ValidationPipe());
+    // appHttps.useGlobalFilters(new HttpApiExceptionFilter());
+    // appHttps.setViewEngine('hbs');
     // appHttps.use(helmet());
     await this.setUpGlobalMiddleware();
     await this.server.listen(this.PORT);
@@ -123,9 +127,7 @@ class Application {
 }
 
 async function init(): Promise<void> {
-  const server = await NestFactory.create<NestExpressApplication>(AppModule, {
-    cors: true,
-  });
+  const server = await NestFactory.create<NestExpressApplication>(AppModule);
   const app = new Application(server);
   await app.boostrap();
   app.startLog();

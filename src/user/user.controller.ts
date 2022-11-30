@@ -112,9 +112,10 @@ export class UserController {
     // const refresh_token = await this.authService.createRefreshToken(user);
 
     response.setHeader('access_token', access_token);
+    response.setHeader('jwt', jwt);
     // response.setHeader('refresh_token', refresh_token);
     response.cookie('jwt', jwt, { httpOnly: true });
-    return { AccessToken: jwt };
+    return { AccessToken: access_token, jwt: jwt };
   }
 
   @ApiOperation({

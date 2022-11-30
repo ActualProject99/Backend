@@ -60,7 +60,9 @@ import { AuthModule } from './auth/auth.module';
       logging: true, // 로그 기록
       keepConnectionAlive: true, // 계속 실행되도록
     }),
-     MongooseModule.forRoot(`mongodb+srv://admin:tgle1222!@cluster0.ofwavxq.mongodb.net/?retryWrites=true&w=majority`),
+    MongooseModule.forRoot(
+      `mongodb+srv://admin:tgle1222!@cluster0.ofwavxq.mongodb.net/?retryWrites=true&w=majority`,
+    ),
 
     // MySqlConfigModule,
     // MySqlConfigService,
