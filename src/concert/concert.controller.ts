@@ -21,20 +21,14 @@ import { Panorama } from 'aws-sdk';
 export class ConcertController {
   constructor(private concertService: ConcertService) {}
 
-  // 콘서트 전체 조회
-  @Get('concert')
-  findAll() {
-    return this.concertService.findAll();
-  }
-
   // 카테고리별 조회
   @Get('category/:categoryId')
-  findAllByCat(@Param('categoryId') categoryId: number): Promise<Concert[]> {
+  findAll(@Param('categoryId') categoryId: number): Promise<Concert[]> {
     return this.concertService.getConcert(categoryId);
   }
 
   // 콘서트 월별로 전체조회
-  @Get('month')
+  @Get('concert')
   findAllConcertByMonth(@Query('month') month: number): Promise<Concert[]> {
     return this.concertService.findAllConcertByMonth(month);
   }
@@ -46,9 +40,9 @@ export class ConcertController {
   }
 
   // 콘서트 상세 조회 --> 그냥 콘서트 조회로 바꾸면 프론트에서 직접 뽑아서 씀
-  @Get('concert/:concertId')
-  async findOne(@Param('concertId') concertId: number): Promise<Concert> {
-    return this.concertService.findOne(concertId);
+  @Get('concerts')
+  async find(): Promise<Concert[]> {
+    return this.concertService.find();
   }
 
   // 콘서트 생성

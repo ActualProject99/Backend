@@ -17,6 +17,7 @@ import { Artist } from '../entities/artist.entity';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
 import { JwtPayload } from '../auth/jwt/jwt.payload';
 import { UserLoginDTO } from '../user/dto/user-login.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('artistlike')
 export class ArtistlikeController {
@@ -44,24 +45,24 @@ export class ArtistlikeController {
 
   @Put(':artistId')
   @ApiBearerAuth('access-token')
+  // @ApiBearerAuth('refresh-token')
   @UseGuards(JwtAuthGuard)
   async like(@Param('artistId', ParseIntPipe) artistId: number, @Req() req) {
-    const userId = 10;
     const existLike: any = await this.artistlikeService.existLike(
       artistId,
       req.user.userId,
     );
-    return console.log(existLike);
 
-    // if (!existLike) {
-    //   return this.artistlikeService.createArtistLike(artistId, req);
-    // } else {
-    //   return this.artistlikeService.deleteArtistLike(artistId, req);
-    // }
+    if (!existLike) {
+      return this.artistlikeService.createArtistLike(artistId, req.user.userId);
+    } else {
+      return this.artistlikeService.deleteArtistLike(artistId, req.user.userId);
+    }
   }
 
   @Get('mypage/:userId')
   @ApiBearerAuth('access-token')
+  // @ApiBearerAuth('refresh-token')
   @UseGuards(JwtAuthGuard)
   async findAllByUser(@Param('userId') userId: number) {
     return this.artistlikeService.find(userId);
@@ -87,5 +88,5 @@ export class ArtistlikeController {
   //   remove(@Param('artistId') artistId: number, user:User) {
   //     this.artistlikeService.deleteLike(user.userId, artistId);
   //   }
-  // }
+  //
 }
