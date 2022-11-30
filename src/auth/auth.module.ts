@@ -5,9 +5,12 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './strategy/jwt.strategy';
 import { KakaoStrategy } from './strategy/kakao.strategy';
 import { UserModule } from 'src/user/user.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from 'src/entities/user.entity';
 
 @Module({
   imports: [
+    TypeOrmModule.forFeature([User]),
     forwardRef(() => UserModule),
     PassportModule.register({
       defaultStrategy: 'jwt',
@@ -16,7 +19,6 @@ import { UserModule } from 'src/user/user.module';
     JwtModule.register({
       secret: process.env.SECRET_KEY,
       secretOrPrivateKey: process.env.SECRET_KEY,
-      //   signOptions: { expiresIn: '1d' },
     }),
   ],
   providers: [AuthService, JwtStrategy, KakaoStrategy],

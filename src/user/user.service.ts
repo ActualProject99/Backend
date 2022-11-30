@@ -62,7 +62,7 @@ export class UserService {
       throw new UnauthorizedException('로그인에 실패하였습니다.');
     try {
       const jwt = await this.jwtService.signAsync(
-        { userId: user.userId },
+        { sub: user.userId },
         { secret: this.configService.get('SECRET_KEY') },
       );
       return { jwt, user };
