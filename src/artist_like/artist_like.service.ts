@@ -25,13 +25,13 @@ export class ArtistlikeService {
     return this.artistLikeRepository.findOne({ where: { artistId, userId } });
   }
 
+  async createArtistLike(artistId: number, userId: number) {
+    const artistlike = new ArtistLike();
+    artistlike.artistId = artistId;
+    artistlike.userId = userId;
 
-  const artistlike = new ArtistLike();
-  artistlike.artistId = artistId;
-  artistlike.userId = userId;
-  
-  return this.artistLikeRepository.save(artistlike)
-}
+    return this.artistLikeRepository.save(artistlike);
+  }
 
   async deleteArtistLike(artistId: number, userId: number): Promise<any> {
     const existLike = await this.artistLikeRepository.findOne({
@@ -47,6 +47,7 @@ export class ArtistlikeService {
     return this.artistLikeRepository.find({ where: { userId } });
   }
 }
+
 //  async CountArtistLike(artistId: number) {
 //   return this.artistLikeRepository.count(artistId);
 //  }
