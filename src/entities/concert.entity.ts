@@ -45,12 +45,6 @@ export class Concert {
   ratings: string;
 
   @Column()
-  createdAt: string;
-
-  @Column()
-  updatedAt: string;
-
-  @Column()
   calender: string;
 
 

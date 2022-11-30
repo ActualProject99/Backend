@@ -32,9 +32,9 @@ export class ConcertController {
   }
 
   // 콘서트 상세 조회 --> 그냥 콘서트 조회로 바꾸면 프론트에서 직접 뽑아서 씀
-  @Get('concert/:concertId')
-  async findOne(@Param('concertId') concertId: number): Promise<Concert> {
-    return this.concertService.findOne(concertId);
+  @Get('concerts')
+  async find(): Promise<Concert[]> {
+    return this.concertService.find();
   }
 
   // 콘서트 생성

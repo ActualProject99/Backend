@@ -29,17 +29,14 @@ export class ConcertService {
         return findAllConcertByMonth;
     }
 
-    // 상세 조회
-    findOne(concertId: number): Promise<Concert> {
-        return this.concertRepository.findOne({where: {concertId}});
-      
+    // 전체 조회
+    find() {
+        return this.concertRepository.find();
     }
 
     // 생성
     async create(createConcertDto: CreateConcertDto): Promise<void> {
-        const {concertName, concertImg, concertInfo, concertDate, ticketingDate, calender } = await this.concertRepository.save({...createConcertDto,
-             createdAt:dayjs().format('YYYY-MM-DDTHH:mm:ss.sssZ'),
-        updatedAt:dayjs().format('YYYY-MM-DDTHH:mm:ss.sssZ')});
+        const {concertName, concertImg, concertInfo, concertDate, ticketingDate, calender, month } = await this.concertRepository.save({...createConcertDto});
         // await this.concertRepository.save({...createConcertDto});
     }
 
@@ -61,7 +58,7 @@ export class ConcertService {
 
    // 수정
    async update(concertId: number, concert: Concert): Promise<void> {
-    const existedConcert = await this.findOne(concertId);
+    const existedConcert = await this.concertRepository.findOne({where:{concertId}});
     if(existedConcert)   {
      await  this.concertRepository
             .createQueryBuilder()
