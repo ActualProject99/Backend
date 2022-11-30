@@ -26,6 +26,7 @@ export class ConcertController {
   findAll() {
     return this.concertService.findAll();
   }
+
   // 카테고리별 조회
   @Get('category/:categoryId')
   findAllByCat(@Param('categoryId') categoryId: number): Promise<Concert[]> {
