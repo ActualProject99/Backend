@@ -22,7 +22,14 @@ export class ArtistlikeService {
   ) {}
 
   async existLike(artistId: number, userId: number) {
-    return this.artistLikeRepository.findOne({ where: { artistId, userId } });
+    const existLike = await this.artistLikeRepository.findOne({
+      where: { artistId, userId },
+    });
+    if (existLike) {
+      return { isLike: true };
+    } else {
+      return { isLike: false };
+    }
   }
 
   async createArtistLike(artistId: number, userId: number) {
@@ -47,99 +54,3 @@ export class ArtistlikeService {
     return this.artistLikeRepository.find({ where: { userId } });
   }
 }
-
-//  async CountArtistLike(artistId: number) {
-//   return this.artistLikeRepository.count(artistId);
-//  }
-
-// // 좋아요 여부
-// async isLike()
-//   async like(artistId: number, userId: number): Promise<void> {
-//     // try {
-//     console.log(`1`, artistId, userId);
-//     const existLike = await this.artistLikeRepository.findOne({
-//       where: { artistId, userId },
-//     });
-//     console.log(existLike);
-//     if (!existLike) {
-//       console.log(`2`, artistId, userId);
-//       const data = this.artistLikeRepository.create({
-//         userId,
-//         artistId,
-//         createdAt: dayjs().format('YYYY-MM-DDTHH:mm:ss.sssZ'),
-//         isLike: true,
-//       });
-//       await this.artistLikeRepository.save(data);
-//     } else {
-//       // console.log(`3`,artistId, userId)
-//       //   if (existLike.isLike)
-//       //   await this.artistLikeRepository.update(
-//       //       { artistLikeId: existLike.artistLikeId },
-//       //       { isLike: false },
-//       //     );
-//       //   else
-//       //     await this.artistLikeRepository.update(
-//       //       { artistLikeId: existLike.artistLikeId },
-//       //       { isLike: true },
-//       //     );
-//       await this.artistLikeRepository.delete(existLike);
-//     }
-
-//     // } catch (error) {
-//         throwError(
-//           {
-//             success: false,
-//             statusCode: 400,
-//             error: '알 수 없는 오류가 발생했습니다.',
-//             timestamp: new Date().toISOString(),
-//           },)
-// }
-// }
-
-// // 특정 아티스트 likeCount 조회
-//     async getLikeCountByArtistId(artistId: number): Promise<Artist> {
-//         return this.artistRepository.findOne({select: {likeCount: true}, where: {artistId}});
-// }
-
-// // 좋아요 여부
-//     async findLike(userId: number, artistId: number) {
-//   const user = {userId:userId, artistId: artistId}
-//         const isLike =  await this.artistLikeRepository.findOne({where:{user}})
-//         if(isLike) {
-//             return { isLike: true }
-//         } else {
-//             return { isLike: false }
-//         }
-//     }
-
-// // 유저별 좋아요 조회
-//     async getArtistLikeByUser(userId: number) {
-//         const user = {userId}
-//         return this.artistLikeRepository.find({where:{user}})
-//     };
-
-// // 좋아요 추가
-// async addLike(userId: number, artistId: number) {
-//     const user = {userId, artistId}
-//     this.artistLikeRepository.create({user})
-// }
-// // 좋아요 삭제
-// async deleteLike(userId: number, artistId: number) {
-//     const user = {userId, artistId}
-//    await this.artistLikeRepository.delete({user})
-// }
-
-// async findUserLike(userId): Promise<User[]> {
-//     const result = this.userRepository
-//     .createQueryBuilder('u')
-//       .leftJoinAndSelect('u.artistlikes', 'artistlike')
-//       .leftJoinAndSelect('u.artists', 'artist')
-//       .select([
-//         'artist_user_no',
-//         'artistlike_artist_no'
-
-//       ])
-//       .where(`artist_user_no = $(userId)`)
-//       .getMany();
-//       return result
-// }

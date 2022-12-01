@@ -66,7 +66,7 @@ export class ArtistlikeController {
   // @ApiBearerAuth('refresh-token')
   @UseGuards(JwtAuthGuard)
   // @UseInterceptors(OnlyPrivateInterceptor)
-  async findAllByUser(@Param('userId') userId: number) {
+  public async isLike(@Param('userId') userId: number) {
     return this.artistlikeService.find(userId);
   }
 

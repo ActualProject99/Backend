@@ -6,8 +6,6 @@ import {
   Logger,
   Post,
   Put,
-  Query,
-  Redirect,
   Req,
   Request,
   Res,
@@ -30,6 +28,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { AwsService } from 'src/aws.service';
 import { UserUpdateDTO } from './dto/user-update.dto';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiCreatedResponse,
   ApiOperation,
@@ -39,6 +38,7 @@ import {
 import { KakaoAuthGuard } from 'src/auth/guard/kakao.guard';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
 import { AuthService } from 'src/auth/auth.service';
+import { JwtStrategy } from 'src/auth/strategy/jwt.strategy';
 
 @Controller('users')
 export class UserController {
@@ -97,7 +97,7 @@ export class UserController {
     status: 500,
     description: '서버 에러',
   })
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   async logIn(
     @Request() req: any,
     @Body() userLoginDTO: UserLoginDTO,
@@ -158,11 +158,12 @@ export class UserController {
     } else {
       res.cookie('once_token', req.user.once_token);
     }
-    res.redirect('https://tgle.shop/');
+    res.redirect('http://tgle.ml/');
     res.end();
   }
 
   // 유저 정보 불러오기
+  @ApiBearerAuth('jwt')
   @Get('userinfo')
   @ApiTags('users')
   @ApiOperation({
@@ -180,12 +181,15 @@ export class UserController {
     description: '서버 에러',
   })
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(OnlyPrivateInterceptor)
-  async getCurrentUser(@CurrentUser() currentUser: UserDTO) {
+  // @UseInterceptors(OnlyPrivateInterceptor)
+  async getCurrentUser(@Req() req) {
+    console.log(req.user.userId);
+    const currentUser = await this.usersService.findUserByEmail(req.user.email);
     return currentUser;
   }
 
   // 유저 닉네임, 패스워드 수정
+  @ApiBearerAuth('jwt')
   @Put('userinfo')
   @ApiTags('users')
   @ApiOperation({
@@ -204,7 +208,7 @@ export class UserController {
     description: '서버 에러',
   })
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(OnlyPrivateInterceptor)
+  // @UseInterceptors(OnlyPrivateInterceptor)
   async updateUserInfo(
     @Body() userUpdateDTO: UserUpdateDTO,
     @CurrentUser() currentUser: UserDTO,
@@ -229,6 +233,7 @@ export class UserController {
   }
 
   // 유저 프로필 이미지 업데이트
+  @ApiBearerAuth('jwt')
   @UseInterceptors(FileInterceptor('profileImg'))
   @Put('userinfo/upload')
   @ApiTags('users')
@@ -248,7 +253,7 @@ export class UserController {
     description: '서버 에러',
   })
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(OnlyPrivateInterceptor)
+  // @UseInterceptors(OnlyPrivateInterceptor)
   async updateUserImg(
     @UploadedFile() profileImg: Express.Multer.File,
     @Body() userUpdateDTO: UserUpdateDTO,

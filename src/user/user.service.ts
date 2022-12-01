@@ -12,7 +12,6 @@ import { UserRegisterDTO } from './dto/user-register.dto';
 import { User } from '../entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { UserLoginDTO } from './dto/user-login.dto';
-import { UserDTO } from './dto/user.dto';
 
 @Injectable()
 export class UserService {
