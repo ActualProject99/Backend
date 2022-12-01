@@ -16,8 +16,8 @@ import { UserService } from './user.service';
     forwardRef(() => AuthModule),
     TypeOrmModule.forFeature([User]),
     JwtModule.register({
-      secret: process.env.SECRET_KEY,
-      secretOrPrivateKey: process.env.SECRET_KEY,
+      // secret: process.env.SECRET_KEY,
+      // secretOrPrivateKey: process.env.SECRET_KEY,
     }),
   ],
   providers: [UserService, AwsService],

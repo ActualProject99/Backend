@@ -107,15 +107,17 @@ export class UserController {
       userLoginDTO.email,
       userLoginDTO.password,
     );
-    const user = await this.authService.validateUser(userLoginDTO.email);
-    const access_token = await this.authService.createLoginToken(user);
+    // const user = await this.authService.validateUser(userLoginDTO.email);
+    // const access_token = await this.authService.createLoginToken(user);
     // const refresh_token = await this.authService.createRefreshToken(user);
 
-    response.setHeader('access_token', access_token);
+    // response.setHeader('access_token', access_token);
     response.setHeader('jwt', jwt);
     // response.setHeader('refresh_token', refresh_token);
-    response.cookie('jwt', jwt, { httpOnly: true });
-    return { AccessToken: access_token, jwt: jwt };
+    // response.cookie('jwt', jwt, { httpOnly: true });
+    response.cookie('jwt', jwt);
+    // return { AccessToken: access_token, jwt: jwt };
+    return { jwt };
   }
 
   @ApiOperation({

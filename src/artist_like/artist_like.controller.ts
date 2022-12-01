@@ -44,9 +44,10 @@ export class ArtistlikeController {
   //   return this.heartsService.getHeartCount(postId);
 
   @Put(':artistId')
-  @ApiBearerAuth('access-token')
+  @ApiBearerAuth('jwt')
   // @ApiBearerAuth('refresh-token')
   @UseGuards(JwtAuthGuard)
+  // @UseInterceptors(OnlyPrivateInterceptor)
   async like(@Param('artistId', ParseIntPipe) artistId: number, @Req() req) {
     const existLike: any = await this.artistlikeService.existLike(
       artistId,
@@ -61,9 +62,10 @@ export class ArtistlikeController {
   }
 
   @Get('mypage/:userId')
-  @ApiBearerAuth('access-token')
+  // @ApiBearerAuth('access-token')
   // @ApiBearerAuth('refresh-token')
   @UseGuards(JwtAuthGuard)
+  // @UseInterceptors(OnlyPrivateInterceptor)
   async findAllByUser(@Param('userId') userId: number) {
     return this.artistlikeService.find(userId);
   }

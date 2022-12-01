@@ -54,18 +54,18 @@ export class UserService {
   async verifyUserAndSignJwt(
     email: UserLoginDTO['email'],
     password: UserLoginDTO['password'],
-  ): Promise<{ jwt: string; user: UserDTO }> {
+  ): Promise<{ jwt: string }> {
     const user = await this.userRepository.findOne({ where: { email } });
     if (!user)
       throw new UnauthorizedException('해당하는 이메일은 존재하지 않습니다.');
     if (!(await bcrypt.compare(password, user.password)))
       throw new UnauthorizedException('로그인에 실패하였습니다.');
     try {
-      const jwt = await this.jwtService.signAsync(
-        { sub: user.userId },
-        { secret: this.configService.get('SECRET_KEY') },
-      );
-      return { jwt, user };
+      const payload = { email };
+      const jwt = await this.jwtService.sign(payload, {
+        secret: this.configService.get('SECRET_KEY'),
+      });
+      return { jwt };
     } catch (err) {
       throw new BadRequestException(err.message);
     }
