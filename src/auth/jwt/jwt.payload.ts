@@ -1,5 +1,5 @@
 export class JwtPayload {
-  sub: number;
+  sub?: number;
   iat?: number;
   exp?: number;
 }
