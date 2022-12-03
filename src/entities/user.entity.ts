@@ -67,10 +67,7 @@ export class User {
   refresh_token: string;
 
   @Column({ nullable: true })
-  like: number;
-
-  @Column({ nullable: true })
-  likeSinger: number;
+  likeArtist: number;
 
   @Column({ nullable: true })
   likeConcert: number;

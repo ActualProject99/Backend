@@ -79,6 +79,8 @@ class Application {
     this.server.useGlobalPipes(
       new ValidationPipe({
         transform: true,
+        whitelist: true,
+        forbidNonWhitelisted: true,
       }),
     );
     this.server.use(passport.initialize());

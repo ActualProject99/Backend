@@ -26,30 +26,23 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
   ): Promise<any> {
     const email = profile._json.kakao_account.email;
     const nickname = profile._json.properties.nickname;
-    const profileImg = profile._json.properties.image_url;
-    // const user_profile = {
-    //   email,
-    //   nickname,
-    //   profileImg,
-    // };
     const user = await this.authService.validateUser(email);
+    // 유저가 없을때
     if (user === null) {
-      // 유저가 없을때
-      // console.log('일회용 토큰 발급');
-      // const once_token = this.authService.onceToken(user_profile);
-      // return { once_token, type: 'once' };
+      console.log('일회용 토큰 발급');
+      const jwt = this.authService.createLoginToken(email);
       const newUser = await this.userRepository.save({
         email: email,
         nickname: nickname,
-        profileImg: profileImg,
       });
       done(null, newUser);
+      return { jwt, nickname, type: 'once' };
     }
 
     // 유저가 있을때
     console.log('로그인 토큰 발급');
-    const access_token = await this.authService.createLoginToken(user);
-    const refresh_token = await this.authService.createRefreshToken(user);
-    return { access_token, refresh_token, type: 'login' };
+    const jwt = await this.authService.createLoginToken(user);
+    // const refresh_token = await this.authService.createRefreshToken(user);
+    return { jwt, nickname, type: 'login' };
   }
 }

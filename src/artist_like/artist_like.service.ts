@@ -40,6 +40,16 @@ export class ArtistlikeService {
     return this.artistLikeRepository.save(artistlike);
   }
 
+  // 유저의 likeArtist에서 artistId 생성
+  async createLikeArtist(artistId: number, userId: number) {
+    const createLikeArtist =
+      /*new User();*/
+      await this.userRepository.findOne({ where: { userId } });
+    createLikeArtist.likeArtist = artistId;
+
+    return this.userRepository.save(createLikeArtist);
+  }
+
   async deleteArtistLike(artistId: number, userId: number): Promise<any> {
     const existLike = await this.artistLikeRepository.findOne({
       where: { artistId, userId },
@@ -49,8 +59,63 @@ export class ArtistlikeService {
     }
   }
 
+  // 유저의 likeArtist에서 artistId 삭제
+  async deleteLikeArtist(artistId: number, userId: number) {
+    const deleteLikeArtist: any = await this.userRepository.findOne({
+      where: { userId },
+    });
+    const likeArtist: any = await deleteLikeArtist.likeArtist.findOne({
+      where: { artistId },
+    });
+    if (likeArtist) {
+      return this.userRepository.remove(likeArtist);
+    }
+  }
+
   // 특정 유저 좋아요 조회
   find(userId: number): Promise<ArtistLike[]> {
     return this.artistLikeRepository.find({ where: { userId } });
   }
 }
+
+// 새로운 접근법 제시(민호)
+// async getLikeCountByArtistId(artistId: number) {
+//   const artist: Artist = await this.artistRepository.findOne({
+//     where: { artistId: artistId},
+//   });
+
+//   if (!artist) {
+//     throw new BadRequestException('존재하지 않는 아티스트 입니다.');
+//   }
+
+//   const likes: ArtistLike[] = await this.artistLikeRepository.find({ where: { artist } });
+//   return likes.length;
+// }
+
+// async isLike(user: User, artist: Artist) {
+//   const findLike: ArtistLike = await this.artistLikeRepository.findOne({
+//     where: { user, artist },
+//   });
+//   if (!findLike) {
+//     return false;
+//   }
+//   return true;
+// }
+
+// /**
+//  * 좋아요
+//  */
+// async like(user: User, artist: Artist) {
+//   await this.artistLikeRepository.save({ user, artist });
+// }
+
+// /**
+//  * 좋아요 취소
+//  */
+// async unlike(user: User, artist: Artist) {
+//   const findLike: ArtistLike = await this.artistLikeRepository.findOne({
+//     where: { user, artist },
+//   });
+//   await this.artistLikeRepository.remove(findLike);
+// }
+// }
