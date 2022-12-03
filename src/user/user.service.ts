@@ -12,6 +12,7 @@ import { UserRegisterDTO } from './dto/user-register.dto';
 import { User } from '../entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { UserLoginDTO } from './dto/user-login.dto';
+import axios, { AxiosRequestConfig } from 'axios';
 
 @Injectable()
 export class UserService {
@@ -53,7 +54,7 @@ export class UserService {
   async verifyUserAndSignJwt(
     email: UserLoginDTO['email'],
     password: UserLoginDTO['password'],
-  ): Promise<{ jwt: string }> {
+  ): Promise<{ jwt: string; nickname: string }> {
     const user = await this.userRepository.findOne({ where: { email } });
     if (!user)
       throw new UnauthorizedException('해당하는 이메일은 존재하지 않습니다.');
@@ -64,11 +65,73 @@ export class UserService {
       const jwt = await this.jwtService.sign(payload, {
         secret: this.configService.get('SECRET_KEY'),
       });
-      return { jwt };
+      const nickname = user.nickname;
+      return { jwt, nickname };
     } catch (err) {
       throw new BadRequestException(err.message);
     }
   }
+
+  // async kakaoSignin() {
+  //   const data = {
+  //     KAKAO_ID: process.env.KAKAO_KEY,
+  //     KAKAO_REDIRECT_URI: process.env.KAKAO_CALLBACK_URL,
+  //   };
+  //   return data;
+  // }
+
+  // async kakaoCallback(query) {
+  //   const data = {
+  //     code: query,
+  //     grant_type: 'authorization_code',
+  //     client_id: process.env.KAKAO_KEY,
+  //     redirect_uri: process.env.KAKAO_CALLBACK_URL,
+  //     client_secret: process.env.SECRET_KEY,
+  //   };
+  //   const queryStringBody = Object.keys(data)
+  //     .map((k) => encodeURIComponent(k) + '=' + encodeURI(data[k]))
+  //     .join('&');
+  //   const config: AxiosRequestConfig = {
+  //     headers: {
+  //       'Content-Type': 'application/x-www-form-urlencoded',
+  //     },
+  //   };
+  //   const response = await axios.post(
+  //     'https://kauth.kakao.com/oauth/token',
+  //     queryStringBody,
+  //     config,
+  //   );
+  //   const { access_token } = response.data;
+  //   // const access_token = query;
+  //   const getUserUrl = 'https://kapi.kakao.com/v2/user/me';
+  //   const response2 = await axios({
+  //     method: 'get',
+  //     url: getUserUrl,
+  //     headers: {
+  //       Authorization: `Bearer ${access_token}`,
+  //     },
+  //   });
+  //   const userdata = response2.data;
+  //   const email = userdata.kakao_account.email;
+  //   const nickname = userdata.properties.nickname;
+  //   const payload = { email };
+  //   const user = await this.findUserByEmail(email);
+  //   const jwt = await this.jwtService.sign(payload, {
+  //     secret: this.configService.get('SECRET_KEY'),
+  //   });
+  //   if (user) {
+  //     return {
+  //       jwt,
+  //       nickname,
+  //     };
+  //   } else {
+  //     const newUser = await this.userRepository.save(email, nickname);
+  //     return {
+  //       jwt,
+  //       nickname,
+  //     };
+  //   }
+  // }
 
   async editNickname(nickname: string, userId) {
     await this.userRepository.update(userId, { nickname });

@@ -17,7 +17,7 @@ export class CommentService {
     private readonly commentRepository: Repository<Comment>,
   ) {}
 
-// pagination 설정
+  // pagination 설정
   async paginate(options: IPaginationOptions): Promise<Pagination<Comment>> {
     const queryBuilder = this.commentRepository.createQueryBuilder('c');
     queryBuilder.orderBy('c.createdAt', 'DESC');
@@ -32,7 +32,7 @@ export class CommentService {
 
   // 유저별 댓글 조회
   findByUser(userId: number) {
-    return this.commentRepository.find({ where: {userId}});
+    return this.commentRepository.find({ where: { userId } });
   }
 
   // 댓글 생성
@@ -42,9 +42,13 @@ export class CommentService {
     createCommentDto: CreateCommentDto,
   ): Promise<void> {
     const { comment } = createCommentDto;
-    await this.commentRepository.save({ concertId, userId, ...createCommentDto,
-      createdAt:dayjs().format('YYYY-MM-DDTHH:mm:ss.sssZ'),
-      updatedAt:dayjs().format('YYYY-MM-DDTHH:mm:ss.sssZ') });
+    await this.commentRepository.save({
+      concertId,
+      userId,
+      ...createCommentDto,
+      createdAt: dayjs().format('YYYY-MM-DDTHH:mm:ss.sssZ'),
+      updatedAt: dayjs().format('YYYY-MM-DDTHH:mm:ss.sssZ'),
+    });
   }
 
   // 댓글 삭제

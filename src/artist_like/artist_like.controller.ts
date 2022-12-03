@@ -53,13 +53,39 @@ export class ArtistlikeController {
       artistId,
       req.user.userId,
     );
-
     if (!existLike) {
       return this.artistlikeService.createArtistLike(artistId, req.user.userId);
+      // this.artistlikeService.createLikeArtist(artistId)
     } else {
       return this.artistlikeService.deleteArtistLike(artistId, req.user.userId);
     }
   }
+
+  // @Put(':artistId')
+  // @ApiBearerAuth('jwt')
+  // // @ApiBearerAuth('refresh-token')
+  // @UseGuards(JwtAuthGuard)
+  // // @UseInterceptors(OnlyPrivateInterceptor)
+  // async likeArtist(
+  //   @Param('artistId', ParseIntPipe) artistId: number,
+  //   @Req() req,
+  //   likeArtist: number,
+  // ) {
+  //   const existLike: any = await this.artistlikeService.existLike(
+  //     artistId,
+  //     req.user.userId,
+  //   );
+  //   // artistId = likeArtist;
+  //   if (!existLike) {
+  //     return (
+  //       this.artistlikeService.createArtistLike(artistId, req.user.userId),
+  //       this.artistlikeService.createLikeArtist(artistId)
+  //     )
+  //   } else {
+  //     return this.artistlikeService.deleteArtistLike(artistId, req.user.userId),
+  //       // this.artistlikeService.deleteLikeArtist(artistId)
+  //   }
+  // }
 
   @Get('mypage/:userId')
   // @ApiBearerAuth('access-token')
