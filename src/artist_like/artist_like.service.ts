@@ -47,8 +47,10 @@ export class ArtistlikeService {
   }
 
   // 특정 유저 좋아요 조회
-  find(userId: number): Promise<ArtistLike[]> {
-    return this.artistLikeRepository.find({ where: { userId } });
+  async find(userId: number): Promise<any> {
+    const existLike = await this.artistLikeRepository.findOne({ where: { userId } })
+    const {artistId} = existLike
+
   }
 
   // 아티스트 상세 좋아요 조회
