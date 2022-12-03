@@ -21,6 +21,8 @@ import { CreateCommentDto } from './dto/create-comment.dto';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
+import { ClassSerializerInterceptor } from '@nestjs/common';
+import { ClassTransformer } from 'class-transformer';
 
 @Controller('comment')
 export class CommentController {
@@ -42,7 +44,8 @@ export class CommentController {
 
   // 콘서트별 댓글 조회(페이지)
   @Get(':concertId')
-  async findAll(@Param('concertId') concertId: string): Promise<Comment[]> {
+
+  async findAll(@Param('concertId') concertId: number): Promise<Comment[]> {
     return this.commentService.findAll(concertId);
   }
 

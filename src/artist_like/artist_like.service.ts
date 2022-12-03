@@ -22,14 +22,11 @@ export class ArtistlikeService {
   ) {}
 
   async existLike(artistId: number, userId: number) {
-    const existLike = await this.artistLikeRepository.findOne({
+     const existLike = await this.artistLikeRepository.findOne({
       where: { artistId, userId },
     });
-    if (existLike) {
-      return { isLike: true };
-    } else {
-      return { isLike: false };
-    }
+
+    return existLike;
   }
 
   async createArtistLike(artistId: number, userId: number) {
@@ -38,16 +35,6 @@ export class ArtistlikeService {
     artistlike.userId = userId;
 
     return this.artistLikeRepository.save(artistlike);
-  }
-
-  // 유저의 likeArtist에서 artistId 생성
-  async createLikeArtist(artistId: number, userId: number) {
-    const createLikeArtist =
-      /*new User();*/
-      await this.userRepository.findOne({ where: { userId } });
-    createLikeArtist.likeArtist = artistId;
-
-    return this.userRepository.save(createLikeArtist);
   }
 
   async deleteArtistLike(artistId: number, userId: number): Promise<any> {
@@ -59,24 +46,36 @@ export class ArtistlikeService {
     }
   }
 
-  // 유저의 likeArtist에서 artistId 삭제
-  async deleteLikeArtist(artistId: number, userId: number) {
-    const deleteLikeArtist: any = await this.userRepository.findOne({
-      where: { userId },
-    });
-    const likeArtist: any = await deleteLikeArtist.likeArtist.findOne({
-      where: { artistId },
-    });
-    if (likeArtist) {
-      return this.userRepository.remove(likeArtist);
-    }
-  }
-
   // 특정 유저 좋아요 조회
   find(userId: number): Promise<ArtistLike[]> {
     return this.artistLikeRepository.find({ where: { userId } });
   }
+
+  // 아티스트 상세 좋아요 조회
+  async getLike(artistId: number, userId: number) {
+    const getLike = await this.artistLikeRepository.findOne({
+      where: { userId, artistId },
+    });
+    
+    if (getLike) {
+      return { isLike: true };
+    } else {
+      return { isLike: false };
+    }
+    // return getLike ? { isLike: true }  : { isLike: false };
+  }
 }
+
+
+
+
+
+
+
+
+
+
+
 
 // 새로운 접근법 제시(민호)
 // async getLikeCountByArtistId(artistId: number) {

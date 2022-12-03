@@ -12,7 +12,7 @@ import { UserRegisterDTO } from './dto/user-register.dto';
 import { User } from '../entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { UserLoginDTO } from './dto/user-login.dto';
-import axios, { AxiosRequestConfig } from 'axios';
+// import axios, { AxiosRequestConfig } from 'axios';
 
 @Injectable()
 export class UserService {

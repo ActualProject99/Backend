@@ -38,7 +38,7 @@ export class ArtistController {
   update(@Param('artistId') artistId: number, @Body() artist: Artist) {
     return this.artistService.update(artistId, artist);
   }
-  
+
   // 아티스트 삭제
   @Delete(':artistId')
   remove(@Param('artistId') artistId: number) {
