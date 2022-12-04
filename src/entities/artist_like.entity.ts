@@ -1,5 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, PrimaryColumn, AfterLoad } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+  PrimaryColumn,
+  AfterLoad,
+} from 'typeorm';
 import { Artist } from './artist.entity';
 import { User } from './user.entity';
 
@@ -8,24 +16,23 @@ export class ArtistLike {
   @PrimaryGeneratedColumn()
   artistLikeId: number;
 
-  @PrimaryColumn({ name: 'userId'})
+  @PrimaryColumn({ name: 'userId' })
   @ApiProperty()
-   userId: number;
+  userId: number;
 
-  @PrimaryColumn({ name: 'artistId'})
+  @PrimaryColumn({ name: 'artistId' })
   @ApiProperty()
-   artistId: number;
+  artistId: number;
 
-  
- // 좋아요는 여러개? 사용자는 하나
- // 
+  // 좋아요는 여러개? 사용자는 하나
+  //
   // @ManyToOne(type => User)
   // @JoinColumn({
   //   name: 'userId',
   //   referencedColumnName: 'userId'
   // })
   // User:User;
-  
+
   // @ManyToOne(type => Artist)
   // @JoinColumn({
   //   name: 'artistId',
@@ -34,11 +41,10 @@ export class ArtistLike {
   // Artist:Artist;
 
   @ManyToOne(() => User)
-  @JoinColumn([{ name: 'userId', referencedColumnName: 'userId'}])
+  @JoinColumn([{ name: 'userId', referencedColumnName: 'userId' }])
   user: User;
 
   @ManyToOne(() => Artist)
-  @JoinColumn([{ name: 'artistId', referencedColumnName: 'artistId'}])
+  @JoinColumn([{ name: 'artistId', referencedColumnName: 'artistId' }])
   artist: Artist;
-   
 }

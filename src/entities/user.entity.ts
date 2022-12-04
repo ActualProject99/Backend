@@ -34,6 +34,8 @@ export class User {
   })
   @Column({
     nullable: true,
+    default:
+      'https://tgle.s3.ap-northeast-2.amazonaws.com/users/userDefault.png',
   })
   profileImg: string;
 
@@ -63,9 +65,6 @@ export class User {
 
   @Column({ nullable: true })
   refresh_token: string;
-
-  // @Column({ nullable: true })
-  // like: number;
 
   @Column({ nullable: true })
   likeArtist: number;

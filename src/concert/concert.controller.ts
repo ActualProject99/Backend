@@ -39,7 +39,7 @@ export class ConcertController {
     return this.concertService.findByArtist(artistId);
   }
 
-  // 콘서트 상세 조회 --> 그냥 콘서트 조회로 바꾸면 프론트에서 직접 뽑아서 씀
+  // 콘서트 전체 조회
   @Get('concerts')
   async find(): Promise<void> {
     return this.concertService.find();

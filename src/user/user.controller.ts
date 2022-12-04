@@ -16,7 +16,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { Response } from 'express';
+import { query, Response } from 'express';
 import { UserService } from './user.service';
 import { UserLoginDTO } from './dto/user-login.dto';
 import { UserRegisterDTO } from './dto/user-register.dto';
@@ -30,8 +30,10 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { AwsService } from 'src/aws.service';
 import { UserUpdateDTO } from './dto/user-update.dto';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiCreatedResponse,
+  ApiOkResponse,
   ApiOperation,
   ApiResponse,
   ApiTags,
@@ -39,6 +41,7 @@ import {
 import { KakaoAuthGuard } from 'src/auth/guard/kakao.guard';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
 import { AuthService } from 'src/auth/auth.service';
+import { JwtStrategy } from 'src/auth/strategy/jwt.strategy';
 
 @Controller('users')
 export class UserController {
@@ -97,25 +100,26 @@ export class UserController {
     status: 500,
     description: '서버 에러',
   })
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   async logIn(
     @Request() req: any,
     @Body() userLoginDTO: UserLoginDTO,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const { jwt } = await this.usersService.verifyUserAndSignJwt(
+    const { jwt, nickname } = await this.usersService.verifyUserAndSignJwt(
       userLoginDTO.email,
       userLoginDTO.password,
     );
-    const user = await this.authService.validateUser(userLoginDTO.email);
-    const access_token = await this.authService.createLoginToken(user);
+    // const user = await this.authService.validateUser(userLoginDTO.email);
+    // const access_token = await this.authService.createLoginToken(user);
     // const refresh_token = await this.authService.createRefreshToken(user);
 
-    response.setHeader('access_token', access_token);
-    response.setHeader('jwt', jwt);
+    // response.setHeader('access_token', access_token);
     // response.setHeader('refresh_token', refresh_token);
-    response.cookie('jwt', jwt, { httpOnly: true });
-    return { AccessToken: access_token, jwt: jwt };
+    // response.cookie('jwt', jwt, { httpOnly: true });
+    response.cookie('jwt', jwt);
+    response.setHeader('jwt', jwt);
+    return { jwt, nickname };
   }
 
   @ApiOperation({
@@ -128,18 +132,20 @@ export class UserController {
     return HttpStatus.OK;
   }
 
-  // @Get('/kakao/callback')
-  // @ApiTags('user')
-  // @Redirect('https://tgle.shop/users/userinfo')
-  // async kakaoCallback(@Query() query, @Res() res) {
-  //   const { access_token } = await this.usersService.kakaoCallback(query.code);
-  // res.cookie('refreshToken', refreshToken);
-  // res.cookie('accessToken', accessToken);
-  // res.session.token = { accessToken, refreshToken };
-  // res.session.save();
-  // return res.redirect('https://everyque.com/auth');
+  //카카오 인증요청
+  // @Get('/kakao')
+  // @ApiTags('users')
+  // @ApiOperation({
+  //   summary: '카카오 로그인',
+  //   description: '카카오 로그인',
+  // })
+  // @ApiOkResponse({ description: '카카오 로그인' })
+  // @Redirect('https://kauth.kakao.com')
+  // async kakakoSignin() {
+  //   const { KAKAO_ID, KAKAO_REDIRECT_URI } =
+  //     await this.usersService.kakaoSignin();
   //   return {
-  //     url: `https://tgle.shop/auth?accessToken=${access_token}`,
+  //     url: `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_ID}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`,
   //   };
   // }
 
@@ -148,19 +154,27 @@ export class UserController {
     description: '카카오 로그인시 콜백 라우터입니다.',
   })
   @UseGuards(KakaoAuthGuard)
-  @Get('kakao/callback')
+  // @Redirect('https://da5loh79xj553.cloudfront.net/')
+  @Get('oauth/kakao/callback')
   async kakaocallback(@Req() req, @Res() res: Response) {
-    if (req.user.type === 'login') {
-      res.cookie('access_token', req.user.access_token);
-      // res.cookie('refresh_token', req.user.refresh_token);
-    } else {
-      res.cookie('once_token', req.user.once_token);
-    }
-    res.redirect('https://tgle.shop/');
+    // const { jwt, nickname } = await this.usersService.kakaoCallback(query.code);
+    // return { jwt, nickname };
+    const { jwt, nickname } = req.user;
+    // console.log(jwt, nickname);
+    // res.setHeader('jwt', jwt);
+    // if (req.user.type === 'login') {
+    //   res.setHeader('jwt', jwt);
+    // res.cookie('refresh_token', req.user.refresh_token);
+    // } else {
+    //   res.cookie('jwt', jwt);
+    // }
+    res.redirect('https://da5loh79xj553.cloudfront.net/');
     res.end();
+    return { jwt, nickname };
   }
 
   // 유저 정보 불러오기
+  @ApiBearerAuth('jwt')
   @Get('userinfo')
   @ApiTags('users')
   @ApiOperation({
@@ -178,12 +192,14 @@ export class UserController {
     description: '서버 에러',
   })
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(OnlyPrivateInterceptor)
-  async getCurrentUser(@CurrentUser() currentUser: UserDTO) {
+  // @UseInterceptors(OnlyPrivateInterceptor)
+  async getCurrentUser(@Req() req) {
+    const currentUser = await this.usersService.findUserByEmail(req.user.email);
     return currentUser;
   }
 
   // 유저 닉네임, 패스워드 수정
+  @ApiBearerAuth('jwt')
   @Put('userinfo')
   @ApiTags('users')
   @ApiOperation({
@@ -202,7 +218,7 @@ export class UserController {
     description: '서버 에러',
   })
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(OnlyPrivateInterceptor)
+  // @UseInterceptors(OnlyPrivateInterceptor)
   async updateUserInfo(
     @Body() userUpdateDTO: UserUpdateDTO,
     @CurrentUser() currentUser: UserDTO,
@@ -227,6 +243,7 @@ export class UserController {
   }
 
   // 유저 프로필 이미지 업데이트
+  @ApiBearerAuth('jwt')
   @UseInterceptors(FileInterceptor('profileImg'))
   @Put('userinfo/upload')
   @ApiTags('users')
@@ -246,7 +263,7 @@ export class UserController {
     description: '서버 에러',
   })
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(OnlyPrivateInterceptor)
+  // @UseInterceptors(OnlyPrivateInterceptor)
   async updateUserImg(
     @UploadedFile() profileImg: Express.Multer.File,
     @Body() userUpdateDTO: UserUpdateDTO,

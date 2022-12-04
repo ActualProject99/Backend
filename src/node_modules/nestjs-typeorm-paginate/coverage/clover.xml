@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1632926518611" clover="3.2.0">
+  <project timestamp="1632926518611" name="All files">
+    <metrics statements="77" coveredstatements="77" conditionals="66" coveredconditionals="62" methods="10" coveredmethods="10" elements="153" coveredelements="149" complexity="0" loc="77" ncloc="77" packages="2" files="5" classes="5"/>
+    <package name="src">
+      <metrics statements="74" coveredstatements="74" conditionals="64" coveredconditionals="60" methods="9" coveredmethods="9"/>
+      <file name="create-pagination.ts" path="/Users/ashleighsimonelli/code/nestjs-typeorm-paginate/src/create-pagination.ts">
+        <metrics statements="15" coveredstatements="15" conditionals="38" coveredconditionals="37" methods="1" coveredmethods="1"/>
+        <line num="7" count="5" type="stmt"/>
+        <line num="9" count="5" type="stmt"/>
+        <line num="29" count="43" type="cond" truecount="2" falsecount="0"/>
+        <line num="31" count="43" type="stmt"/>
+        <line num="32" count="43" type="cond" truecount="2" falsecount="0"/>
+        <line num="33" count="43" type="cond" truecount="3" falsecount="0"/>
+        <line num="34" count="43" type="cond" truecount="3" falsecount="0"/>
+        <line num="36" count="43" type="cond" truecount="4" falsecount="0"/>
+        <line num="39" count="43" type="cond" truecount="2" falsecount="0"/>
+        <line num="44" count="43" type="cond" truecount="4" falsecount="0"/>
+        <line num="47" count="43" type="stmt"/>
+        <line num="66" count="43" type="stmt"/>
+        <line num="74" count="43" type="cond" truecount="2" falsecount="0"/>
+        <line num="75" count="1" type="stmt"/>
+        <line num="82" count="42" type="cond" truecount="2" falsecount="0"/>
+      </file>
+      <file name="index.ts" path="/Users/ashleighsimonelli/code/nestjs-typeorm-paginate/src/index.ts">
+        <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="5" count="1" type="stmt"/>
+      </file>
+      <file name="paginate.ts" path="/Users/ashleighsimonelli/code/nestjs-typeorm-paginate/src/paginate.ts">
+        <metrics statements="50" coveredstatements="50" conditionals="26" coveredconditionals="23" methods="7" coveredmethods="7"/>
+        <line num="1" count="5" type="stmt"/>
+        <line num="8" count="5" type="stmt"/>
+        <line num="13" count="5" type="stmt"/>
+        <line num="15" count="5" type="stmt"/>
+        <line num="16" count="5" type="stmt"/>
+        <line num="28" count="5" type="stmt"/>
+        <line num="33" count="27" type="stmt"/>
+        <line num="45" count="5" type="stmt"/>
+        <line num="53" count="10" type="stmt"/>
+        <line num="55" count="10" type="stmt"/>
+        <line num="63" count="10" type="cond" truecount="2" falsecount="0"/>
+        <line num="64" count="5" type="stmt"/>
+        <line num="65" count="5" type="stmt"/>
+        <line num="68" count="10" type="stmt"/>
+        <line num="70" count="10" type="stmt"/>
+        <line num="81" count="5" type="stmt"/>
+        <line num="89" count="6" type="stmt"/>
+        <line num="94" count="6" type="stmt"/>
+        <line num="102" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="103" count="5" type="stmt"/>
+        <line num="104" count="5" type="stmt"/>
+        <line num="107" count="6" type="stmt"/>
+        <line num="109" count="6" type="stmt"/>
+        <line num="126" count="43" type="stmt"/>
+        <line num="127" count="43" type="stmt"/>
+        <line num="128" count="43" type="stmt"/>
+        <line num="130" count="43" type="cond" truecount="2" falsecount="0"/>
+        <line num="132" count="43" type="cond" truecount="2" falsecount="0"/>
+        <line num="134" count="43" type="stmt"/>
+        <line num="142" count="86" type="stmt"/>
+        <line num="143" count="86" type="stmt"/>
+        <line num="145" count="86" type="cond" truecount="4" falsecount="0"/>
+        <line num="146" count="82" type="stmt"/>
+        <line num="148" count="4" type="stmt"/>
+        <line num="151" count="4" type="stmt"/>
+        <line num="160" count="24" type="stmt"/>
+        <line num="162" count="24" type="cond" truecount="2" falsecount="0"/>
+        <line num="163" count="2" type="stmt"/>
+        <line num="174" count="22" type="stmt"/>
+        <line num="183" count="22" type="cond" truecount="2" falsecount="0"/>
+        <line num="184" count="21" type="stmt"/>
+        <line num="189" count="22" type="stmt"/>
+        <line num="191" count="22" type="stmt"/>
+        <line num="207" count="3" type="stmt"/>
+        <line num="209" count="3" type="stmt"/>
+        <line num="217" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="218" count="2" type="stmt"/>
+        <line num="219" count="2" type="stmt"/>
+        <line num="222" count="3" type="stmt"/>
+        <line num="224" count="3" type="stmt"/>
+      </file>
+      <file name="pagination.ts" path="/Users/ashleighsimonelli/code/nestjs-typeorm-paginate/src/pagination.ts">
+        <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="3" count="5" type="stmt"/>
+        <line num="11" count="43" type="stmt"/>
+        <line num="15" count="43" type="stmt"/>
+        <line num="19" count="43" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.interfaces">
+      <metrics statements="3" coveredstatements="3" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1"/>
+      <file name="index.ts" path="/Users/ashleighsimonelli/code/nestjs-typeorm-paginate/src/interfaces/index.ts">
+        <metrics statements="3" coveredstatements="3" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1"/>
+        <line num="1" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="2" count="5" type="stmt"/>
+        <line num="3" count="5" type="stmt"/>
+      </file>
+    </package>
+  </project>
+</coverage>

@@ -3,13 +3,11 @@ import { LocationService } from './location.service';
 
 @Controller('location')
 export class LocationController {
-    constructor(
-        private locationService: LocationService
-    ) {}
+  constructor(private locationService: LocationService) {}
 
-    // 공연장 조회
-    @Get(':locationId')
-    findOne(@Param('locationId') locationId: number) {
-        return this.locationService.findOne(locationId);
-    }
+  // 공연장 조회
+  @Get('')
+  find() {
+    return this.locationService.find();
+  }
 }
