@@ -1,6 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  Index,
+  OneToMany,
+} from 'typeorm';
 import { ConcertLike } from './concert_like.entity';
-
 
 @Entity()
 export class Concert {
@@ -16,7 +21,7 @@ export class Concert {
   @Column()
   month: number;
 
-  @Index({fulltext: true})
+  @Index({ fulltext: true })
   @Column()
   concertName: string;
 
@@ -47,16 +52,9 @@ export class Concert {
   @Column()
   calender: string;
 
-
-
-
-
-
-
   @OneToMany(() => ConcertLike, (concertLike) => concertLike.concert)
   concertLikes: ConcertLike[];
 
-
   @OneToMany(() => ConcertLike, (concertLike) => concertLike.concert)
-  concerts: Concert[]
+  concerts: Concert[];
 }

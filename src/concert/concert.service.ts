@@ -32,8 +32,12 @@ export class ConcertService {
   }
 
   // 전체 조회
-  find() {
-    return this.concertRepository.find();
+  async find(): Promise<any> {
+    const find: Array<any> = await this.concertRepository.find();
+    // for (let i = 0; i < find.length; i++) {
+    //   find[i].ticketingUrl = JSON.parse(find[i].ticketingUrl);
+    // }
+    // return JSON.parse(find);
   }
 
   // 생성
@@ -49,6 +53,19 @@ export class ConcertService {
     } = await this.concertRepository.save({ ...createConcertDto });
     // await this.concertRepository.save({...createConcertDto});
   }
+
+  // // 티켓URL 저장
+  // ticketingUrl(ticketingUrl: Concert[]) {
+  //   let ticketingUrl_string = '[';
+  //   for (let i = 0; i < ticketingUrl.length; i++) {
+  //     ticketingUrl_string += JSON.stringify(ticketingUrl[i]);
+  //     if (i < ticketingUrl.length - 1) {
+  //       ticketingUrl_string += ',';
+  //     }
+  //   }
+  //   ticketingUrl_string += ']';
+  //   this.concertRepository.save({ ticketingUrl: ticketingUrl_string });
+  // }
 
   // 삭제
   async remove(concertId: number): Promise<void> {

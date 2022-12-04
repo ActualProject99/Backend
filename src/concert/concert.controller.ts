@@ -41,7 +41,7 @@ export class ConcertController {
 
   // 콘서트 상세 조회 --> 그냥 콘서트 조회로 바꾸면 프론트에서 직접 뽑아서 씀
   @Get('concerts')
-  async find(): Promise<Concert[]> {
+  async find(): Promise<void> {
     return this.concertService.find();
   }
 
@@ -50,6 +50,12 @@ export class ConcertController {
   create(@Body() createConcertDto: CreateConcertDto) {
     return this.concertService.create(createConcertDto);
   }
+
+  // // 티켓URL 저장
+  // @Post('ticketurl')
+  // ticketingUrl(@Body() ticketingUrl: Concert[]) {
+  //   return this.concertService.ticketingUrl(ticketingUrl);
+  // }
 
   // 콘서트 수정
   @Put('concert/:concertId')
