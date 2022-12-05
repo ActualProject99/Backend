@@ -17,7 +17,7 @@ import { UserService } from './user.service';
     TypeOrmModule.forFeature([User]),
     JwtModule.register({}),
   ],
-  providers: [UserService, AwsService],
+  providers: [UserService, AwsService, AuthModule],
   controllers: [UserController],
   exports: [UserService],
 })
