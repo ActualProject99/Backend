@@ -8,6 +8,7 @@ import {
   UseGuards,
   UseInterceptors,
   Req,
+  Res,
   ParseIntPipe,
 } from '@nestjs/common';
 import { ArtistlikeService } from './artist_like.service';
@@ -46,13 +47,25 @@ export class ArtistlikeController {
     }
   }
 
+  // @Get('mypage/:userId')
+  // @ApiBearerAuth('jwt')
+  // @UseGuards(JwtAuthGuard)
+  // async isLike(@Param('userId') userId: number): Promise<any> {
+  //   return this.artistlikeService.find(userId);
+  // }
+
+  // 마이페이지 좋아요 조회
   @Get('mypage/:userId')
   @ApiBearerAuth('jwt')
   @UseGuards(JwtAuthGuard)
-  async isLike(@Param('userId') userId: number): Promise<any> {
-    return this.artistlikeService.find(userId);
+  public async isLike(@Param('userId') userId: number, @Res() res) {
+    return this.artistlikeService.find(userId, res.artistId);
   }
+
 }
+
+
+
 
 
 

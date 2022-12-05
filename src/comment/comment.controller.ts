@@ -32,8 +32,8 @@ export class CommentController {
   // @Get(':concertId')
   // async findAll(
   //   @Param('concertId') concertId: number,
-  //   // @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
-  //   // @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
+  //   @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
+  //   @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
   // ): Promise<Pagination<Comment>> {
   //   limit = limit > 10 ? 10 : limit; // 필요없는 코드같은데
   //   return this.commentService.paginate({
@@ -68,26 +68,31 @@ export class CommentController {
     return this.commentService.create(
       concertId,
       req.user.userId,
+      req.user.nickname,
+      req.user.profileImg,
       createCommentDto,
     );
   }
 
-  
   // 댓글 수정
   @Put(':commentId')
   @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
-  update(
+  async update(
     @Param('commentId') commentId: number,
-    @Body() updateCommentDto: UpdateCommentDto,
+    @Body() comment, updateCommentDto:UpdateCommentDto,
     @Req() req,
   ) {
-    return this.commentService.update(commentId, req.user.userId, updateCommentDto);
+    return this.commentService.update(commentId, req.user.userId, comment, updateCommentDto);
   }
 
   // 댓글 삭제
-  @Delete('detail/:commentId')
-  remove(@Param('commentId') commentId: number) {
-    return this.commentService.remove(commentId);
+  @Delete(':commentId')
+  @ApiBearerAuth('access-token')
+  @UseGuards(JwtAuthGuard)
+  async remove(
+    @Param('commentId') commentId: number, 
+    @Req() req) {
+    return this.commentService.remove(commentId, req.user.userId);
   }
 }

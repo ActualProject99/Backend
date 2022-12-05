@@ -3,6 +3,7 @@ import { Comment } from '../entities/comment.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateCommentDto } from './dto/create-comment.dto';
+import { UpdateCommentDto } from './dto/update-comment.dto';
 import {
   paginate,
   Pagination,
@@ -40,12 +41,16 @@ export class CommentService {
   async create(
     concertId: number,
     userId: number,
+    nickname: string,
+    profileImg: string,
     createCommentDto: CreateCommentDto,
   ): Promise<void> {
     const { comment } = createCommentDto;
     await this.commentRepository.save({
       concertId,
       userId,
+      nickname,
+      profileImg,
       ...createCommentDto,
       createdAt: dayjs().format('YYYY-MM-DDTHH:mm:ss.sssZ'),
       updatedAt: dayjs().format('YYYY-MM-DDTHH:mm:ss.sssZ'),
@@ -53,26 +58,30 @@ export class CommentService {
   }
 
 // 댓글 수정
-async update(commentId, userId, updateCommentDto) {
+async update(commentId: number, userId: number, comment: Comment, updateCommentDto: UpdateCommentDto) {
   const existComment = await this.commentRepository.findOne({
     where: { userId, commentId },
   });
   if (existComment) {
-    await this.commentRepository
-      .createQueryBuilder()
-      .update(Comment)
-      .set({
-        comment: updateCommentDto.comment,
+    await this.commentRepository 
+      .update(commentId, {
+        comment:comment.comment
       })
-      .where('commentId = :commentId', { commentId })
-      .execute();
   } else {
     return { errorMessage: "작성자가 아닙니다." }
   }
 }
 
   // 댓글 삭제
-  async remove(commentId: number): Promise<void> {
-    await this.commentRepository.delete(commentId);
+  async remove(commentId: number, userId: number): Promise<object> {
+    const deleteComment = await this.commentRepository.findOne({
+     where: { commentId }
+    });
+    console.log(deleteComment);
+    if (deleteComment.userId === userId) {
+       await this.commentRepository.delete(deleteComment)
+    } else {
+      return { errorMessage: '작성자가 아닙니다.' }
+    } 
   }
 }

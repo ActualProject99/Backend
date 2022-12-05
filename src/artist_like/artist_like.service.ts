@@ -46,11 +46,23 @@ export class ArtistlikeService {
     }
   }
 
-  // 특정 유저 좋아요 조회
-  async find(userId: number): Promise<any> {
-    await this.artistLikeRepository.findOne({ where: { userId } })
-    
+  // // 특정 유저 좋아요 조회
+  // async find(userId: number): Promise<any> {
+  //   await this.artistLikeRepository.findOne({ where: { userId } })
+  // }
 
+  // 특정 유저 좋아요 조회
+  async find(userId: number, artistId: number) {
+    for(let i = 0; i < 46; i++) {
+    const findLike = await this.artistLikeRepository.findOne({
+      where: { userId, artistId },
+    });
+    if (findLike) {
+      return { artistId: artistId, isLike: true }
+    } else {
+      return { isLike: false }
+    }
+  }
   }
 
   // 아티스트 상세 좋아요 조회
