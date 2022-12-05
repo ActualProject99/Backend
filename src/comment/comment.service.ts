@@ -3,6 +3,7 @@ import { Comment } from '../entities/comment.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateCommentDto } from './dto/create-comment.dto';
+import { UpdateCommentDto } from './dto/update-comment.dto';
 import {
   paginate,
   Pagination,
@@ -51,8 +52,30 @@ export class CommentService {
     });
   }
 
+  // 댓글 수정
+  async updateComment(commentId: number, userId, updateCommentDto) {
+    const existComment = await this.commentRepository.findOne({
+      where: { commentId, userId },
+    });
+    const { comment } = updateCommentDto;
+    existComment.comment = comment;
+    if (existComment.userId === userId) {
+      return await this.commentRepository.save(existComment);
+    } else {
+      return { errorMessage: '작성자가 아닙니다.' };
+    }
+  }
+
   // 댓글 삭제
-  async remove(commentId: number): Promise<void> {
-    await this.commentRepository.delete(commentId);
+  async remove(commentId: number, userId: number): Promise<object> {
+    const deleteComment = await this.commentRepository.findOne({
+      where: { commentId },
+    });
+    console.log(deleteComment);
+    if (deleteComment.userId === userId) {
+      await this.commentRepository.delete(deleteComment);
+    } else {
+      return { errorMessage: '작성자가 아닙니다.' };
+    }
   }
 }

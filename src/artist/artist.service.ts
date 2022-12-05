@@ -27,15 +27,10 @@ export class ArtistService {
   }
 
   async create(createArtistDto: CreateArtistDto): Promise<void> {
-    const {
-      category,
-      artistName,
-      artistImg,
-      debutSong,
-      debutDate,
-    } = await this.artistRepository.save({
-      ...createArtistDto,
-    });
+    const { category, artistName, artistImg, debutSong, debutDate } =
+      await this.artistRepository.save({
+        ...createArtistDto,
+      });
   }
   // 삭제
   async remove(artistId: number): Promise<void> {

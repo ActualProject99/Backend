@@ -57,7 +57,7 @@ export class UserController {
 
   // 유저 회원가입
   @Post('signup')
-  @UseInterceptors(FileInterceptor('profileImg'))
+  // @UseInterceptors(FileInterceptor('profileImg'))
   @ApiTags('users')
   @ApiOperation({
     summary: '회원가입',
@@ -132,43 +132,23 @@ export class UserController {
     return HttpStatus.OK;
   }
 
-  //카카오 인증요청
-  // @Get('/kakao')
-  // @ApiTags('users')
-  // @ApiOperation({
-  //   summary: '카카오 로그인',
-  //   description: '카카오 로그인',
-  // })
-  // @ApiOkResponse({ description: '카카오 로그인' })
-  // @Redirect('https://kauth.kakao.com')
-  // async kakakoSignin() {
-  //   const { KAKAO_ID, KAKAO_REDIRECT_URI } =
-  //     await this.usersService.kakaoSignin();
-  //   return {
-  //     url: `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_ID}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`,
-  //   };
-  // }
-
   @ApiOperation({
     summary: '카카오 로그인 콜백',
     description: '카카오 로그인시 콜백 라우터입니다.',
   })
   @UseGuards(KakaoAuthGuard)
-  // @Redirect('https://da5loh79xj553.cloudfront.net/')
   @Get('oauth/kakao/callback')
   async kakaocallback(@Req() req, @Res() res: Response) {
+    const { jwt, nickname } = req.user;
+    if (req.user.type === 'login') {
+      res.cookie('jwt', jwt);
+    }
     // const { jwt, nickname } = await this.usersService.kakaoCallback(query.code);
     // return { jwt, nickname };
-    const { jwt, nickname } = req.user;
-    // console.log(jwt, nickname);
     // res.setHeader('jwt', jwt);
-    // if (req.user.type === 'login') {
-    //   res.setHeader('jwt', jwt);
-    // res.cookie('refresh_token', req.user.refresh_token);
-    // } else {
-    //   res.cookie('jwt', jwt);
+    // res.cookie('jwt', jwt);
     // }
-    res.redirect('https://da5loh79xj553.cloudfront.net/');
+    res.redirect('http://tgle.ml');
     res.end();
     return { jwt, nickname };
   }
@@ -199,7 +179,6 @@ export class UserController {
   }
 
   // 유저 닉네임, 패스워드 수정
-  @ApiBearerAuth('jwt')
   @Put('userinfo')
   @ApiTags('users')
   @ApiOperation({
@@ -217,20 +196,14 @@ export class UserController {
     status: 500,
     description: '서버 에러',
   })
+  @ApiBearerAuth('jwt')
   @UseGuards(JwtAuthGuard)
-  // @UseInterceptors(OnlyPrivateInterceptor)
-  async updateUserInfo(
-    @Body() userUpdateDTO: UserUpdateDTO,
-    @CurrentUser() currentUser: UserDTO,
-  ) {
+  async updateUserInfo(@Req() req, @Body() userUpdateDTO: UserUpdateDTO) {
     if (userUpdateDTO.nickname) {
-      this.usersService.editNickname(
-        userUpdateDTO.nickname,
-        currentUser.userId,
-      );
+      this.usersService.editNickname(userUpdateDTO.nickname, req.user.userId);
     }
     if (userUpdateDTO.password && userUpdateDTO.confirmPassword) {
-      this.usersService.editPassword(userUpdateDTO, currentUser.userId);
+      this.usersService.editPassword(userUpdateDTO, req.user.userId);
     }
     if (
       !userUpdateDTO.nickname &&
@@ -267,11 +240,11 @@ export class UserController {
   async updateUserImg(
     @UploadedFile() profileImg: Express.Multer.File,
     @Body() userUpdateDTO: UserUpdateDTO,
-    @CurrentUser() currentUser: UserDTO,
+    @Req() req,
   ) {
     // await this.awsService.deleteS3Object(currentUser.profileImg); //s3 이미지 삭제 수정요함
     const imgObject = await this.awsService.uploadFileToS3('users', profileImg);
-    return await this.usersService.updateUserImg(imgObject, currentUser.userId);
+    return await this.usersService.updateUserImg(imgObject, req.user.userId);
   }
 
   // 유저 로그아웃

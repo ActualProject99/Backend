@@ -24,9 +24,6 @@ export class ArtistLike {
   @ApiProperty()
   artistId: number;
 
-  @Column()
-  isLike: Boolean;
-
   // 좋아요는 여러개? 사용자는 하나
   //
   // @ManyToOne(type => User)
