@@ -10,7 +10,6 @@ import {
 } from 'nestjs-typeorm-paginate';
 import * as dayjs from 'dayjs';
 
-
 @Injectable()
 export class CommentService {
   constructor(
@@ -50,6 +49,23 @@ export class CommentService {
       createdAt: dayjs().format('YYYY-MM-DDTHH:mm:ss.sssZ'),
       updatedAt: dayjs().format('YYYY-MM-DDTHH:mm:ss.sssZ'),
     });
+  }
+
+  // 댓글 수정
+  async update(commentId, updateCommentDto) {
+    const existComment = await this.commentRepository.findOne({
+      where: { commentId },
+    });
+    if (existComment) {
+      await this.commentRepository
+        .createQueryBuilder()
+        .update(Comment)
+        .set({
+          comment: updateCommentDto.comment,
+        })
+        .where('commentId = :commentId', { commentId })
+        .execute();
+    }
   }
 
   // 댓글 삭제

@@ -15,7 +15,7 @@ import {
 import { CommentService } from './comment.service';
 import { Comment } from '../entities/comment.entity';
 import { CreateCommentDto } from './dto/create-comment.dto';
-// import { UpdateCommentDto } from './dto/update-comment.dto';
+import { UpdateCommentDto } from './dto/update-comment.dto';
 // import { Repository } from 'typeorm';
 // import { InjectRepository } from '@nestjs/typeorm';
 import { Pagination } from 'nestjs-typeorm-paginate';
@@ -44,7 +44,6 @@ export class CommentController {
 
   // 콘서트별 댓글 조회(페이지)
   @Get(':concertId')
-
   async findAll(@Param('concertId') concertId: number): Promise<Comment[]> {
     return this.commentService.findAll(concertId);
   }
@@ -73,14 +72,16 @@ export class CommentController {
     );
   }
 
-  // // 댓글 수정
-  // @Put(':commentId')
-  // update(
-  //   @Param('commentId') commentId: number,
-  //   @Body() updateCommentDto: UpdateCommentDto,
-  // ) {
-  //   return this.commentService.update(commentId, updateCommentDto);
-  // }
+  // 댓글 수정
+  @Put(':commentId')
+  @ApiBearerAuth('access-token')
+  @UseGuards(JwtAuthGuard)
+  update(
+    @Param('commentId') commentId: number,
+    @Body() updateCommentDto: UpdateCommentDto,
+  ) {
+    return this.commentService.update(commentId, updateCommentDto);
+  }
 
   // 댓글 삭제
   @Delete('detail/:commentId')
