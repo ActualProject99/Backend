@@ -48,10 +48,8 @@ export class ArtistlikeController {
 
   @Get('mypage/:userId')
   @ApiBearerAuth('jwt')
-  // @ApiBearerAuth('refresh-token')
   @UseGuards(JwtAuthGuard)
-  // @UseInterceptors(OnlyPrivateInterceptor)
-  public async isLike(@Param('userId') userId: number) {
+  async isLike(@Param('userId') userId: number): Promise<any> {
     return this.artistlikeService.find(userId);
   }
 }

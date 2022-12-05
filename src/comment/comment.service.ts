@@ -52,6 +52,25 @@ export class CommentService {
     });
   }
 
+// 댓글 수정
+async update(commentId, userId, updateCommentDto) {
+  const existComment = await this.commentRepository.findOne({
+    where: { userId, commentId },
+  });
+  if (existComment) {
+    await this.commentRepository
+      .createQueryBuilder()
+      .update(Comment)
+      .set({
+        comment: updateCommentDto.comment,
+      })
+      .where('commentId = :commentId', { commentId })
+      .execute();
+  } else {
+    return { errorMessage: "작성자가 아닙니다." }
+  }
+}
+
   // 댓글 삭제
   async remove(commentId: number): Promise<void> {
     await this.commentRepository.delete(commentId);
