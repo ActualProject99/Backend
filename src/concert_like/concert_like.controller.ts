@@ -23,6 +23,13 @@ import { CreateConcertLikeDto } from './dto/create.concert_like.dto';
 export class ConcertLikeController {
   constructor(private concertLikeService: ConcertLikeService) {}
 
+  // 콘서트 마이페이지에서 조회
+  @Get('mypage')
+  @ApiBearerAuth('access-token')
+  @UseGuards(JwtAuthGuard)
+  async findAllByUser(@Req() req) {
+    return this.concertLikeService.find(req.user.userId);
+  }
   // 아티스트 상세 좋아요 조회
   @Get(':concertId')
   @ApiBearerAuth('jwt')
@@ -51,12 +58,5 @@ export class ConcertLikeController {
         req.user.userId,
       );
     }
-  }
-
-  @Get('mypage/:userId')
-  @ApiBearerAuth('access-token')
-  @UseGuards(JwtAuthGuard)
-  async findAllByUser(@Param('userId') userId: number) {
-    return this.concertLikeService.find(userId);
   }
 }

@@ -45,9 +45,24 @@ export class ConcertLikeService {
     }
   }
 
-  // 특정 유저 좋아요 조회
-  find(userId: number): Promise<ConcertLike[]> {
-    return this.concertLikeRepository.find({ where: { userId } });
+  // // 특정 유저 좋아요 조회
+  // async find(userId: number) {
+  //   const concert = await this.concertRepository.find();
+  //   concert.forEach((a) => console.log(a.concertId));
+
+  //   const existLike = await this.concertRepository.find({
+  //     where: { userId },
+  //   });
+  //   existLike.forEach((b) => console.log(b.concertId));
+  //   // return existLike.map((a) => a.artistId === artist) ? { artistId: artistId, isLike: true } : { artistId: artistId, isLike: false }
+  // }
+
+  async find(userId: number) {
+    const existLike = await this.concertLikeRepository.find({
+      where: { userId },
+    });
+
+    return existLike;
   }
 
   // 아티스트 상세 좋아요 조회

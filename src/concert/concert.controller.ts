@@ -62,4 +62,10 @@ export class ConcertController {
   remove(@Param('concertId') concertId: number) {
     return this.concertService.remove(concertId);
   }
+
+  // 핫콘서트 조회
+  @Get('hotconcert')
+  hotconcert() {
+    return this.concertService.hotConcert();
+  }
 }
