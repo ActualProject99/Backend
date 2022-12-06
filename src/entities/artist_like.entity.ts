@@ -16,11 +16,11 @@ export class ArtistLike {
   @PrimaryGeneratedColumn()
   artistLikeId: number;
 
-  @PrimaryColumn({ name: 'userId' })
+  @Column()
   @ApiProperty()
   userId: number;
 
-  @PrimaryColumn({ name: 'artistId' })
+  @Column()
   @ApiProperty()
   artistId: number;
 

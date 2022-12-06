@@ -8,6 +8,7 @@ import {
   UseGuards,
   UseInterceptors,
   Req,
+  Res,
   ParseIntPipe,
 } from '@nestjs/common';
 import { ArtistlikeService } from './artist_like.service';
@@ -22,6 +23,14 @@ import { AuthGuard } from '@nestjs/passport';
 @Controller('artistlike')
 export class ArtistlikeController {
   constructor(private artistlikeService: ArtistlikeService) {}
+
+  // 마이페이지 좋아요 조회
+  @Get('/mypage')
+  @ApiBearerAuth('jwt')
+  @UseGuards(JwtAuthGuard)
+  async isLike(@Req() req) {
+    return await this.artistlikeService.find(req.user.userId);
+  }
 
   // 아티스트 상세 좋아요 조회
   @Get(':artistId')
@@ -45,72 +54,4 @@ export class ArtistlikeController {
       return this.artistlikeService.deleteArtistLike(artistId, req.user.userId);
     }
   }
-
-  @Get('mypage/:userId')
-  @ApiBearerAuth('jwt')
-  // @ApiBearerAuth('refresh-token')
-  @UseGuards(JwtAuthGuard)
-  // @UseInterceptors(OnlyPrivateInterceptor)
-  public async isLike(@Param('userId') userId: number) {
-    return this.artistlikeService.find(userId);
-  }
 }
-
-
-
-  
-  // @Put(':artistId')
-  // @ApiBearerAuth('jwt')
-  // // @ApiBearerAuth('refresh-token')
-  // @UseGuards(JwtAuthGuard)
-  // // @UseInterceptors(OnlyPrivateInterceptor)
-  // async likeArtist(
-  //   @Param('artistId', ParseIntPipe) artistId: number,
-  //   @Req() req,
-  //   likeArtist: number,
-  // ) {
-  //   const existLike: any = await this.artistlikeService.existLike(
-  //     artistId,
-  //     req.user.userId,
-  //   );
-  //   // artistId = likeArtist;
-  //   if (!existLike) {
-  //     return (
-  //       this.artistlikeService.createArtistLike(artistId, req.user.userId),
-  //       this.artistlikeService.createLikeArtist(artistId)
-  //     )
-  //   } else {
-  //     return this.artistlikeService.deleteArtistLike(artistId, req.user.userId),
-  //       // this.artistlikeService.deleteLikeArtist(artistId)
-  //   }
-  // }
-
-
-
-
-
-
-
-  // 유저별 좋아요 조회 유저아이디 어떻게 받아오는지?? 마이페이지에서 좋아요한 가수를 볼테니 일단 파라미터로 userId를 받는다고 가정
-  // @Get(':userId')
-  // @UseGuards(JwtAuthGuard)
-  // @UseInterceptors(OnlyPrivateInterceptor)
-  //   findAllByUser(@Param('userId') userId: number) {
-  //     return this.artistlikeService.getArtistLikeByUser(userId);
-  //   }
-
-  //   // 좋아요 추가
-  //   @UseGuards(JwtAuthGuard)
-  //   @Post(':artistId')
-  //   addLike(@Param('artistId') artistId: number, user:User) {
-  //     return this.artistlikeService.addLike(user.userId, artistId);
-  //   }
-
-  //   // 좋아요 삭제
-  //   @Delete(':artistId')
-  //   remove(@Param('artistId') artistId: number, user:User) {
-  //     this.artistlikeService.deleteLike(user.userId, artistId);
-  //   }
-  //
-
-

@@ -52,19 +52,17 @@ export class CommentService {
   }
 
   // 댓글 수정
-  async update(commentId, updateCommentDto) {
+  async updateComment(commentId: number, userId, updateCommentDto) {
     const existComment = await this.commentRepository.findOne({
-      where: { commentId },
+      where: { commentId, userId },
     });
-    if (existComment) {
-      await this.commentRepository
-        .createQueryBuilder()
-        .update(Comment)
-        .set({
-          comment: updateCommentDto.comment,
-        })
-        .where('commentId = :commentId', { commentId })
-        .execute();
+    const { comment } = updateCommentDto;
+    existComment.comment = comment;
+    existComment.updatedAt = dayjs().format('YYYY-MM-DDTHH:mm:ss.sssZ');
+    if (existComment.userId === userId) {
+      return await this.commentRepository.save(existComment);
+    } else {
+      return { errorMessage: '작성자가 아닙니다.' };
     }
   }
 

@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Put,
+  Patch,
   Delete,
   Param,
   Body,
@@ -73,14 +74,19 @@ export class CommentController {
   }
 
   // 댓글 수정
-  @Put(':commentId')
+  @Patch(':commentId')
   @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
   update(
+    @Req() req,
     @Param('commentId') commentId: number,
     @Body() updateCommentDto: UpdateCommentDto,
   ) {
-    return this.commentService.update(commentId, updateCommentDto);
+    return this.commentService.updateComment(
+      commentId,
+      req.user.userId,
+      updateCommentDto,
+    );
   }
 
   // 댓글 삭제

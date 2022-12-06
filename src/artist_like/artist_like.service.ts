@@ -22,7 +22,7 @@ export class ArtistlikeService {
   ) {}
 
   async existLike(artistId: number, userId: number) {
-     const existLike = await this.artistLikeRepository.findOne({
+    const existLike = await this.artistLikeRepository.findOne({
       where: { artistId, userId },
     });
 
@@ -46,11 +46,10 @@ export class ArtistlikeService {
     }
   }
 
-  // 특정 유저 좋아요 조회
-  async find(userId: number): Promise<any> {
-    const existLike = await this.artistLikeRepository.findOne({ where: { userId } })
-    const {artistId} = existLike
+  async find(userId: number) {
+    const a = await this.artistLikeRepository.find({ where: { userId } });
 
+    return a;
   }
 
   // 아티스트 상세 좋아요 조회
@@ -58,65 +57,11 @@ export class ArtistlikeService {
     const getLike = await this.artistLikeRepository.findOne({
       where: { userId, artistId },
     });
-    
+
     if (getLike) {
       return { isLike: true };
     } else {
       return { isLike: false };
     }
-    // return getLike ? { isLike: true }  : { isLike: false };
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-// 새로운 접근법 제시(민호)
-// async getLikeCountByArtistId(artistId: number) {
-//   const artist: Artist = await this.artistRepository.findOne({
-//     where: { artistId: artistId},
-//   });
-
-//   if (!artist) {
-//     throw new BadRequestException('존재하지 않는 아티스트 입니다.');
-//   }
-
-//   const likes: ArtistLike[] = await this.artistLikeRepository.find({ where: { artist } });
-//   return likes.length;
-// }
-
-// async isLike(user: User, artist: Artist) {
-//   const findLike: ArtistLike = await this.artistLikeRepository.findOne({
-//     where: { user, artist },
-//   });
-//   if (!findLike) {
-//     return false;
-//   }
-//   return true;
-// }
-
-// /**
-//  * 좋아요
-//  */
-// async like(user: User, artist: Artist) {
-//   await this.artistLikeRepository.save({ user, artist });
-// }
-
-// /**
-//  * 좋아요 취소
-//  */
-// async unlike(user: User, artist: Artist) {
-//   const findLike: ArtistLike = await this.artistLikeRepository.findOne({
-//     where: { user, artist },
-//   });
-//   await this.artistLikeRepository.remove(findLike);
-// }
-// }
