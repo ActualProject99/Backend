@@ -19,11 +19,20 @@ import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
 import { JwtPayload } from '../auth/jwt/jwt.payload';
 import { UserLoginDTO } from '../user/dto/user-login.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { ArtistLike } from 'src/entities/artist_like.entity';
 
 @Controller('artistlike')
 export class ArtistlikeController {
   constructor(private artistlikeService: ArtistlikeService) {}
 
+  // 마이페이지 좋아요 조회
+  @Get('/mypage')
+  @ApiBearerAuth('jwt')
+  @UseGuards(JwtAuthGuard)
+  public async isLike(@Req() req) {
+    // return this.artistlikeService.find(req.user.userId);
+    return this.artistlikeService.find(req.user.userId);
+  }
   // 아티스트 상세 좋아요 조회
   @Get(':artistId')
   @ApiBearerAuth('jwt')
@@ -32,6 +41,7 @@ export class ArtistlikeController {
     return this.artistlikeService.getLike(artistId, req.user.userId);
   }
 
+  // 아티스트 좋아요 등록/취소
   @Put(':artistId')
   @ApiBearerAuth('jwt')
   @UseGuards(JwtAuthGuard)
@@ -46,22 +56,6 @@ export class ArtistlikeController {
       return this.artistlikeService.deleteArtistLike(artistId, req.user.userId);
     }
   }
-
-  // @Get('mypage/:userId')
-  // @ApiBearerAuth('jwt')
-  // @UseGuards(JwtAuthGuard)
-  // async isLike(@Param('userId') userId: number): Promise<any> {
-  //   return this.artistlikeService.find(userId);
-  // }
-
-  // 마이페이지 좋아요 조회
-  @Get('mypage/:userId')
-  @ApiBearerAuth('jwt')
-  @UseGuards(JwtAuthGuard)
-  public async isLike(@Param('userId') userId: number, @Res() res) {
-    return this.artistlikeService.find(userId, res.artistId);
-  }
-
 }
 
 

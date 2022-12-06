@@ -22,7 +22,7 @@ export class ArtistlikeService {
   ) {}
 
   async existLike(artistId: number, userId: number) {
-     const existLike = await this.artistLikeRepository.findOne({
+    const existLike = await this.artistLikeRepository.findOne({
       where: { artistId, userId },
     });
 
@@ -46,37 +46,37 @@ export class ArtistlikeService {
     }
   }
 
-  // // 특정 유저 좋아요 조회
-  // async find(userId: number): Promise<any> {
-  //   await this.artistLikeRepository.findOne({ where: { userId } })
+  // // 특정 유저 좋아요 조회 ver.2
+  // async find(userId: number) {
+  //   const artist = await this.artistRepository.find();
+  //   artist.forEach((a) => console.log(a.artistId));
+
+  //   const existLike = await this.artistLikeRepository.find({
+  //     where: { userId },
+  //   });
+  //   existLike.forEach((b) => console.log(b.artistId));
+  //   // return existLike.map((a) => a.artistId === artist) ? { artistId: artistId, isLike: true } : { artistId: artistId, isLike: false }
   // }
 
-  // 특정 유저 좋아요 조회
-  async find(userId: number, artistId: number) {
-    for(let i = 0; i < 46; i++) {
-    const findLike = await this.artistLikeRepository.findOne({
-      where: { userId, artistId },
+  async find(userId: number) {
+    const existLike = await this.artistLikeRepository.find({
+      where: { userId },
     });
-    if (findLike) {
-      return { artistId: artistId, isLike: true }
-    } else {
-      return { isLike: false }
-    }
-  }
+
+    return existLike;
   }
 
   // 아티스트 상세 좋아요 조회
   async getLike(artistId: number, userId: number) {
     const getLike = await this.artistLikeRepository.findOne({
-      where: { userId, artistId },
+      where: { artistId, userId },
     });
-    
+
     if (getLike) {
       return { isLike: true };
     } else {
       return { isLike: false };
     }
-    // return getLike ? { isLike: true }  : { isLike: false };
   }
 }
 

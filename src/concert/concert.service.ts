@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Concert } from '../entities/concert.entity';
+import { hotConcert } from '../entities/hotconcert.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateConcertDto } from './dto/create-concert.dto';
@@ -10,7 +11,13 @@ export class ConcertService {
   constructor(
     @InjectRepository(Concert)
     private readonly concertRepository: Repository<Concert>,
+    private readonly hotconcertRepository: Repository<hotConcert>,
   ) {}
+
+  // 핫콘서트 조회
+  async hotConcert() {
+    return this.hotconcertRepository.find();
+  }
 
   // 카테고리별 조회
   async getConcert(categoryId: number) {

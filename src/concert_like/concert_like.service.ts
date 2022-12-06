@@ -15,51 +15,66 @@ export class ConcertLikeService {
   constructor(
     @InjectRepository(ConcertLike)
     private readonly concertLikeRepository: Repository<ConcertLike>,
-     @InjectRepository(Concert)
-     private readonly concertRepository: Repository<Concert>,
-     @InjectRepository(User)
-     private readonly userRepository: Repository<User>,
+    @InjectRepository(Concert)
+    private readonly concertRepository: Repository<Concert>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
   ) {}
 
   async existConcertLike(concertId: number, userId: number) {
     const existLike = await this.concertLikeRepository.findOne({
-     where: { concertId, userId },
-   });
-   return existLike;
- }
+      where: { concertId, userId },
+    });
+    return existLike;
+  }
 
- async createConcertLike(concertId: number, userId: number) {
-   const concertlike = new ConcertLike();
-   concertlike.concertId = concertId;
-   concertlike.userId = userId;
+  async createConcertLike(concertId: number, userId: number) {
+    const concertlike = new ConcertLike();
+    concertlike.concertId = concertId;
+    concertlike.userId = userId;
 
-   return this.concertLikeRepository.save(concertlike);
- }
+    return this.concertLikeRepository.save(concertlike);
+  }
 
- async deleteConcertLike(concertId: number, userId: number): Promise<any> {
-   const existLike = await this.concertLikeRepository.findOne({
-     where: { concertId, userId },
-   });
-   if (existLike) {
-     return this.concertLikeRepository.remove(existLike);
-   }
- }
+  async deleteConcertLike(concertId: number, userId: number): Promise<any> {
+    const existLike = await this.concertLikeRepository.findOne({
+      where: { concertId, userId },
+    });
+    if (existLike) {
+      return this.concertLikeRepository.remove(existLike);
+    }
+  }
 
- // 특정 유저 좋아요 조회
- find(userId: number): Promise<ConcertLike[]> {
-   return this.concertLikeRepository.find({ where: { userId } });
- }
+  // // 특정 유저 좋아요 조회
+  // async find(userId: number) {
+  //   const concert = await this.concertRepository.find();
+  //   concert.forEach((a) => console.log(a.concertId));
 
- // 아티스트 상세 좋아요 조회
- async getLike(concertId: number, userId: number) {
-   const getLike = await this.concertLikeRepository.findOne({
-     where: { userId, concertId },
-   });
-   
-   if (getLike) {
-     return { isLike: true };
-   } else {
-     return { isLike: false };
-   }
- }
+  //   const existLike = await this.concertRepository.find({
+  //     where: { userId },
+  //   });
+  //   existLike.forEach((b) => console.log(b.concertId));
+  //   // return existLike.map((a) => a.artistId === artist) ? { artistId: artistId, isLike: true } : { artistId: artistId, isLike: false }
+  // }
+
+  async find(userId: number) {
+    const existLike = await this.concertLikeRepository.find({
+      where: { userId },
+    });
+
+    return existLike;
+  }
+
+  // 아티스트 상세 좋아요 조회
+  async getLike(concertId: number, userId: number) {
+    const getLike = await this.concertLikeRepository.findOne({
+      where: { userId, concertId },
+    });
+
+    if (getLike) {
+      return { isLike: true };
+    } else {
+      return { isLike: false };
+    }
+  }
 }
