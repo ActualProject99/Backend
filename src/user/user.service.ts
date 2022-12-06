@@ -12,7 +12,6 @@ import { UserRegisterDTO } from './dto/user-register.dto';
 import { User } from '../entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { UserLoginDTO } from './dto/user-login.dto';
-import axios, { AxiosRequestConfig } from 'axios';
 
 @Injectable()
 export class UserService {
@@ -48,6 +47,15 @@ export class UserService {
       ...userRegisterDTO,
       password: hashedPassword,
     });
+  }
+
+  async getNickname(nickname: string) {
+    const nick = await this.userRepository.findOne({ where: { nickname } });
+    if (nick) {
+      return { success: false };
+    } else {
+      return { success: true };
+    }
   }
 
   async verifyUserAndSignJwt(

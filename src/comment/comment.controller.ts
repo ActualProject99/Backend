@@ -67,6 +67,8 @@ export class CommentController {
     return this.commentService.create(
       concertId,
       req.user.userId,
+      req.user.nickname,
+      req.user.profileImg,
       createCommentDto,
     );
   }
@@ -80,7 +82,6 @@ export class CommentController {
     @Body() updateCommentDto: UpdateCommentDto,
     @Req() req,
   ): Promise<object> {
-    console.log(updateCommentDto.comment);
     return this.commentService.updateComment(
       commentId,
       req.user.userId,

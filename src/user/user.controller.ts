@@ -7,7 +7,6 @@ import {
   Post,
   Put,
   Query,
-  Redirect,
   Req,
   Request,
   Res,
@@ -42,6 +41,8 @@ import { KakaoAuthGuard } from 'src/auth/guard/kakao.guard';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtStrategy } from 'src/auth/strategy/jwt.strategy';
+import { ArtistLike } from 'src/entities/artist_like.entity';
+import { ArtistlikeService } from 'src/artist_like/artist_like.service';
 
 @Controller('users')
 export class UserController {
@@ -81,6 +82,13 @@ export class UserController {
   ) {
     // const imgUrl = await this.awsService.uploadFileToS3('users', profileImg);
     return await this.usersService.registerUser(userRegisterDTO);
+  }
+
+  // 유저 닉네임 중복검사
+  @Get('signup')
+  @ApiTags('users')
+  async getNickname(@Req() req) {
+    return await this.usersService.getNickname(req.query.nickname);
   }
 
   // 유저 로그인
@@ -148,7 +156,7 @@ export class UserController {
     // res.setHeader('jwt', jwt);
     // res.cookie('jwt', jwt);
     // }
-    res.redirect('http://tgle.ml');
+    res.redirect('https://www.tgle.ml');
     res.end();
     return { jwt, nickname };
   }

@@ -27,6 +27,7 @@ import { User } from './entities/user.entity';
 import { AppService } from './app.service';
 import { AppController } from './app.controller';
 import { Location } from './entities/location.entity';
+import { hotConcert } from './entities/hot_concert.entity';
 
 // import { access } from 'fs';
 import { LocationService } from './location/location.service';
@@ -45,6 +46,7 @@ import { AuthModule } from './auth/auth.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
+      timezone: 'Asia/Seoul',
       entities: [
         Category,
         Concert,
@@ -54,6 +56,7 @@ import { AuthModule } from './auth/auth.module';
         ArtistLike,
         User,
         Location,
+        hotConcert,
       ],
       synchronize: false, // 매번 연결할때마다 데이터베이스를 날리고 새로 생성하는 메소드
       autoLoadEntities: true, // Entity를 자동으로 로딩

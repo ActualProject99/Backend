@@ -40,12 +40,16 @@ export class CommentService {
   async create(
     concertId: number,
     userId: number,
+    nickname: string,
+    profileImg: string,
     createCommentDto: CreateCommentDto,
   ): Promise<void> {
     const { comment } = createCommentDto;
     await this.commentRepository.save({
       concertId,
       userId,
+      nickname,
+      profileImg,
       ...createCommentDto,
       createdAt: dayjs().format('YYYY-MM-DDTHH:mm:ss.sssZ'),
       updatedAt: dayjs().format('YYYY-MM-DDTHH:mm:ss.sssZ'),
@@ -59,6 +63,7 @@ export class CommentService {
     });
     const { comment } = updateCommentDto;
     existComment.comment = comment;
+    existComment.updatedAt = dayjs().format('YYYY-MM-DDTHH:mm:ss.sssZ');
     if (existComment.userId === userId) {
       return await this.commentRepository.save(existComment);
     } else {
