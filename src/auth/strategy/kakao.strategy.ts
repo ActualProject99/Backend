@@ -32,7 +32,7 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
     if (user === null) {
       console.log('일회용 토큰 발급');
       const jwt = this.authService.createLoginToken(email);
-      console.log(email, nickname, profileImg, jwt);
+      console.log(email, nickname, profileImg);
       const newUser = await this.userRepository.save({
         email: email,
         nickname: nickname,

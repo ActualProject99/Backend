@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpStatus,
   Logger,
@@ -43,6 +44,8 @@ import { AuthService } from 'src/auth/auth.service';
 import { JwtStrategy } from 'src/auth/strategy/jwt.strategy';
 import { ArtistLike } from 'src/entities/artist_like.entity';
 import { ArtistlikeService } from 'src/artist_like/artist_like.service';
+import { IsPhoneNumber } from 'class-validator';
+import { UserPhoneVerifyDTO } from './dto/user-phoneverify.dto';
 
 @Controller('users')
 export class UserController {
@@ -91,6 +94,14 @@ export class UserController {
     return await this.usersService.getNickname(req.query.nickname);
   }
 
+  // 휴대전화 인증구현
+  // @Post('signup/phonenumber')
+  // @ApiTags('users')
+  // async confirmPhone(@Body() phoneNumber: string) {
+  //   const checkNumber = await this.authService.sendSMS(phoneNumber);
+  //   return checkNumber;
+  // }
+
   // 유저 로그인
   @Post('login')
   @ApiTags('users')
@@ -126,7 +137,7 @@ export class UserController {
     // response.setHeader('refresh_token', refresh_token);
     // response.cookie('jwt', jwt, { httpOnly: true });
     response.cookie('jwt', jwt);
-    response.setHeader('jwt', jwt);
+    // response.setHeader('jwt', jwt);
     return { jwt, nickname };
   }
 
@@ -180,8 +191,8 @@ export class UserController {
     description: '서버 에러',
   })
   @UseGuards(JwtAuthGuard)
-  // @UseInterceptors(OnlyPrivateInterceptor)
   async getCurrentUser(@Req() req) {
+    console.log(req.user);
     const currentUser = await this.usersService.findUserByEmail(req.user.email);
     return currentUser;
   }
@@ -253,6 +264,15 @@ export class UserController {
     // await this.awsService.deleteS3Object(currentUser.profileImg); //s3 이미지 삭제 수정요함
     const imgObject = await this.awsService.uploadFileToS3('users', profileImg);
     return await this.usersService.updateUserImg(imgObject, req.user.userId);
+  }
+
+  // 회원탈퇴
+  @Delete('delete')
+  @ApiTags('users')
+  @ApiBearerAuth('jwt')
+  @UseGuards(JwtAuthGuard)
+  async deleteUser(@Req() req): Promise<object> {
+    return this.usersService.deleteUser(req.user);
   }
 
   // 유저 로그아웃

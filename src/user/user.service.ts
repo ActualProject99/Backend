@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   Logger,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -112,5 +113,15 @@ export class UserService {
   async findUserByEmail(email: string) {
     const user = await this.userRepository.findOne({ where: { email } });
     return user;
+  }
+
+  async deleteUser(user) {
+    const deleteuser = await this.userRepository.delete({
+      userId: user.userId,
+    });
+    // if (deleteuser.affected === 0) {
+    //   throw new NotFoundException('회원 탈퇴에 실패했습니다.');
+    // }
+    return { success: true, message: '회원탈퇴 완료' };
   }
 }
