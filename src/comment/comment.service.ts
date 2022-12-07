@@ -1,3 +1,4 @@
+import { MinLength } from 'class-validator';
 import { Injectable } from '@nestjs/common';
 import { Comment } from '../entities/comment.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -27,12 +28,18 @@ export class CommentService {
 
   // 콘서트별 댓글 조회
   async findAll(concertId: number): Promise<Comment[]> {
-    return this.commentRepository.find({ where: { concertId } });
+    return this.commentRepository.find({
+      where: { concertId },
+      order: { createdAt: 'DESC' },
+    });
   }
 
   // 유저별 댓글 조회
   findByUser(userId: number) {
-    return this.commentRepository.find({ where: { userId } });
+    return this.commentRepository.find({
+      where: { userId },
+      order: { createdAt: 'DESC' },
+    });
   }
 
   // 댓글 생성
@@ -60,7 +67,9 @@ export class CommentService {
     existComment.comment = comment;
     existComment.updatedAt = dayjs().format('YYYY-MM-DDTHH:mm:ss.sssZ');
     if (existComment.userId === userId) {
-      return await this.commentRepository.save(existComment);
+      if (comment) {
+        return await this.commentRepository.save(existComment);
+      }
     } else {
       return { errorMessage: '작성자가 아닙니다.' };
     }

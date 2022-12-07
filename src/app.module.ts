@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { MongooseModule } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
 // import { MySqlConfigModule } from './config/database/config.module';
@@ -33,6 +33,7 @@ import { hotConcert } from './entities/hot_concert.entity';
 import { LocationService } from './location/location.service';
 import { LocationController } from './location/location.controller';
 import { AuthModule } from './auth/auth.module';
+import { WebpushModule } from './webpush/webpush.module';
 
 @Module({
   imports: [
@@ -78,6 +79,7 @@ import { AuthModule } from './auth/auth.module';
     UserModule,
     LocationModule,
     AuthModule,
+    WebpushModule,
   ],
   controllers: [AppController],
   providers: [AppService],
