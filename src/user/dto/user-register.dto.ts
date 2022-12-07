@@ -7,13 +7,4 @@ export class UserRegisterDTO extends PickType(User, [
   'nickname',
   'password',
   'phoneNumber',
-] as const) {
-  // @ApiProperty()
-  // email: string;
-  // @ApiProperty()
-  // nickname: string;
-  // @ApiProperty()
-  // password: string;
-  // @ApiProperty()
-  // phoneNumber: string;
-}
+] as const) {}

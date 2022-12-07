@@ -28,12 +28,18 @@ export class CommentService {
 
   // 콘서트별 댓글 조회
   async findAll(concertId: number): Promise<Comment[]> {
-    return this.commentRepository.find({ where: { concertId } });
+    return this.commentRepository.find({
+      where: { concertId },
+      order: { updatedAt: 'DESC' },
+    });
   }
 
   // 유저별 댓글 조회
   findByUser(userId: number) {
-    return this.commentRepository.find({ where: { userId } });
+    return this.commentRepository.find({
+      where: { userId },
+      order: { updatedAt: 'DESC' },
+    });
   }
 
   // 댓글 생성

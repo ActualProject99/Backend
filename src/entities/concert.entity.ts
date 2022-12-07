@@ -55,6 +55,9 @@ export class Concert {
   @Column()
   locationId: number;
 
+  @Column()
+  saleDone: string;
+
   @OneToMany(() => ConcertLike, (concertLike) => concertLike.concert)
   concertLikes: ConcertLike[];
 
