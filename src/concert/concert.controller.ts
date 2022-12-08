@@ -10,6 +10,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { ConcertService } from './concert.service';
+import { ArtistService } from '../artist/artist.service';
 import { Concert } from '../entities/concert.entity';
 import { CreateConcertDto } from './dto/create-concert.dto';
 import { UpdateConcertDto } from './dto/update-concert.dto';
@@ -19,7 +20,10 @@ import { Panorama } from 'aws-sdk';
 
 @Controller('')
 export class ConcertController {
-  constructor(private concertService: ConcertService) {}
+  constructor(
+    private concertService: ConcertService,
+    private artistService: ArtistService,
+  ) {}
 
   // 카테고리별 조회
   @Get('category/:categoryId')
@@ -73,5 +77,17 @@ export class ConcertController {
   @Get('hotconcert')
   hotconcert() {
     return this.concertService.hotConcert();
+  }
+
+  // // 검색
+  // @Get('search')
+  // searchConcert(@Query('searchQuery') searchQuery: string) {
+  //   return this.concertService.searchConcert(searchQuery);
+  // }
+
+  // 검색
+  @Get('search')
+  search(@Query('searchQuery') searchQuery: string) {
+    return this.concertService.search(searchQuery);
   }
 }

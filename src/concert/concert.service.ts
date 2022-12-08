@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { Concert } from '../entities/concert.entity';
+import { Artist } from '../entities/artist.entity';
 import { hotConcert } from '../entities/hot_concert.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { createQueryBuilder, Repository } from 'typeorm';
 import { CreateConcertDto } from './dto/create-concert.dto';
 import * as dayjs from 'dayjs';
 
@@ -13,6 +14,8 @@ export class ConcertService {
     private readonly concertRepository: Repository<Concert>,
     @InjectRepository(hotConcert)
     private readonly hotconcertRepository: Repository<hotConcert>,
+    @InjectRepository(Artist)
+    private readonly artistRepository: Repository<Artist>,
   ) {}
 
   // 핫콘서트 조회
@@ -42,10 +45,12 @@ export class ConcertService {
   // 전체 조회
   async find(): Promise<any> {
     const find: Array<any> = await this.concertRepository.find();
-    // for (let i = 0; i < find.length; i++) {
-    //   find[i].ticketingUrl = JSON.parse(find[i].ticketingUrl);
-    // }
-    // return JSON.parse(find);
+  }
+
+  // 상세 조회
+  findOne(concertId: number) {
+    console.log('findOne');
+    return this.concertRepository.findOne({ where: { concertId } });
   }
 
   // 생성
@@ -59,37 +64,72 @@ export class ConcertService {
       calender,
       month,
     } = await this.concertRepository.save({ ...createConcertDto });
-    // await this.concertRepository.save({...createConcertDto});
   }
-
-  // // 티켓URL 저장
-  // ticketingUrl(ticketingUrl: Concert[]) {
-  //   let ticketingUrl_string = '[';
-  //   for (let i = 0; i < ticketingUrl.length; i++) {
-  //     ticketingUrl_string += JSON.stringify(ticketingUrl[i]);
-  //     if (i < ticketingUrl.length - 1) {
-  //       ticketingUrl_string += ',';
-  //     }
-  //   }
-  //   ticketingUrl_string += ']';
-  //   this.concertRepository.save({ ticketingUrl: ticketingUrl_string });
-  // }
 
   // 삭제
   async remove(concertId: number): Promise<void> {
     await this.concertRepository.delete(concertId);
   }
 
-  // 검색
-  searchConcert = (args: any) => {
-    const { searchQuery } = args;
+  // // 콘서트 검색
+  // async searchConcert(searchQuery: string) {
+  //   const search = searchQuery;
 
-    return this.concertRepository
+  //   const searchConcert = await this.concertRepository
+  //     .createQueryBuilder()
+  //     .select()
+  //     .where(`MATCH(concertName) AGAINST ('${search}' IN BOOLEAN MODE)`)
+  //     .getMany();
+
+  //   return searchConcert;
+  // }
+
+  // // 아티스트 검색
+  // async searchArtist(searchQuery: string) {
+  //   const search = searchQuery;
+
+  //   const searchArtist = await this.artistRepository
+  //     .createQueryBuilder()
+  //     .select()
+  //     .where(`MATCH(artistName) AGAINST ('${search}' IN BOOLEAN MODE)`)
+  //     .getMany();
+
+  //   return searchArtist;
+  // }
+
+  // 통합 검색
+  async search(searchQuery: string) {
+    const search = searchQuery;
+
+    const searchArtist = await this.artistRepository
       .createQueryBuilder()
       .select()
-      .where(`MATCH(concertName) AGAINST ('${searchQuery}' IN BOOLEAN MODE)`)
+      .where(`MATCH(artistName) AGAINST ('${search}' IN BOOLEAN MODE)`)
       .getMany();
-  };
+
+    const searchConcert = await this.concertRepository
+      .createQueryBuilder()
+      .select()
+      .where(`MATCH(concertName) AGAINST ('${search}' IN BOOLEAN MODE)`)
+      .getMany();
+
+    if (!searchArtist || !searchConcert) {
+      await this.concertRepository
+        .createQueryBuilder()
+        .select()
+        .where(`MATCH(concertName) AGAINST ('${search}' IN BOOLEAN MODE)`)
+        .getMany();
+
+      await this.artistRepository
+        .createQueryBuilder()
+        .select()
+        .where(`MATCH(artistName) AGAINST ('${search}' IN BOOLEAN MODE)`)
+        .getMany();
+    }
+    return [searchArtist, searchConcert];
+    // const searchArtist = this.searchArtist(searchQuery);
+    // const searchConcert = this.searchConcert(searchQuery);
+  }
 
   // 수정
   async update(concertId: number, concert: Concert): Promise<void> {

@@ -25,4 +25,7 @@ export class Comment {
 
   @Column()
   updatedAt: string;
+
+  @Column()
+  concertName: string;
 }

@@ -8,9 +8,9 @@ import { ArtistController } from './artist.controller';
 import { ArtistService } from './artist.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Artist, Concert])],
-  controllers: [],
-  providers: [],
+  imports: [TypeOrmModule.forFeature([Artist, Concert, hotConcert])],
+  controllers: [ArtistController],
+  providers: [ArtistService, ConcertService],
   exports: [TypeOrmModule],
 })
 export class ArtistModule {}

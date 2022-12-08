@@ -12,6 +12,7 @@ import {
   Query,
   UseGuards,
   Req,
+  Res,
 } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { Comment } from '../entities/comment.entity';
@@ -24,10 +25,15 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
 import { ClassSerializerInterceptor } from '@nestjs/common';
 import { ClassTransformer } from 'class-transformer';
+import { ConcertService } from 'src/concert/concert.service';
+import { Response } from 'express';
 
 @Controller('comment')
 export class CommentController {
-  constructor(private commentService: CommentService) {}
+  constructor(
+    private commentService: CommentService,
+    private concertService: ConcertService,
+  ) {}
 
   // // 콘서트별 댓글 조회(페이지)
   // @Get(':concertId')
@@ -66,9 +72,12 @@ export class CommentController {
     @Req() req,
     @Body() createCommentDto: CreateCommentDto,
   ) {
+    console.log(req);
     return this.commentService.create(
       concertId,
       req.user.userId,
+      req.user.nickname,
+      req.user.profileImg,
       createCommentDto,
     );
   }

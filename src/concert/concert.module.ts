@@ -5,10 +5,11 @@ import { Concert } from '../entities/concert.entity';
 import { hotConcert } from '../entities/hot_concert.entity';
 import { ConcertController } from './concert.controller';
 import { ConcertService } from './concert.service';
+import { ArtistService } from './../artist/artist.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Concert, hotConcert])],
+  imports: [TypeOrmModule.forFeature([Concert, hotConcert, Artist])],
   controllers: [ConcertController],
-  providers: [ConcertService],
+  providers: [ConcertService, ArtistService, Artist, hotConcert],
 })
 export class ConcertModule {}

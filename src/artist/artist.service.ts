@@ -27,15 +27,10 @@ export class ArtistService {
   }
 
   async create(createArtistDto: CreateArtistDto): Promise<void> {
-    const {
-      category,
-      artistName,
-      artistImg,
-      debutSong,
-      debutDate,
-    } = await this.artistRepository.save({
-      ...createArtistDto,
-    });
+    const { category, artistName, artistImg, debutSong, debutDate } =
+      await this.artistRepository.save({
+        ...createArtistDto,
+      });
   }
   // 삭제
   async remove(artistId: number): Promise<void> {
@@ -43,7 +38,7 @@ export class ArtistService {
   }
 
   // 검색
-  searchArtist = (args: any) => {
+  async searchArtist(args: any) {
     const { searchQuery } = args;
 
     return this.artistRepository
@@ -51,7 +46,7 @@ export class ArtistService {
       .select()
       .where(`MATCH(artistName) AGAINST ('${searchQuery}' IN BOOLEAN MODE)`)
       .getMany();
-  };
+  }
 
   // 수정
   async update(artistId: number, artist: Artist): Promise<void> {
