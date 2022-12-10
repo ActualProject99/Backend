@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { ArtistLike } from './artist_like.entity';
 import { ConcertLike } from './concert_like.entity';
+import { Alarm } from './alarm.entity';
 
 // @Index('email', ['email'], { unique: true })
 @Entity('User')
@@ -64,7 +65,7 @@ export class User {
   password: string;
 
   @Column({ nullable: true })
-  refresh_token: string;
+  currentHashedRefreshToken: string;
 
   @Column({ nullable: true })
   likeArtist: number;
@@ -80,6 +81,9 @@ export class User {
 
   @OneToMany(() => ConcertLike, (concertLike) => concertLike.user)
   concertLikes: ConcertLike[];
+
+  @OneToMany(() => Alarm, (alarm) => alarm.user)
+  alarms: Alarm[];
 
   // @OneToMany(() => Artist, (artist) => artist.user)
   // artists: Artist[];

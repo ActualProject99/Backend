@@ -1,28 +1,19 @@
 import {
   Controller,
   Get,
-  Post,
   Put,
-  Delete,
   Param,
   UseGuards,
-  UseInterceptors,
   Req,
   ParseIntPipe,
 } from '@nestjs/common';
 import { ConcertLikeService } from './concert_like.service';
-import { OnlyPrivateInterceptor } from 'src/common/interceptor/only-private.interceptor';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Concert } from '../entities/concert.entity';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
-import { JwtPayload } from '../auth/jwt/jwt.payload';
-import { UserLoginDTO } from '../user/dto/user-login.dto';
-import { CreateConcertLikeDto } from './dto/create.concert_like.dto';
 
 @Controller('concertlike')
 export class ConcertLikeController {
   constructor(private concertLikeService: ConcertLikeService) {}
-
 
   @Put(':concertId')
   @ApiBearerAuth('access-token')

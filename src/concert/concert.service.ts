@@ -71,32 +71,6 @@ export class ConcertService {
     await this.concertRepository.delete(concertId);
   }
 
-  // // 콘서트 검색
-  // async searchConcert(searchQuery: string) {
-  //   const search = searchQuery;
-
-  //   const searchConcert = await this.concertRepository
-  //     .createQueryBuilder()
-  //     .select()
-  //     .where(`MATCH(concertName) AGAINST ('${search}' IN BOOLEAN MODE)`)
-  //     .getMany();
-
-  //   return searchConcert;
-  // }
-
-  // // 아티스트 검색
-  // async searchArtist(searchQuery: string) {
-  //   const search = searchQuery;
-
-  //   const searchArtist = await this.artistRepository
-  //     .createQueryBuilder()
-  //     .select()
-  //     .where(`MATCH(artistName) AGAINST ('${search}' IN BOOLEAN MODE)`)
-  //     .getMany();
-
-  //   return searchArtist;
-  // }
-
   // 통합 검색
   async search(searchQuery: string) {
     const search = searchQuery;
@@ -127,8 +101,6 @@ export class ConcertService {
         .getMany();
     }
     return [searchArtist, searchConcert];
-    // const searchArtist = this.searchArtist(searchQuery);
-    // const searchConcert = this.searchConcert(searchQuery);
   }
 
   // 수정

@@ -34,6 +34,7 @@ import { LocationService } from './location/location.service';
 import { LocationController } from './location/location.controller';
 import { AuthModule } from './auth/auth.module';
 import { WebpushModule } from './webpush/webpush.module';
+import { AlarmModule } from './alarm/alarm.module';
 
 @Module({
   imports: [
@@ -80,6 +81,7 @@ import { WebpushModule } from './webpush/webpush.module';
     LocationModule,
     AuthModule,
     WebpushModule,
+    AlarmModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -51,7 +51,7 @@ export class JwtRefreshGuard extends AuthGuard('jwt') {
 
       const user = await this.userService.findUserById(token_verify.userId);
 
-      if (user.refresh_token === token) {
+      if (user.currentHashedRefreshToken === token) {
         return await this.authService.createLoginToken(user);
       } else {
         throw new Error('no permission');

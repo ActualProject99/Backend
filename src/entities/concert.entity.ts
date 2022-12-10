@@ -6,6 +6,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { ConcertLike } from './concert_like.entity';
+import { Alarm } from './alarm.entity';
 
 @Entity()
 export class Concert {
@@ -60,4 +61,7 @@ export class Concert {
 
   @OneToMany(() => ConcertLike, (concertLike) => concertLike.concert)
   concerts: Concert[];
+
+  @OneToMany(() => Alarm, (alarm) => alarm.concertId)
+  alarms: Alarm[];
 }
