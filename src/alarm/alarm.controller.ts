@@ -41,10 +41,10 @@ export class AlarmController {
   }
 
   // 마이페이지 알람 조회
-  @Get('mypage/:userId')
+  @Get('mypage')
   @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
-  async findAllByUser(@Param('userId') userId: number) {
-    return this.alarmService.findAlarms(userId);
+  async findAllByUser(@Req() req) {
+    return this.alarmService.findAlarms(req.user.userId);
   }
 }

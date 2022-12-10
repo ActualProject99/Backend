@@ -40,7 +40,7 @@ export class AlarmService {
     return this.alarmRepository.find({ where: { userId } });
   }
 
-  // 아티스트 상세 좋아요 조회
+  // 콘서트 상세 좋아요 조회
   async getAlarm(concertId: number, userId: number) {
     const getAlarm = await this.alarmRepository.findOne({
       where: { userId, concertId },
