@@ -33,7 +33,6 @@ import { hotConcert } from './entities/hot_concert.entity';
 import { LocationService } from './location/location.service';
 import { LocationController } from './location/location.controller';
 import { AuthModule } from './auth/auth.module';
-import { WebpushModule } from './webpush/webpush.module';
 import { AlarmModule } from './alarm/alarm.module';
 
 @Module({
@@ -80,7 +79,6 @@ import { AlarmModule } from './alarm/alarm.module';
     UserModule,
     LocationModule,
     AuthModule,
-    WebpushModule,
     AlarmModule,
   ],
   controllers: [AppController],
