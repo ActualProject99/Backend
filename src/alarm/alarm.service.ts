@@ -36,7 +36,7 @@ export class AlarmService {
   }
 
   // 특정 유저 좋아요 조회
-  findAlarms(userId: number): Promise<Alarm[]> {
+  findAlarms(userId: number) {
     return this.alarmRepository.find({ where: { userId } });
   }
 
@@ -47,9 +47,9 @@ export class AlarmService {
     });
 
     if (getAlarm) {
-      return { concertId: concertId, isAlarm: true };
+      return { concertId: concertId, isLike: true };
     } else {
-      return { concertId: concertId, isAlarm: false };
+      return { concertId: concertId, isLike: false };
     }
   }
 }

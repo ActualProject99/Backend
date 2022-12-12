@@ -3,6 +3,11 @@ import { Artist } from '../entities/artist.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateArtistDto } from './dto/create-artist.dto';
+import { stringify } from 'querystring';
+import { ArtistlikeService } from 'src/artist_like/artist_like.service';
+import { ArtistLike } from 'src/entities/artist_like.entity';
+import { User } from 'src/entities/user.entity';
+import * as dayjs from 'dayjs';
 
 @Injectable()
 export class ArtistService {
@@ -11,21 +16,39 @@ export class ArtistService {
     private readonly artistRepository: Repository<Artist>,
   ) {}
 
-  // 아티스트 전체 조회
+  // 전체 조회
   async getArtist() {
-    await this.artistRepository.find();
+    const getArtist = await this.artistRepository.find();
+
+    return getArtist;
   }
 
   // 특정 아티스트 조회
-  async findOne(artistId: number): Promise<Artist> {
-    return await this.artistRepository.findOne({ where: { artistId } });
+  findOne(artistId: number): Promise<Artist> {
+    return this.artistRepository.findOne({ where: { artistId } });
   }
 
   // 생성
   async create(createArtistDto: CreateArtistDto): Promise<void> {
-    await this.artistRepository.save({
-      ...createArtistDto,
-    });
+    const { category, artistName, artistImg, debutSong, debutDate } =
+      await this.artistRepository.save({
+        ...createArtistDto,
+      });
+  }
+  // 삭제
+  async remove(artistId: number): Promise<void> {
+    await this.artistRepository.delete(artistId);
+  }
+
+  // 검색
+  async searchArtist(args: any) {
+    const { searchQuery } = args;
+
+    const searchArtist = await this.artistRepository
+      .createQueryBuilder()
+      .select()
+      .where(`MATCH(artistName) AGAINST ('${searchQuery}' IN BOOLEAN MODE)`)
+      .getMany();
   }
 
   // 수정
@@ -43,9 +66,19 @@ export class ArtistService {
         .execute();
     }
   }
+  // // 좋아요, 좋아요 취소
 
-  // 삭제
-  async remove(artistId: number): Promise<void> {
-    await this.artistRepository.delete(artistId);
-  }
+  //     async like(currentUser: User, artistId: number) {
+  //         const currentArtist = await this.findOne(artistId);
+  //         const isLike = await this.artistlikeservice.isLike(currentUser, currentArtist)
+
+  //    // 좋아요를 이미 했다면 좋아요 취소
+  //         if (isLike) {
+  //         await this.artistlikeservice.like(currentUser, currentArtist)
+  //         return;
+  //     }
+  //     // 좋아요를 안했다면 좋아요 하기
+  //     await this.artistlikeservice.like(currentUser, currentArtist)
+
+  //     }
 }

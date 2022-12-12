@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpStatus,
   Logger,
@@ -42,6 +43,10 @@ import { KakaoAuthGuard } from 'src/auth/guard/kakao.guard';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtStrategy } from 'src/auth/strategy/jwt.strategy';
+import { ArtistLike } from 'src/entities/artist_like.entity';
+import { ArtistlikeService } from 'src/artist_like/artist_like.service';
+import { IsPhoneNumber } from 'class-validator';
+import { UserPhoneVerifyDTO } from './dto/user-phoneverify.dto';
 
 @Controller('users')
 export class UserController {
@@ -57,7 +62,7 @@ export class UserController {
 
   // 유저 회원가입
   @Post('signup')
-  @UseInterceptors(FileInterceptor('profileImg'))
+  // @UseInterceptors(FileInterceptor('profileImg'))
   @ApiTags('users')
   @ApiOperation({
     summary: '회원가입',
@@ -83,6 +88,27 @@ export class UserController {
     return await this.usersService.registerUser(userRegisterDTO);
   }
 
+  // 유저 닉네임 중복검사
+  @Get('signup')
+  @ApiTags('users')
+  async getNickname(@Req() req) {
+    return await this.usersService.getNickname(req.query.nickname);
+  }
+
+  // 휴대전화 인증구현
+  @Post('signup/phonenumber')
+  @ApiTags('users')
+  async confirmPhone(@Body() phoneNumber: string) {
+    return await this.authService.sendSMS(phoneNumber);
+    // return checkNumber;
+  }
+
+  @Get('signup/verifyNum')
+  @ApiTags('users')
+  async verifyNumber(@Body() phoneNumber: string, inputNumber: string) {
+    return await this.authService.checkSMS(phoneNumber, inputNumber);
+  }
+
   // 유저 로그인
   @Post('login')
   @ApiTags('users')
@@ -100,26 +126,28 @@ export class UserController {
     status: 500,
     description: '서버 에러',
   })
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   async logIn(
     @Request() req: any,
     @Body() userLoginDTO: UserLoginDTO,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const { jwt, nickname } = await this.usersService.verifyUserAndSignJwt(
-      userLoginDTO.email,
-      userLoginDTO.password,
-    );
+    const { jwt, refreshToken, nickname } =
+      await this.usersService.verifyUserAndSignJwt(
+        userLoginDTO.email,
+        userLoginDTO.password,
+      );
     // const user = await this.authService.validateUser(userLoginDTO.email);
     // const access_token = await this.authService.createLoginToken(user);
     // const refresh_token = await this.authService.createRefreshToken(user);
 
     // response.setHeader('access_token', access_token);
     // response.setHeader('refresh_token', refresh_token);
+    // response.setHeader('jwt', jwt);
     // response.cookie('jwt', jwt, { httpOnly: true });
-    response.cookie('jwt', jwt);
-    response.setHeader('jwt', jwt);
-    return { jwt, nickname };
+    response.cookie('accessToken', jwt);
+    response.cookie('refreshToken', refreshToken);
+    return { jwt, refreshToken, nickname };
   }
 
   @ApiOperation({
@@ -128,11 +156,52 @@ export class UserController {
   })
   @UseGuards(KakaoAuthGuard)
   @Get('kakao')
+  // @Redirect('http://localhost:3000/users/kakao/callback')
   async kakaoLogin() {
     return HttpStatus.OK;
   }
 
-  //카카오 인증요청
+  @ApiOperation({
+    summary: '카카오 로그인 콜백',
+    description: '카카오 로그인시 콜백 라우터입니다.',
+  })
+  @UseGuards(KakaoAuthGuard)
+  @Get('kakao/callback')
+  async kakaocallback(@Req() req, @Res() res: Response) {
+    const { jwt, nickname } = req.user;
+    if (req.user.type === 'login') {
+      res.setHeader('jwt', jwt);
+      res.cookie('jwt', jwt);
+    }
+    // const { jwt, nickname } = await this.usersService.kakaoCallback(query.code);
+    // return { jwt, nickname };
+    // res.setHeader('jwt', jwt);
+    // res.cookie('jwt', jwt);
+    // }
+    res.redirect('https://www.tgle.ml/');
+    return { jwt, nickname };
+    // res.end();
+  }
+
+  // //카카오 콜벡
+  // @Get('/kakao/callback')
+  // @ApiTags('users')
+  // @Redirect('https://tgle.ml/concert')
+  // async kakaoCallback(@Query() query, @Res() res) {
+  //   const { accessToken, refreshToken } = await this.usersService.kakaoCallback(
+  //     query.code,
+  //   );
+  //   res.cookie('refreshToken', refreshToken);
+  //   res.cookie('accessToken', accessToken);
+  //   // res.session.token = { accessToken, refreshToken };
+  //   // res.session.save();
+  //   return {
+  //     // accessToken,
+  //     url: `https://tgle.ml/auth?accessToken=${accessToken}&refreshToken=${refreshToken}`,
+  //   };
+  // }
+
+  // //카카오 인증요청
   // @Get('/kakao')
   // @ApiTags('users')
   // @ApiOperation({
@@ -148,30 +217,6 @@ export class UserController {
   //     url: `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_ID}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`,
   //   };
   // }
-
-  @ApiOperation({
-    summary: '카카오 로그인 콜백',
-    description: '카카오 로그인시 콜백 라우터입니다.',
-  })
-  @UseGuards(KakaoAuthGuard)
-  // @Redirect('https://da5loh79xj553.cloudfront.net/')
-  @Get('oauth/kakao/callback')
-  async kakaocallback(@Req() req, @Res() res: Response) {
-    // const { jwt, nickname } = await this.usersService.kakaoCallback(query.code);
-    // return { jwt, nickname };
-    const { jwt, nickname } = req.user;
-    // console.log(jwt, nickname);
-    // res.setHeader('jwt', jwt);
-    // if (req.user.type === 'login') {
-    //   res.setHeader('jwt', jwt);
-    // res.cookie('refresh_token', req.user.refresh_token);
-    // } else {
-    //   res.cookie('jwt', jwt);
-    // }
-    res.redirect('https://da5loh79xj553.cloudfront.net/');
-    res.end();
-    return { jwt, nickname };
-  }
 
   // 유저 정보 불러오기
   @ApiBearerAuth('jwt')
@@ -192,14 +237,12 @@ export class UserController {
     description: '서버 에러',
   })
   @UseGuards(JwtAuthGuard)
-  // @UseInterceptors(OnlyPrivateInterceptor)
   async getCurrentUser(@Req() req) {
     const currentUser = await this.usersService.findUserByEmail(req.user.email);
     return currentUser;
   }
 
   // 유저 닉네임, 패스워드 수정
-  @ApiBearerAuth('jwt')
   @Put('userinfo')
   @ApiTags('users')
   @ApiOperation({
@@ -217,20 +260,14 @@ export class UserController {
     status: 500,
     description: '서버 에러',
   })
+  @ApiBearerAuth('jwt')
   @UseGuards(JwtAuthGuard)
-  // @UseInterceptors(OnlyPrivateInterceptor)
-  async updateUserInfo(
-    @Body() userUpdateDTO: UserUpdateDTO,
-    @CurrentUser() currentUser: UserDTO,
-  ) {
+  async updateUserInfo(@Req() req, @Body() userUpdateDTO: UserUpdateDTO) {
     if (userUpdateDTO.nickname) {
-      this.usersService.editNickname(
-        userUpdateDTO.nickname,
-        currentUser.userId,
-      );
+      this.usersService.editNickname(userUpdateDTO.nickname, req.user.userId);
     }
     if (userUpdateDTO.password && userUpdateDTO.confirmPassword) {
-      this.usersService.editPassword(userUpdateDTO, currentUser.userId);
+      this.usersService.editPassword(userUpdateDTO, req.user.userId);
     }
     if (
       !userUpdateDTO.nickname &&
@@ -267,11 +304,20 @@ export class UserController {
   async updateUserImg(
     @UploadedFile() profileImg: Express.Multer.File,
     @Body() userUpdateDTO: UserUpdateDTO,
-    @CurrentUser() currentUser: UserDTO,
+    @Req() req,
   ) {
     // await this.awsService.deleteS3Object(currentUser.profileImg); //s3 이미지 삭제 수정요함
     const imgObject = await this.awsService.uploadFileToS3('users', profileImg);
-    return await this.usersService.updateUserImg(imgObject, currentUser.userId);
+    return await this.usersService.updateUserImg(imgObject, req.user.userId);
+  }
+
+  // 회원탈퇴
+  @Delete('delete')
+  @ApiTags('users')
+  @ApiBearerAuth('jwt')
+  @UseGuards(JwtAuthGuard)
+  async deleteUser(@Req() req): Promise<object> {
+    return this.usersService.deleteUser(req.user);
   }
 
   // 유저 로그아웃

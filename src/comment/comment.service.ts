@@ -1,9 +1,9 @@
-import { ConcertService } from './../concert/concert.service';
 import { Injectable } from '@nestjs/common';
 import { Comment } from '../entities/comment.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateCommentDto } from './dto/create-comment.dto';
+import { UpdateCommentDto } from './dto/update-comment.dto';
 import {
   paginate,
   Pagination,
@@ -16,16 +16,15 @@ export class CommentService {
   constructor(
     @InjectRepository(Comment)
     private readonly commentRepository: Repository<Comment>,
-    private concertService: ConcertService,
   ) {}
 
-  // // pagination 설정
-  // async paginate(options: IPaginationOptions): Promise<Pagination<Comment>> {
-  //   const queryBuilder = this.commentRepository.createQueryBuilder('c');
-  //   queryBuilder.orderBy('c.createdAt', 'DESC');
+  // pagination 설정
+  async paginate(options: IPaginationOptions): Promise<Pagination<Comment>> {
+    const queryBuilder = this.commentRepository.createQueryBuilder('c');
+    queryBuilder.orderBy('c.createdAt', 'DESC');
 
-  //   return paginate<Comment>(queryBuilder, options);
-  // }
+    return paginate<Comment>(queryBuilder, options);
+  }
 
   // 콘서트별 댓글 조회
   async findAll(concertId: number): Promise<Comment[]> {
@@ -36,8 +35,8 @@ export class CommentService {
   }
 
   // 유저별 댓글 조회
-  async findByUser(userId: number) {
-    await this.commentRepository.find({
+  findByUser(userId: number) {
+    return this.commentRepository.find({
       where: { userId },
       order: { createdAt: 'DESC' },
     });
@@ -52,7 +51,6 @@ export class CommentService {
     createCommentDto: CreateCommentDto,
   ): Promise<void> {
     const { comment } = createCommentDto;
-
     await this.commentRepository.save({
       concertId,
       userId,
@@ -60,28 +58,23 @@ export class CommentService {
       profileImg,
       ...createCommentDto,
       createdAt: dayjs().format('YYYY-MM-DDTHH:mm:ss.sssZ'),
+      updatedAt: dayjs().format('YYYY-MM-DDTHH:mm:ss.sssZ'),
     });
   }
 
   // 댓글 수정
-  async updateComment(
-    commentId: number,
-    userId: number,
-    nickname: string,
-    profileImg: string,
-    updateCommentDto,
-  ) {
+  async updateComment(commentId: number, userId, updateCommentDto) {
     const existComment = await this.commentRepository.findOne({
       where: { commentId, userId },
     });
     const { comment } = updateCommentDto;
     existComment.comment = comment;
-    existComment.nickname = nickname;
-    existComment.profileImg = profileImg;
     existComment.updatedAt = dayjs().format('YYYY-MM-DDTHH:mm:ss.sssZ');
     if (existComment.userId === userId) {
       if (comment) {
         return await this.commentRepository.save(existComment);
+      } else {
+        return { errorMessage: '댓글을 입력해주세요.' };
       }
     } else {
       return { errorMessage: '작성자가 아닙니다.' };
@@ -89,7 +82,15 @@ export class CommentService {
   }
 
   // 댓글 삭제
-  async remove(commentId: number): Promise<void> {
-    await this.commentRepository.delete(commentId);
+  async remove(commentId: number, userId: number): Promise<object> {
+    const deleteComment = await this.commentRepository.findOne({
+      where: { commentId },
+    });
+    console.log(deleteComment);
+    if (deleteComment.userId === userId) {
+      await this.commentRepository.delete(deleteComment);
+    } else {
+      return { errorMessage: '작성자가 아닙니다.' };
+    }
   }
 }

@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Concert } from '../entities/concert.entity';
-import { Artist } from '../entities/artist.entity';
 import { hotConcert } from '../entities/hot_concert.entity';
+import { Artist } from '../entities/artist.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateConcertDto } from './dto/create-concert.dto';
+import * as dayjs from 'dayjs';
 
 @Injectable()
 export class ConcertService {
@@ -42,15 +43,14 @@ export class ConcertService {
   }
 
   // 전체 조회
-  async find() {
-    await this.concertRepository.find();
+  find() {
+    return this.concertRepository.find();
   }
 
   // 상세 조회
   findOne(concertId: number) {
     return this.concertRepository.findOne({ where: { concertId } });
   }
-
   // 생성
   async create(createConcertDto: CreateConcertDto): Promise<void> {
     const {
@@ -62,6 +62,7 @@ export class ConcertService {
       calender,
       month,
     } = await this.concertRepository.save({ ...createConcertDto });
+    // await this.concertRepository.save({...createConcertDto});
   }
 
   // 수정

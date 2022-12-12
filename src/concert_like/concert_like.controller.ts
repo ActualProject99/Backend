@@ -1,42 +1,48 @@
 import {
   Controller,
   Get,
+  Post,
   Put,
+  Delete,
   Param,
   UseGuards,
+  UseInterceptors,
   Req,
   ParseIntPipe,
 } from '@nestjs/common';
 import { ConcertLikeService } from './concert_like.service';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { OnlyPrivateInterceptor } from 'src/common/interceptor/only-private.interceptor';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Concert } from '../entities/concert.entity';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
+import { JwtPayload } from '../auth/jwt/jwt.payload';
+import { UserLoginDTO } from '../user/dto/user-login.dto';
+import { CreateConcertLikeDto } from './dto/create.concert_like.dto';
 
 @Controller('concertlike')
 export class ConcertLikeController {
   constructor(private concertLikeService: ConcertLikeService) {}
 
-  // 상세페이지 좋아요 여부
-  @Get(':concertId')
+  // 콘서트 마이페이지에서 조회
+  @Get('mypage')
   @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
-  async getLike(@Param('concertId') concertId: number, @Req() req) {
+  async findAllByUser(@Req() req) {
+    return this.concertLikeService.find(req.user.userId);
+  }
+  // 아티스트 상세 좋아요 조회
+  @Get(':concertId')
+  @ApiBearerAuth('jwt')
+  @UseGuards(JwtAuthGuard)
+  getLike(@Param('concertId') concertId: number, @Req() req) {
     return this.concertLikeService.getLike(concertId, req.user.userId);
   }
 
-  // 마이페이지 좋아요한 콘서트 조회
-  @Get('mypage/:userId')
-  @ApiBearerAuth('access-token')
-  @UseGuards(JwtAuthGuard)
-  async findAllByUser(@Param('userId') userId: number) {
-    return this.concertLikeService.find(userId);
-  }
-
-  // 좋아요 추가, 삭제
   @Put(':concertId')
   @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
-  async like(@Param('concertId') concertId: number, @Req() req) {
-    const existLike: object = await this.concertLikeService.existConcertLike(
+  async like(@Param('concertId', ParseIntPipe) concertId: number, @Req() req) {
+    const existLike: any = await this.concertLikeService.existConcertLike(
       concertId,
       req.user.userId,
     );

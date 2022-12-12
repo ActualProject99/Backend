@@ -1,73 +1,63 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# 프로젝트명
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+### Tgle - 티켓 정글<br/>
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+### https://www.tgle.ml/
 
-## Description
+<br/>
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+backend repo 입니다.<br/> [ -> front repo](https://github.com/ActualProject99/Frontend)
+<br/><br/>
 
-## Installation
+## 프로젝트 소개
 
-```bash
-$ npm install
-```
+<br/>
 
-## Running the app
+> 초조함으로 가득찬 티켓팅을 즐거운 경험으로 만들어 줍니다
 
-```bash
-# development
-$ npm run start
+1. 티켓팅 기본 정보 제공
+2. 티켓팅 사이터 서버시간 확인
+3. 관심 공연 티켓팅 일정 알림
+   <br/><br/>
 
-# watch mode
-$ npm run start:dev
+## 🗓 프로젝트 기간
 
-# production mode
-$ npm run start:prod
-```
+2022년 11월 3일 ~ 2022년 12월 16일 (6주)
+<br/><br/>
 
-## Test
+## 아키텍처
+![아키텍처](https://user-images.githubusercontent.com/108498421/206983822-0091229f-c68b-43cb-98b8-4e60f2bad080.png)
+<br/><br/>
 
-```bash
-# unit tests
-$ npm run test
+## 🛠 기술스택
 
-# e2e tests
-$ npm run test:e2e
+Back<br/>
+<img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=TypeScript&logoColor=white"/>&nbsp;
+<img src="https://img.shields.io/badge/NestJS-E0234E?style=for-the-square&logo=NestJS&logoColor=black">&nbsp;
+<img src="https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=MySQL&logoColor=black"/>&nbsp;
+<img src="https://img.shields.io/badge/JSON Web Tokens-000000?style=flat-square&logo=JSON Web Tokens&logoColor=white"/>&nbsp;
+<img src="https://img.shields.io/badge/Passport-34E27A?style=flat-square&logo=Passport&logoColor=white"/>&nbsp;
+<img src="https://img.shields.io/badge/TypeORM-3578e5?style=flat-square&logoColor=white"/>&nbsp;
+<img src="https://img.shields.io/badge/PM2-2B037A?style=flat-square&logo=PM2&logoColor=white"/><br/>
+Dev tools<br/>
+<img src="https://img.shields.io/badge/Visual Studio Code-007ACC?style=flat-square&logo=Visual Studio Code&logoColor=white"/>&nbsp;
+<img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=GitHub&logoColor=white"/>
+<img src="https://img.shields.io/badge/MySQLWorkbench-004088?style=flat-square&logo=MySQLWorkbench&logoColor=white"/>
+<img src="https://img.shields.io/badge/ESLint-4B32C3?style=flat-square&logo=ESLint&logoColor=white"/><br/>
+Dev Ops<br/>
+<img src="https://img.shields.io/badge/Amazon EC2-FF9900?style=flat-square&logo=Amazon EC2&logoColor=white"/>&nbsp;
+<img src="https://img.shields.io/badge/Amazon RDS-527FFF?style=flat-square&logo=Amazon RDS&logoColor=white"/>&nbsp;
+<img src="https://img.shields.io/badge/Amazon S3-569A31?style=flat-square&logo=Amazon S3&logoColor=white"/>&nbsp;
+<img src="https://img.shields.io/badge/Route53-000000?style=flat-square&logo=Route53&logoColor=white"/>&nbsp;
+<img src="https://img.shields.io/badge/NGINX-009639?style=flat-square&logo=NGINX&logoColor=white"/>&nbsp;<br/><br/>
 
-# test coverage
-$ npm run test:cov
-```
+## 😎 팀원 소개
 
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+| 이름     | 깃허브 주소                   |
+| -------- | ----------------------------- |
+| 🔰임요한(F) | https://github.com/obov       |
+| 김혁진(F)   | https://github.com/rklskhj    |
+| 이민기(F)   | https://github.com/Pasilda123 |
+| 🔰예지완(B) | https://github.com/kmdet1235  |
+| 박민호(B)   | https://github.com/maino96    |
+| 김정환(B)   | https://github.com/jeongpal   |

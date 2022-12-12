@@ -7,6 +7,9 @@ import {
   Delete,
   Param,
   Body,
+  DefaultValuePipe,
+  ParseIntPipe,
+  Query,
   UseGuards,
   Req,
 } from '@nestjs/common';
@@ -14,15 +17,17 @@ import { CommentService } from './comment.service';
 import { Comment } from '../entities/comment.entity';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
+// import { Repository } from 'typeorm';
+// import { InjectRepository } from '@nestjs/typeorm';
+import { Pagination } from 'nestjs-typeorm-paginate';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
-import { ConcertService } from 'src/concert/concert.service';
 
 @Controller('comment')
 export class CommentController {
   constructor(private commentService: CommentService) {}
 
-  // // 콘서트별 댓글 조회(pagenation)
+  // // 콘서트별 댓글 조회(페이지)
   // @Get(':concertId')
   // async findAll(
   //   @Param('concertId') concertId: number,
@@ -72,23 +77,23 @@ export class CommentController {
   @Patch(':commentId')
   @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
-  update(
-    @Req() req,
+  async update(
     @Param('commentId') commentId: number,
     @Body() updateCommentDto: UpdateCommentDto,
-  ) {
+    @Req() req,
+  ): Promise<object> {
     return this.commentService.updateComment(
       commentId,
       req.user.userId,
-      req.user.nickname,
-      req.user.profileImg,
       updateCommentDto,
     );
   }
 
   // 댓글 삭제
   @Delete(':commentId')
-  remove(@Param('commentId') commentId: number) {
-    return this.commentService.remove(commentId);
+  @ApiBearerAuth('access-token')
+  @UseGuards(JwtAuthGuard)
+  async remove(@Param('commentId') commentId: number, @Req() req) {
+    return this.commentService.remove(commentId, req.user.userId);
   }
 }
