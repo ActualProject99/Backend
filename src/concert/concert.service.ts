@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Concert } from '../entities/concert.entity';
 import { hotConcert } from '../entities/hot_concert.entity';
+import { Artist } from '../entities/artist.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateConcertDto } from './dto/create-concert.dto';
@@ -13,6 +14,8 @@ export class ConcertService {
     private readonly concertRepository: Repository<Concert>,
     @InjectRepository(hotConcert)
     private readonly hotconcertRepository: Repository<hotConcert>,
+    @InjectRepository(Artist)
+    private readonly artistRepository: Repository<Artist>,
   ) {}
 
   // 핫콘서트 조회
@@ -44,6 +47,10 @@ export class ConcertService {
     return this.concertRepository.find();
   }
 
+  // 상세 조회
+  findOne(concertId: number) {
+    return this.concertRepository.findOne({ where: { concertId } });
+  }
   // 생성
   async create(createConcertDto: CreateConcertDto): Promise<void> {
     const {
@@ -57,22 +64,6 @@ export class ConcertService {
     } = await this.concertRepository.save({ ...createConcertDto });
     // await this.concertRepository.save({...createConcertDto});
   }
-
-  // 삭제
-  async remove(concertId: number): Promise<void> {
-    await this.concertRepository.delete(concertId);
-  }
-
-  // 검색
-  searchConcert = (args: any) => {
-    const { searchQuery } = args;
-
-    return this.concertRepository
-      .createQueryBuilder()
-      .select()
-      .where(`MATCH(concertName) AGAINST ('${searchQuery}' IN BOOLEAN MODE)`)
-      .getMany();
-  };
 
   // 수정
   async update(concertId: number, concert: Concert): Promise<void> {
@@ -94,5 +85,42 @@ export class ConcertService {
         .where('concertId = :concertId', { concertId })
         .execute();
     }
+  }
+
+  // 삭제
+  async remove(concertId: number): Promise<void> {
+    await this.concertRepository.delete(concertId);
+  }
+
+  // 통합 검색
+  async search(searchQuery: string) {
+    const search = searchQuery;
+
+    const searchArtist = await this.artistRepository
+      .createQueryBuilder()
+      .select()
+      .where(`MATCH(artistName) AGAINST ('${search}' IN BOOLEAN MODE)`)
+      .getMany();
+
+    const searchConcert = await this.concertRepository
+      .createQueryBuilder()
+      .select()
+      .where(`MATCH(concertName) AGAINST ('${search}' IN BOOLEAN MODE)`)
+      .getMany();
+
+    if (!searchArtist || !searchConcert) {
+      await this.concertRepository
+        .createQueryBuilder()
+        .select()
+        .where(`MATCH(concertName) AGAINST ('${search}' IN BOOLEAN MODE)`)
+        .getMany();
+
+      await this.artistRepository
+        .createQueryBuilder()
+        .select()
+        .where(`MATCH(artistName) AGAINST ('${search}' IN BOOLEAN MODE)`)
+        .getMany();
+    }
+    return [searchArtist, searchConcert];
   }
 }

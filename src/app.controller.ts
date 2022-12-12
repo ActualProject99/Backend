@@ -10,5 +10,6 @@ export class AppController {
   @Get()
   getHello(@Req() req, @Res() res: Response) {
     res.redirect('https://www.tgle.ml');
+    // return '까꿍!';
   }
 }

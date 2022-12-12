@@ -16,16 +16,19 @@ export class ArtistService {
     private readonly artistRepository: Repository<Artist>,
   ) {}
 
+  // 전체 조회
   async getArtist() {
     const getArtist = await this.artistRepository.find();
 
     return getArtist;
   }
+
   // 특정 아티스트 조회
   findOne(artistId: number): Promise<Artist> {
     return this.artistRepository.findOne({ where: { artistId } });
   }
 
+  // 생성
   async create(createArtistDto: CreateArtistDto): Promise<void> {
     const { category, artistName, artistImg, debutSong, debutDate } =
       await this.artistRepository.save({
@@ -38,15 +41,15 @@ export class ArtistService {
   }
 
   // 검색
-  searchArtist = (args: any) => {
+  async searchArtist(args: any) {
     const { searchQuery } = args;
 
-    return this.artistRepository
+    const searchArtist = await this.artistRepository
       .createQueryBuilder()
       .select()
       .where(`MATCH(artistName) AGAINST ('${searchQuery}' IN BOOLEAN MODE)`)
       .getMany();
-  };
+  }
 
   // 수정
   async update(artistId: number, artist: Artist): Promise<void> {

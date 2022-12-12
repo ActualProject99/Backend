@@ -64,7 +64,7 @@ export class User {
   password: string;
 
   @Column({ nullable: true })
-  refresh_token: string;
+  currentHashedRefreshToken: string;
 
   @Column({ nullable: true })
   likeArtist: number;
