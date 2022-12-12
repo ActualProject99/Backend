@@ -15,11 +15,28 @@ import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
 export class ConcertLikeController {
   constructor(private concertLikeService: ConcertLikeService) {}
 
+  // 상세페이지 좋아요 여부
+  @Get(':concertId')
+  @ApiBearerAuth('access-token')
+  @UseGuards(JwtAuthGuard)
+  async getLike(@Param('concertId') concertId: number, @Req() req) {
+    return this.concertLikeService.getLike(concertId, req.user.userId);
+  }
+
+  // 마이페이지 좋아요한 콘서트 조회
+  @Get('mypage/:userId')
+  @ApiBearerAuth('access-token')
+  @UseGuards(JwtAuthGuard)
+  async findAllByUser(@Param('userId') userId: number) {
+    return this.concertLikeService.find(userId);
+  }
+
+  // 좋아요 추가, 삭제
   @Put(':concertId')
   @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
-  async like(@Param('concertId', ParseIntPipe) concertId: number, @Req() req) {
-    const existLike: any = await this.concertLikeService.existConcertLike(
+  async like(@Param('concertId') concertId: number, @Req() req) {
+    const existLike: object = await this.concertLikeService.existConcertLike(
       concertId,
       req.user.userId,
     );
@@ -35,12 +52,5 @@ export class ConcertLikeController {
         req.user.userId,
       );
     }
-  }
-
-  @Get('mypage/:userId')
-  @ApiBearerAuth('access-token')
-  @UseGuards(JwtAuthGuard)
-  async findAllByUser(@Param('userId') userId: number) {
-    return this.concertLikeService.find(userId);
   }
 }

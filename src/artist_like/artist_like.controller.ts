@@ -1,24 +1,7 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Put,
-  Delete,
-  Param,
-  UseGuards,
-  UseInterceptors,
-  Req,
-  Res,
-  ParseIntPipe,
-} from '@nestjs/common';
+import { Controller, Get, Put, Param, UseGuards, Req } from '@nestjs/common';
 import { ArtistlikeService } from './artist_like.service';
-import { OnlyPrivateInterceptor } from 'src/common/interceptor/only-private.interceptor';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Artist } from '../entities/artist.entity';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
-import { JwtPayload } from '../auth/jwt/jwt.payload';
-import { UserLoginDTO } from '../user/dto/user-login.dto';
-import { AuthGuard } from '@nestjs/passport';
 
 @Controller('artistlike')
 export class ArtistlikeController {
@@ -40,11 +23,12 @@ export class ArtistlikeController {
     return this.artistlikeService.getLike(artistId, req.user.userId);
   }
 
+  // 아티스트 좋아요 추가, 삭제
   @Put(':artistId')
   @ApiBearerAuth('jwt')
   @UseGuards(JwtAuthGuard)
   async like(@Param('artistId') artistId: number, @Req() req) {
-    const existLike: any = await this.artistlikeService.existLike(
+    const existLike: object = await this.artistlikeService.existLike(
       artistId,
       req.user.userId,
     );

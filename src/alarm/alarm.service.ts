@@ -12,7 +12,7 @@ export class AlarmService {
   ) {}
 
   async existConcertAlarm(concertId: number, userId: number) {
-    const existAlarm = await this.alarmRepository.findOne({
+    const existAlarm: object = await this.alarmRepository.findOne({
       where: { concertId, userId },
     });
     return existAlarm;
@@ -47,9 +47,9 @@ export class AlarmService {
     });
 
     if (getAlarm) {
-      return { concertId: concertId, isLike: true };
+      return { concertId: concertId, isAlarm: true };
     } else {
-      return { concertId: concertId, isLike: false };
+      return { concertId: concertId, isAlarm: false };
     }
   }
 }

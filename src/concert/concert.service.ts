@@ -3,9 +3,8 @@ import { Concert } from '../entities/concert.entity';
 import { Artist } from '../entities/artist.entity';
 import { hotConcert } from '../entities/hot_concert.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { createQueryBuilder, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CreateConcertDto } from './dto/create-concert.dto';
-import * as dayjs from 'dayjs';
 
 @Injectable()
 export class ConcertService {
@@ -43,13 +42,12 @@ export class ConcertService {
   }
 
   // 전체 조회
-  async find(): Promise<any> {
-    const find: Array<any> = await this.concertRepository.find();
+  async find() {
+    await this.concertRepository.find();
   }
 
   // 상세 조회
   findOne(concertId: number) {
-    console.log('findOne');
     return this.concertRepository.findOne({ where: { concertId } });
   }
 
@@ -64,6 +62,28 @@ export class ConcertService {
       calender,
       month,
     } = await this.concertRepository.save({ ...createConcertDto });
+  }
+
+  // 수정
+  async update(concertId: number, concert: Concert): Promise<void> {
+    const existedConcert = await this.concertRepository.findOne({
+      where: { concertId },
+    });
+    if (existedConcert) {
+      await this.concertRepository
+        .createQueryBuilder()
+        .update(Concert)
+        .set({
+          concertName: concert.concertName,
+          concertImg: concert.concertImg,
+          concertInfo: concert.concertInfo,
+          concertDate: concert.concertDate,
+          ticketingDate: concert.ticketingDate,
+          calender: concert.calender,
+        })
+        .where('concertId = :concertId', { concertId })
+        .execute();
+    }
   }
 
   // 삭제
@@ -101,27 +121,5 @@ export class ConcertService {
         .getMany();
     }
     return [searchArtist, searchConcert];
-  }
-
-  // 수정
-  async update(concertId: number, concert: Concert): Promise<void> {
-    const existedConcert = await this.concertRepository.findOne({
-      where: { concertId },
-    });
-    if (existedConcert) {
-      await this.concertRepository
-        .createQueryBuilder()
-        .update(Concert)
-        .set({
-          concertName: concert.concertName,
-          concertImg: concert.concertImg,
-          concertInfo: concert.concertInfo,
-          concertDate: concert.concertDate,
-          ticketingDate: concert.ticketingDate,
-          calender: concert.calender,
-        })
-        .where('concertId = :concertId', { concertId })
-        .execute();
-    }
   }
 }

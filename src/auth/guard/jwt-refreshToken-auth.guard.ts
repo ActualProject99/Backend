@@ -8,13 +8,11 @@ import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
 import CryptoJS from 'crypto-js';
 import { UserService } from 'src/user/user.service';
-import { getRepository } from 'typeorm';
 import { AuthService } from '../auth.service';
 
 @Injectable()
 export class JwtRefreshGuard extends AuthGuard('jwt') {
   constructor(
-    private jwtService: JwtService,
     private authService: AuthService,
     private userService: UserService,
   ) {

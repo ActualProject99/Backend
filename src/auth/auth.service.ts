@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/entities/user.entity';
 import { UserService } from 'src/user/user.service';
-// import { getConnection } from 'typeorm';
 
 @Injectable()
 export class AuthService {
@@ -11,7 +10,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(email: string): Promise<any> {
+  async validateUser(email: string): Promise<object> {
     const user = await this.usersService.findUserByEmail(email);
     if (!user) {
       return null;
@@ -43,19 +42,6 @@ export class AuthService {
     });
 
     return refresh_token;
-
-    // const refresh_token = CryptoJS.AES.encrypt(
-    //   JSON.stringify(token),
-    //   process.env.AES_KEY,
-    // ).toString();
-
-    // await getConnection()
-    //   .createQueryBuilder()
-    //   .update(User)
-    //   .set({ refresh_token: token })
-    //   .where(`userId = ${user.userId}`)
-    //   .execute();
-    // return refresh_token;
   }
 
   onceToken(user_profile: any) {

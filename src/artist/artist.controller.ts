@@ -9,23 +9,16 @@ import {
 } from '@nestjs/common';
 import { ArtistService } from './artist.service';
 import { ConcertService } from '../concert/concert.service';
-// import { ArtistlikeService } from '../artist_like/artist_like.service';
 import { Artist } from '../entities/artist.entity';
 import { CreateArtistDto } from './dto/create-artist.dto';
-// import { UpdateArtistDto } from './dto/update-artist.dto';
-// import { Repository } from 'typeorm';
-// import { InjectRepository } from '@nestjs/typeorm';
 
 @Controller('artist')
 export class ArtistController {
-  constructor(
-    private artistService: ArtistService,
-    private concertService: ConcertService, // private artistlikeService: ArtistlikeService
-  ) {}
+  constructor(private artistService: ArtistService) {}
 
   // 모든 아티스트 조회
   @Get()
-  findAll(): Promise<Artist[]> {
+  findAll() {
     return this.artistService.getArtist();
   }
 

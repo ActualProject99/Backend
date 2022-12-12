@@ -18,12 +18,7 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
       callbackURL: process.env.KAKAO_CALLBACK_URL,
     });
   }
-  async validate(
-    accessToken: string,
-    refreshToken: string,
-    profile: any,
-    done: any,
-  ): Promise<any> {
+  async validate(profile: any, done: any): Promise<any> {
     const email = profile._json.kakao_account.email;
     const nickname = profile._json.properties.nickname;
     const user = await this.authService.validateUser(email);
@@ -42,7 +37,6 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
     // 유저가 있을때
     console.log('로그인 토큰 발급');
     const jwt = await this.authService.createLoginToken(user);
-    // const refresh_token = await this.authService.createRefreshToken(user);
     return { jwt, nickname, type: 'login' };
   }
 }

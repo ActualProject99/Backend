@@ -1,28 +1,17 @@
-import { Injectable, Response } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ArtistLike } from '../entities/artist_like.entity';
-import { Artist } from 'src/entities/artist.entity';
-import { User } from 'src/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UserService } from 'src/user/user.service';
-import { throwError } from 'rxjs';
-import * as dayjs from 'dayjs';
-import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
-import { CreateArtistlikeDto } from './dto/create-artist_like.dto';
 
 @Injectable()
 export class ArtistlikeService {
   constructor(
     @InjectRepository(ArtistLike)
     private readonly artistLikeRepository: Repository<ArtistLike>,
-    @InjectRepository(Artist)
-    private readonly artistRepository: Repository<Artist>,
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
   ) {}
 
   async existLike(artistId: number, userId: number) {
-    const existLike = await this.artistLikeRepository.findOne({
+    const existLike: object = await this.artistLikeRepository.findOne({
       where: { artistId, userId },
     });
 
@@ -47,9 +36,7 @@ export class ArtistlikeService {
   }
 
   async find(userId: number) {
-    const a = await this.artistLikeRepository.find({ where: { userId } });
-
-    return a;
+    await this.artistLikeRepository.find({ where: { userId } });
   }
 
   // 아티스트 상세 좋아요 조회

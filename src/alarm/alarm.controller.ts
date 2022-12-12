@@ -32,19 +32,19 @@ export class AlarmController {
     }
   }
 
-  // 상세페이지 알람 여부 조회
-  @Get('/:concertId')
-  @ApiBearerAuth('access-token')
-  @UseGuards(JwtAuthGuard)
-  async isAlarm(@Param('concertId') concertId: number, @Req() req) {
-    return this.alarmService.getAlarm(concertId, req.user.userId);
-  }
-
   // 마이페이지 알람 조회
   @Get('mypage')
   @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
   async findAllByUser(@Req() req) {
     return this.alarmService.findAlarms(req.user.userId);
+  }
+
+  // 상세페이지 알람 여부 조회
+  @Get('/:concertId')
+  @ApiBearerAuth('access-token')
+  @UseGuards(JwtAuthGuard)
+  async isAlarm(@Param('concertId') concertId: number, @Req() req) {
+    return this.alarmService.getAlarm(concertId, req.user.userId);
   }
 }
