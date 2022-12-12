@@ -18,12 +18,15 @@ backend repo 입니다.<br/> [ -> front repo](https://github.com/ActualProject99
 1. 티켓팅 기본 정보 제공
 2. 티켓팅 사이터 서버시간 확인
 3. 관심 공연 티켓팅 일정 알림
-4. 티켓팅 모의 연습
    <br/><br/>
 
 ## 🗓 프로젝트 기간
 
 2022년 11월 3일 ~ 2022년 12월 16일 (6주)
+<br/><br/>
+
+## 아키텍처
+![아키텍처](https://user-images.githubusercontent.com/108498421/206983822-0091229f-c68b-43cb-98b8-4e60f2bad080.png)
 <br/><br/>
 
 ## 🛠 기술스택
