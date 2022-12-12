@@ -30,22 +30,23 @@ backend repo 입니다.<br/> [ -> front repo](https://github.com/ActualProject99
 
 Back<br/>
 <img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=TypeScript&logoColor=white"/>&nbsp;
-<img src="https://img.shields.io/badge/NestJS-E0234E?style=for-the-badge&logo=NestJS&logoColor=white">&nbsp;
-<img src="https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=React&logoColor=black"/>&nbsp;
-<img src="https://img.shields.io/badge/Create React App-09D3AC?style=flat-square&logo=Create React App&logoColor=white"/>&nbsp;
-<img src="https://img.shields.io/badge/React Router-CA4245?style=flat-square&logo=React Router&logoColor=white"/>&nbsp;
-<img src="https://img.shields.io/badge/React Hook Form-EC5990?style=flat-square&logoColor=white"/>&nbsp;
-<img src="https://img.shields.io/badge/Axios-5A29E4?style=flat-square&logo=Axios&logoColor=white"/>&nbsp;
-<img src="https://img.shields.io/badge/React Query-FF4154?style=flat-square&logo=React Query&logoColor=white"/>&nbsp;
-<img src="https://img.shields.io/badge/Recoil-3578e5?style=flat-square&logoColor=white"/>&nbsp;
-<img src="https://img.shields.io/badge/Framer Motion-0055FF?style=flat-square&logo=Framer&logoColor=white"/><br/>
+<img src="https://img.shields.io/badge/NestJS-E0234E?style=for-the-square&logo=NestJS&logoColor=black">&nbsp;
+<img src="https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=MySQL&logoColor=black"/>&nbsp;
+<img src="https://img.shields.io/badge/JSON Web Tokens-000000?style=flat-square&logo=JSON Web Tokens&logoColor=white"/>&nbsp;
+<img src="https://img.shields.io/badge/Passport-34E27A?style=flat-square&logo=Passport&logoColor=white"/>&nbsp;
+<img src="https://img.shields.io/badge/TypeORM-3578e5?style=flat-square&logoColor=white"/>&nbsp;
+<img src="https://img.shields.io/badge/PM2-2B037A?style=flat-square&logo=PM2&logoColor=white"/><br/>
 Dev tools<br/>
 <img src="https://img.shields.io/badge/Visual Studio Code-007ACC?style=flat-square&logo=Visual Studio Code&logoColor=white"/>&nbsp;
-<img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=GitHub&logoColor=white"/><br/>
+<img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=GitHub&logoColor=white"/>
+<img src="https://img.shields.io/badge/MySQLWorkbench-004088?style=flat-square&logo=MySQLWorkbench&logoColor=white"/>
+<img src="https://img.shields.io/badge/ESLint-4B32C3?style=flat-square&logo=ESLint&logoColor=white"/><br/>
 Dev Ops<br/>
+<img src="https://img.shields.io/badge/Amazon EC2-FF9900?style=flat-square&logo=Amazon EC2&logoColor=white"/>&nbsp;
+<img src="https://img.shields.io/badge/Amazon RDS-527FFF?style=flat-square&logo=Amazon RDS&logoColor=white"/>&nbsp;
 <img src="https://img.shields.io/badge/Amazon S3-569A31?style=flat-square&logo=Amazon S3&logoColor=white"/>&nbsp;
-<img src="https://img.shields.io/badge/Amazon Cloudfront-232F3E?style=flat-square&logo=Amazon AWS&logoColor=white"/>&nbsp;
-<img src="https://img.shields.io/badge/GitHub Actions-2088FF?style=flat-square&logo=GitHub Actions&logoColor=white"/><br/><br/>
+<img src="https://img.shields.io/badge/Route53-000000?style=flat-square&logo=Route53&logoColor=white"/>&nbsp;
+<img src="https://img.shields.io/badge/NGINX-009639?style=flat-square&logo=NGINX&logoColor=black"/>&nbsp;<br/><br/>
 
 ## 😎 팀원 소개
 
