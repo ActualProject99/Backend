@@ -55,9 +55,9 @@ Dev Ops<br/>
 
 | 이름     | 깃허브 주소                   |
 | -------- | ----------------------------- |
-| 🔰임요한 | https://github.com/obov       |
-| 김혁진   | https://github.com/rklskhj    |
-| 이민기   | https://github.com/Pasilda123 |
-| 🔰예지완 | https://github.com/kmdet1235  |
-| 박민호   | https://github.com/maino96    |
-| 김정환   | https://github.com/jeongpal   |
+| 🔰임요한(F) | https://github.com/obov       |
+| 김혁진(F)   | https://github.com/rklskhj    |
+| 이민기(F)   | https://github.com/Pasilda123 |
+| 🔰예지완(B) | https://github.com/kmdet1235  |
+| 박민호(B)   | https://github.com/maino96    |
+| 김정환(B)   | https://github.com/jeongpal   |
