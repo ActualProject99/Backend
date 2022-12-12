@@ -30,7 +30,7 @@ export class CommentService {
   async findAll(concertId: number): Promise<Comment[]> {
     return this.commentRepository.find({
       where: { concertId },
-      order: { updatedAt: 'DESC' },
+      order: { createdAt: 'DESC' },
     });
   }
 
@@ -38,7 +38,7 @@ export class CommentService {
   findByUser(userId: number) {
     return this.commentRepository.find({
       where: { userId },
-      order: { updatedAt: 'DESC' },
+      order: { createdAt: 'DESC' },
     });
   }
 
@@ -71,7 +71,11 @@ export class CommentService {
     existComment.comment = comment;
     existComment.updatedAt = dayjs().format('YYYY-MM-DDTHH:mm:ss.sssZ');
     if (existComment.userId === userId) {
-      return await this.commentRepository.save(existComment);
+      if (comment) {
+        return await this.commentRepository.save(existComment);
+      } else {
+        return { errorMessage: '댓글을 입력해주세요.' };
+      }
     } else {
       return { errorMessage: '작성자가 아닙니다.' };
     }

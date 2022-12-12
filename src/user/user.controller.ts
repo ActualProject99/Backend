@@ -8,6 +8,7 @@ import {
   Post,
   Put,
   Query,
+  Redirect,
   Req,
   Request,
   Res,
@@ -95,12 +96,18 @@ export class UserController {
   }
 
   // 휴대전화 인증구현
-  // @Post('signup/phonenumber')
-  // @ApiTags('users')
-  // async confirmPhone(@Body() phoneNumber: string) {
-  //   const checkNumber = await this.authService.sendSMS(phoneNumber);
-  //   return checkNumber;
-  // }
+  @Post('signup/phonenumber')
+  @ApiTags('users')
+  async confirmPhone(@Body() phoneNumber: string) {
+    return await this.authService.sendSMS(phoneNumber);
+    // return checkNumber;
+  }
+
+  @Get('signup/verifyNum')
+  @ApiTags('users')
+  async verifyNumber(@Body() phoneNumber: string, inputNumber: string) {
+    return await this.authService.checkSMS(phoneNumber, inputNumber);
+  }
 
   // 유저 로그인
   @Post('login')
@@ -119,26 +126,28 @@ export class UserController {
     status: 500,
     description: '서버 에러',
   })
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   async logIn(
     @Request() req: any,
     @Body() userLoginDTO: UserLoginDTO,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const { jwt, nickname } = await this.usersService.verifyUserAndSignJwt(
-      userLoginDTO.email,
-      userLoginDTO.password,
-    );
+    const { jwt, refreshToken, nickname } =
+      await this.usersService.verifyUserAndSignJwt(
+        userLoginDTO.email,
+        userLoginDTO.password,
+      );
     // const user = await this.authService.validateUser(userLoginDTO.email);
     // const access_token = await this.authService.createLoginToken(user);
     // const refresh_token = await this.authService.createRefreshToken(user);
 
     // response.setHeader('access_token', access_token);
     // response.setHeader('refresh_token', refresh_token);
-    // response.cookie('jwt', jwt, { httpOnly: true });
-    response.cookie('jwt', jwt);
     // response.setHeader('jwt', jwt);
-    return { jwt, nickname };
+    // response.cookie('jwt', jwt, { httpOnly: true });
+    response.cookie('accessToken', jwt);
+    response.cookie('refreshToken', refreshToken);
+    return { jwt, refreshToken, nickname };
   }
 
   @ApiOperation({
@@ -147,6 +156,7 @@ export class UserController {
   })
   @UseGuards(KakaoAuthGuard)
   @Get('kakao')
+  // @Redirect('http://localhost:3000/users/kakao/callback')
   async kakaoLogin() {
     return HttpStatus.OK;
   }
@@ -156,10 +166,11 @@ export class UserController {
     description: '카카오 로그인시 콜백 라우터입니다.',
   })
   @UseGuards(KakaoAuthGuard)
-  @Get('oauth/kakao/callback')
+  @Get('kakao/callback')
   async kakaocallback(@Req() req, @Res() res: Response) {
     const { jwt, nickname } = req.user;
     if (req.user.type === 'login') {
+      res.setHeader('jwt', jwt);
       res.cookie('jwt', jwt);
     }
     // const { jwt, nickname } = await this.usersService.kakaoCallback(query.code);
@@ -167,10 +178,45 @@ export class UserController {
     // res.setHeader('jwt', jwt);
     // res.cookie('jwt', jwt);
     // }
-    res.redirect('https://www.tgle.ml');
-    res.end();
+    res.redirect('https://www.tgle.ml/');
     return { jwt, nickname };
+    // res.end();
   }
+
+  // //카카오 콜벡
+  // @Get('/kakao/callback')
+  // @ApiTags('users')
+  // @Redirect('https://tgle.ml/concert')
+  // async kakaoCallback(@Query() query, @Res() res) {
+  //   const { accessToken, refreshToken } = await this.usersService.kakaoCallback(
+  //     query.code,
+  //   );
+  //   res.cookie('refreshToken', refreshToken);
+  //   res.cookie('accessToken', accessToken);
+  //   // res.session.token = { accessToken, refreshToken };
+  //   // res.session.save();
+  //   return {
+  //     // accessToken,
+  //     url: `https://tgle.ml/auth?accessToken=${accessToken}&refreshToken=${refreshToken}`,
+  //   };
+  // }
+
+  // //카카오 인증요청
+  // @Get('/kakao')
+  // @ApiTags('users')
+  // @ApiOperation({
+  //   summary: '카카오 로그인',
+  //   description: '카카오 로그인',
+  // })
+  // @ApiOkResponse({ description: '카카오 로그인' })
+  // @Redirect('https://kauth.kakao.com')
+  // async kakakoSignin() {
+  //   const { KAKAO_ID, KAKAO_REDIRECT_URI } =
+  //     await this.usersService.kakaoSignin();
+  //   return {
+  //     url: `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_ID}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`,
+  //   };
+  // }
 
   // 유저 정보 불러오기
   @ApiBearerAuth('jwt')
@@ -192,7 +238,6 @@ export class UserController {
   })
   @UseGuards(JwtAuthGuard)
   async getCurrentUser(@Req() req) {
-    console.log(req.user);
     const currentUser = await this.usersService.findUserByEmail(req.user.email);
     return currentUser;
   }

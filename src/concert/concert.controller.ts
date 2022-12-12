@@ -45,6 +45,12 @@ export class ConcertController {
     return this.concertService.find();
   }
 
+  // 콘서트 상세 조회
+  @Get('concert/:concertId')
+  async findOne(@Param('concertId') concertId: number) {
+    return this.concertService.findOne(concertId);
+  }
+
   // 콘서트 생성
   @Post('concert')
   create(@Body() createConcertDto: CreateConcertDto) {
@@ -67,5 +73,11 @@ export class ConcertController {
   @Get('hotconcert')
   hotconcert() {
     return this.concertService.hotConcert();
+  }
+
+  // 검색
+  @Get('search')
+  search(@Query('searchQuery') searchQuery: string) {
+    return this.concertService.search(searchQuery);
   }
 }

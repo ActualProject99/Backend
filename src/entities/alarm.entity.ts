@@ -11,9 +11,9 @@ import { Concert } from './concert.entity';
 import { User } from './user.entity';
 
 @Entity()
-export class ConcertLike {
+export class Alarm {
   @PrimaryGeneratedColumn()
-  concertLikeId: number;
+  alarmId: number;
 
   @PrimaryColumn({ name: 'userId' })
   @ApiProperty()
