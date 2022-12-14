@@ -61,19 +61,6 @@ export class AuthService {
     });
 
     return refresh_token;
-
-    // const refresh_token = CryptoJS.AES.encrypt(
-    //   JSON.stringify(token),
-    //   process.env.AES_KEY,
-    // ).toString();
-
-    // await getConnection()
-    //   .createQueryBuilder()
-    //   .update(User)
-    //   .set({ refresh_token: token })
-    //   .where(`userId = ${user.userId}`)
-    //   .execute();
-    // return refresh_token;
   }
 
   async onceToken(user_profile: any) {
@@ -89,12 +76,6 @@ export class AuthService {
       expiresIn: '10m',
     });
   }
-
-  // tokenValidate(token: string) {
-  //   return await this.jwtService.verify(token, {
-  //     secret: process.env.SECRET_KEY,
-  //   });
-  // }
 
   // SMS 인증 위한 시그니쳐 생성 로직
   makeSignitureForSMS = (): string => {

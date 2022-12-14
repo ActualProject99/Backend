@@ -132,7 +132,7 @@ export class UserController {
     @Body() userLoginDTO: UserLoginDTO,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const { jwt, refreshToken, nickname } =
+    const { access_token, refresh_token, nickname } =
       await this.usersService.verifyUserAndSignJwt(
         userLoginDTO.email,
         userLoginDTO.password,
@@ -145,43 +145,60 @@ export class UserController {
     // response.setHeader('refresh_token', refresh_token);
     // response.setHeader('jwt', jwt);
     // response.cookie('jwt', jwt, { httpOnly: true });
-    response.cookie('accessToken', jwt);
-    response.cookie('refreshToken', refreshToken);
-    return { jwt, refreshToken, nickname };
+    response.cookie('access_token', access_token);
+    response.cookie('refreshToken', refresh_token);
+    return { access_token, refresh_token, nickname };
   }
 
+  // @ApiOperation({
+  //   summary: '카카오 로그인',
+  //   description: '카카오 로그인을 API',
+  // })
+  // @UseGuards(KakaoAuthGuard)
+  // @Get('kakao')
+  // @Redirect('http://localhost:3000/users/kakao/callback')
+  // async kakaoLogin() {
+  //   return HttpStatus.OK;
+  // }
+
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({
     summary: '카카오 로그인',
     description: '카카오 로그인을 API',
   })
-  @UseGuards(KakaoAuthGuard)
-  @Get('kakao')
-  // @Redirect('http://localhost:3000/users/kakao/callback')
-  async kakaoLogin() {
-    return HttpStatus.OK;
+  @Post('kakao')
+  // @Redirect('http://localhost:3000/concerts')
+  async kakaoLogin(@Req() req, @Res() res: Response) {
+    const { accessToken, refreshToken } = await this.usersService.kakaoLogin(
+      req.headers.authorization,
+    );
+    res.cookie('accessToken', accessToken);
+    res.cookie('refreshToken', refreshToken);
+    res.status(200).json({
+      message: '로그인 성공',
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+    });
+    // return { accessToken, refreshToken };
   }
 
-  @ApiOperation({
-    summary: '카카오 로그인 콜백',
-    description: '카카오 로그인시 콜백 라우터입니다.',
-  })
-  @UseGuards(KakaoAuthGuard)
-  @Get('kakao/callback')
-  async kakaocallback(@Req() req, @Res() res: Response) {
-    const { jwt, nickname } = req.user;
-    if (req.user.type === 'login') {
-      res.setHeader('jwt', jwt);
-      res.cookie('jwt', jwt);
-    }
-    // const { jwt, nickname } = await this.usersService.kakaoCallback(query.code);
-    // return { jwt, nickname };
-    // res.setHeader('jwt', jwt);
-    // res.cookie('jwt', jwt);
-    // }
-    res.redirect('https://www.tgle.ml/');
-    return { jwt, nickname };
-    // res.end();
-  }
+  // @ApiOperation({
+  //   summary: '카카오 로그인 콜백',
+  //   description: '카카오 로그인시 콜백 라우터입니다.',
+  // })
+  // // @UseGuards(KakaoAuthGuard)
+  // @Get('kakao/callback')
+  // async kakaocallback(@Req() req, @Res() res: Response) {
+  //   const { accessToken, refreshToken } = await this.usersService.kakaoLogin(
+  //     req.headers.authorization,
+  //   );
+  //   console.log(accessToken, refreshToken);
+  //   res.cookie('accessToken', accessToken);
+  //   res.cookie('refreshToken', refreshToken);
+  //   res.redirect('https://www.tgle.ml/concerts');
+  //   return { accessToken, refreshToken };
+  //   // res.end();
+  // }
 
   // //카카오 콜벡
   // @Get('/kakao/callback')
