@@ -74,10 +74,6 @@ export class UserService {
     if (!(await bcrypt.compare(password, user.password)))
       throw new UnauthorizedException('로그인에 실패하였습니다.');
     try {
-      // const payload = { email };
-      // const jwt = await this.jwtService.sign(payload, {
-      //   secret: this.configService.get('SECRET_KEY'),
-      // });
       const access_token = await this.makeAccessToken(user.email);
       const refresh_token = await this.makeRefreshToken(user.email);
       const nickname = user.nickname;
@@ -195,19 +191,6 @@ export class UserService {
   // }
 
   async kakaoLogin(authorization) {
-    // const kakaojwt = async (userId: number) => {
-    //   const payload = { userId };
-    //   const accessToken = await this.jwtService.sign(payload, {
-    //     secret: process.env.SECRET_KEY,
-    //     expiresIn: '60m',
-    //   });
-    //   const refreshToken = await this.jwtService.sign(payload, {
-    //     secret: process.env.SECRET_KEY,
-    //     expiresIn: '15d',
-    //   });
-    //   await this.CurrnetRefreshToken(refreshToken, userId);
-    //   return { accessToken, refreshToken };
-    // };
     if (!authorization) throw new BadRequestException('토큰 정보가 없습니다.');
     const kakaoAccessToken = authorization;
     const { data: kakaoUser } = await axios(
