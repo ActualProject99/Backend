@@ -45,8 +45,6 @@ import { AuthService } from 'src/auth/auth.service';
 import { JwtStrategy } from 'src/auth/strategy/jwt.strategy';
 import { ArtistLike } from 'src/entities/artist_like.entity';
 import { ArtistlikeService } from 'src/artist_like/artist_like.service';
-import { IsPhoneNumber } from 'class-validator';
-import { UserPhoneVerifyDTO } from './dto/user-phoneverify.dto';
 
 @Controller('users')
 export class UserController {
@@ -103,7 +101,7 @@ export class UserController {
     // return checkNumber;
   }
 
-  @Get('signup/verifyNum')
+  @Post('signup/verifyNum')
   @ApiTags('users')
   async verifyNumber(@Body() phoneNumber: string, inputNumber: string) {
     return await this.authService.checkSMS(phoneNumber, inputNumber);
@@ -126,7 +124,6 @@ export class UserController {
     status: 500,
     description: '서버 에러',
   })
-  // @UseGuards(JwtAuthGuard)
   async logIn(
     @Request() req: any,
     @Body() userLoginDTO: UserLoginDTO,
@@ -137,14 +134,6 @@ export class UserController {
         userLoginDTO.email,
         userLoginDTO.password,
       );
-    // const user = await this.authService.validateUser(userLoginDTO.email);
-    // const access_token = await this.authService.createLoginToken(user);
-    // const refresh_token = await this.authService.createRefreshToken(user);
-
-    // response.setHeader('access_token', access_token);
-    // response.setHeader('refresh_token', refresh_token);
-    // response.setHeader('jwt', jwt);
-    // response.cookie('jwt', jwt, { httpOnly: true });
     response.cookie('access_token', access_token);
     response.cookie('refreshToken', refresh_token);
     return { access_token, refresh_token, nickname };
@@ -161,13 +150,11 @@ export class UserController {
   //   return HttpStatus.OK;
   // }
 
-  @UseGuards(JwtAuthGuard)
   @ApiOperation({
     summary: '카카오 로그인',
     description: '카카오 로그인을 API',
   })
   @Post('kakao')
-  // @Redirect('http://localhost:3000/concerts')
   async kakaoLogin(@Req() req, @Res() res: Response) {
     const { accessToken, refreshToken } = await this.usersService.kakaoLogin(
       req.headers.authorization,
@@ -179,26 +166,7 @@ export class UserController {
       accessToken: accessToken,
       refreshToken: refreshToken,
     });
-    // return { accessToken, refreshToken };
   }
-
-  // @ApiOperation({
-  //   summary: '카카오 로그인 콜백',
-  //   description: '카카오 로그인시 콜백 라우터입니다.',
-  // })
-  // // @UseGuards(KakaoAuthGuard)
-  // @Get('kakao/callback')
-  // async kakaocallback(@Req() req, @Res() res: Response) {
-  //   const { accessToken, refreshToken } = await this.usersService.kakaoLogin(
-  //     req.headers.authorization,
-  //   );
-  //   console.log(accessToken, refreshToken);
-  //   res.cookie('accessToken', accessToken);
-  //   res.cookie('refreshToken', refreshToken);
-  //   res.redirect('https://www.tgle.ml/concerts');
-  //   return { accessToken, refreshToken };
-  //   // res.end();
-  // }
 
   // //카카오 콜벡
   // @Get('/kakao/callback')
